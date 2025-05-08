@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Forgot Password</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" type="image/png" href="assets/tablogo.png">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+        
+        :root {
+            --primary-color: #8E2157;
+            --primary-color-dark: #6b0f3d;
+            --text-dark: #0b0f18;
+            --text-light: #503744;
+            --extra-light: #f1f5f9;
+            --white: #ffffff;
+            --max-width: 1400px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.6s;
+            padding: 15px 50px;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav__logo img {
+            height: 45px;
+            width: 135px;
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav__links li {
+            list-style: none;
+            display: inline-block;
+            padding: 8px 12px;
+            position: relative;
+        }
+
+        .nav__links li a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .nav__links li::after {
+            content: '';
+            width: 0%;
+            height: 3px;
+            background: var(--primary-color-dark);
+            display: block;
+            margin: auto;
+            transition: 0.5s;
+        }
+
+        .nav__links li:hover::after {
+            width: 100%;
+        }
+
+        /* Content Container */
+        .content-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 120px 30px 100px;
+        }
+
+        .password-reset-container {
+            display: flex;
+            width: 900px;
+            max-width: 95%;
+            background-color: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .reset-form-container {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .reset-form-container h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .reset-form-container h3 {
+            color: var(--text-light);
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .register-container {
+            flex: 1;
+            background-color: #f7f0f3;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10%;
+            height: 80%;
+            width: 5px;
+            background-color: var(--primary-color);
+        }
+
+        .register-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .register-container h3 {
+            font-weight: 400;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: var(--text-light);
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 20px;
+        }
+        
+        .input-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .input-container i {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            font-size: 20px;
+            color: var(--text-light);
+        }
+
+        input {
+            font-size: 16px;
+            width: 100%;
+            padding: 12px 10px 8px 30px;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: transparent;
+        }
+
+        input:focus {
+            border-bottom-color: var(--primary-color);
+        }
+
+        label {
+            position: absolute;
+            top: 12px;
+            left: 30px;
+            font-size: 16px;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        input:focus + label,
+        input:valid + label,
+        label.active {
+            top: -10px;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: #ffe6e6;
+            color: #d63031;
+            border: 1px solid #ffcccc;
+        }
+
+        .alert-success {
+            background-color: #e6ffee;
+            color: #00b894;
+            border: 1px solid #ccffdd;
+        }
+
+        .alert-info {
+            background-color: #e6f7ff;
+            color: #0984e3;
+            border: 1px solid #ccedff;
+        }
+
+        /* Button Styles */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .button {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--white);
+            background-color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 200px;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(142, 33, 87, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Links */
+        .login-link {
+            text-align: right;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: auto;
+            width: 100%;
+            background-color: var(--primary-color);
+            padding: 15px 0;
+        }
+
+        .footer__container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+        }
+
+        .footer__copyright {
+            color: var(--white);
+            font-size: 0.9rem;
+        }
+
+        .social {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .social span {
+            font-size: 1.2rem;
+        }
+
+        .social span a {
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social span a:hover {
+            color: var(--extra-light);
+        }
+
+        .n_logo img {
+            height: 35px;
+            width: 105px;
+            margin-left: 15px;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            
+            .password-reset-container {
+                flex-direction: column;
+            }
+            
+            .register-container::before {
+                width: 100%;
+                height: 3px;
+                top: 0;
+                left: 0;
+            }
+            
+            .footer__container {
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px 20px;
+            }
+        }
+		/* Modal Styles */
+		    .modal-overlay {
+		        display: none;
+		        position: fixed;
+		        top: 0;
+		        left: 0;
+		        width: 100%;
+		        height: 100%;
+		        background-color: rgba(0, 0, 0, 0.6);
+		        z-index: 1000;
+		        justify-content: center;
+		        align-items: center;
+		    }
+		    
+		    .modal-content {
+		        background-color: var(--white, #ffffff);
+		        border-radius: 20px;
+		        padding: 30px;
+		        width: 90%;
+		        max-width: 400px;
+		        text-align: center;
+		        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+		        animation: fadeIn 0.3s ease;
+		    }
+		    
+		    .modal-content h3 {
+		        color: var(--primary-color, #8E2157);
+		        margin-bottom: 15px;
+		    }
+		    
+		    .modal-content p {
+		        color: var(--text-light, #503744);
+		        margin-bottom: 25px;
+		        line-height: 1.6;
+		    }
+		    
+		    .modal-buttons {
+		        display: flex;
+		        justify-content: center;
+		        gap: 15px;
+		        flex-wrap: wrap;
+		    }
+		    
+		    .btn-secondary {
+		        background-color: #f7f0f3;
+		        color: var(--primary-color, #8E2157);
+		    }
+		    
+		    .btn-secondary:hover {
+		        background-color: #f0e5ea;
+		        box-shadow: 0 5px 15px rgba(142, 33, 87, 0.15);
+		    }
+		    
+		    @keyframes fadeIn {
+		        from { opacity: 0; transform: scale(0.95); }
+		        to { opacity: 1; transform: scale(1); }
+		    }
+		    
+		    /* Responsive adjustments */
+		    @media screen and (max-width: 480px) {
+		        .modal-content {
+		            padding: 20px;
+		        }
+		        
+		        .modal-buttons {
+		            flex-direction: column;
+		        }
+		        
+		        .button {
+		            width: 100%;
+		            margin-bottom: 10px;
+		        }
+		    }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav__logo"><img src="assets/jetsetflylogo.png" alt="JetSetFly Logo"></div>
+        <ul class="nav__links">
+            <li><a th:href="@{/}">HOME</a></li>
+            <li><a th:href="@{/aboutus}">ABOUT</a></li>
+        </ul>
+    </header>
+
+    <div class="content-container">
+        <div class="password-reset-container">
+            <div class="reset-form-container">
+                <h1>Reset Password</h1>
+                
+                <!-- Email Form Section -->
+                <div th:if="${otpSent == null}" class="form-section">
+                    <h3>We will send a one-time pin to your registered email address to reset your password.
+                        <br>Please check your spam folder if it does not arrive in your inbox.
+                    </h3>
+                    
+                    <!-- Alert Messages -->
+                    <div th:if="${emailNotFound}" class="alert alert-danger">
+                        This email is not registered in our system.
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}">
+                        Something went wrong. Please try again.
+                    </div>
+                    
+                    <form th:action="@{/forgot-password}" method="post">
+                        <div class="input-container">
+                            <i class='bx bx-user-circle'></i>
+                            <input type="email" id="email" name="email" th:value="${email}" required>
+                            <label for="email">Email</label>
+                        </div>
+                        
+                        <div class="login-link">
+                            <a href="/login">Back to Login</a>
+                        </div>
+                        
+                        <div class="btn-container">
+                            <button type="submit" class="button">Send OTP</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- OTP Verification Section -->
+                <div th:if="${otpSent}" class="form-section">
+                    <h3>An OTP has been sent to your email.
+                        <br>Please enter the OTP below to continue.
+                    </h3>
+                    
+                    <!-- Alert Messages -->
+                    <div th:if="${invalidOtp}" class="alert alert-danger">
+                        Invalid OTP. Please try again.
+                    </div>
+                    <div th:if="${otpExpired}" class="alert alert-danger">
+                        OTP has expired. Please request a new one.
+                    </div>
+                    
+                    <form th:action="@{/verify-otp}" method="post">
+                        <div class="input-container">
+                            <i class='bx bx-message-dots'></i>
+                            <input type="text" id="otp" name="otp" required>
+                            <label for="otp">OTP</label>
+                        </div>
+                        
+                        <input type="hidden" name="email" th:value="${email}">
+                        
+                        <div class="btn-container">
+                            <button type="submit" class="button">Verify OTP</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Password Reset Section -->
+                <div th:if="${otpVerified}" class="form-section">
+                    <h3>Create your new password</h3>
+                    
+                    <!-- Alert Messages -->
+                    <div th:if="${passwordMismatch}" class="alert alert-danger">
+                        Passwords do not match. Please try again.
+                    </div>
+                    <div th:if="${passwordTooWeak}" class="alert alert-danger">
+                        Password is too weak. Please choose a stronger password.
+                    </div>
+                    
+                    <form th:action="@{/reset-password}" method="post" id="resetPasswordForm">
+                        <div class="input-container">
+                            <i class='bx bx-lock-open'></i>
+                            <input type="password" id="password" name="password" required>
+                            <label for="password">New Password</label>
+                        </div>
+                        
+                        <div class="input-container">
+                            <i class='bx bx-lock-open'></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required>
+                            <label for="confirmPassword">Confirm New Password</label>
+                        </div>
+                        
+                        <input type="hidden" name="email" th:value="${email}">
+                        <input type="hidden" name="token" th:value="${token}">
+                        
+                        <div class="btn-container">
+                            <button type="submit" class="button">Reset Password</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Success Message -->
+                <div th:if="${resetSuccess}" class="form-section">
+                    <div class="alert alert-success">
+                        Your password has been reset successfully.
+                    </div>
+                    <div class="btn-container">
+                        <a th:href="@{/login1}" class="button">Go to Login</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="register-container">
+                <h2>Don't have an account yet?</h2>
+                <h3>Create an account for booking flights, managing reservations, and exploring the world with us.</h3>
+                <div class="btn-container">
+                    <a href="/register" class="button">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer__container">
+            <p class="footer__copyright">Copyright © 2024 Team GMADS. All rights reserved.</p>
+            <div class="social">
+                <span><a href="#"><i class="ri-facebook-fill"></i></a></span>
+                <span><a href="#"><i class="ri-twitter-fill"></i></a></span>
+                <span><a href="#"><i class="ri-instagram-line"></i></a></span>
+                <span><a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" target="_blank"><i class="ri-youtube-fill"></i></a></span>
+                <div class="n_logo"><img src="assets/w.png" alt="Logo"></div>
+            </div>
+        </div>
+    </footer>
+	
+	<div id="backConfirmModal" class="modal-overlay">
+	    <div class="modal-content">
+	        <h3>Confirm Navigation</h3>
+	        <p>Are you sure you want to go back?<br>This will restart the password reset process.</p>
+	        <div class="modal-buttons">
+	            <button class="button btn-secondary" onclick="cancelBack()">No, Stay Here</button>
+	            <button class="button" onclick="confirmBack()">Yes, Go Back</button>
+	        </div>
+	    </div>
+	</div>
+
+	<script>
+	    let redirectOnConfirm = false;
+
+	    if (window.history && window.history.pushState) {
+	        window.history.pushState(null, "", window.location.href);
+	        window.onpopstate = function () {
+	            if (!redirectOnConfirm) {
+	                // show modal instead of navigating
+	                document.getElementById("backConfirmModal").style.display = "flex";
+	                // push again to block auto back
+	                window.history.pushState(null, "", window.location.href);
+	            }
+	        };
+	    }
+
+	    function confirmBack() {
+	        redirectOnConfirm = true;
+	        window.location.href = "/register"; // controller will reset session
+	    }
+
+	    function cancelBack() {
+	        document.getElementById("backConfirmModal").style.display = "none";
+	    }
+	</script>
+
+    <script>
+        // Email validation
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('blur', validateEmail);
+            emailInput.addEventListener('input', validateEmail);
+        }
+
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email === '') {
+                return false;
+            } else if (!emailPattern.test(email)) {
+                return false;
+            }
+            return true;
+        }
+
+        // Password validation for reset form
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+        if (resetPasswordForm) {
+            resetPasswordForm.addEventListener('submit', function(event) {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    alert('Passwords do not match. Please try again.');
+                }
+                
+                // Simple password strength check
+                if (password.length < 8) {
+                    event.preventDefault();
+                    alert('Password must be at least 8 characters long.');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
