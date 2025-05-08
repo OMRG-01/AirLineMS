@@ -88,7 +88,7 @@
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="">
-        <img src="../assetsp/img/PH.jpg" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
+        <img th:src="@{/img/PH.jpg}" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white"></span>
       </a>
     </div>
@@ -96,7 +96,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-primary" href="dashboard.php">
+          <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/dashboard}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -104,7 +104,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="airline-management.PHP">
+          <a class="nav-link text-white " th:href="@{/admin/airline-management}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -179,24 +179,24 @@
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
       data-scroll="true">
       <div class="container-fluid py-1 px-3">
-        <img class="aaa" src="assets/GG-removebg-preview.png">
+        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
         <div class="container2">
           <div class="nav-links">
             <ul>
-              <li><a href="add-flight.php"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT
-                </a></li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT
+                </a></li>
             </ul>
           </div>
           <div class="nav-links">
             <ul>
-              <li><a href="add-airline.php"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
-              </li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+              </li>
             </ul>
           </div>
           <div class="nav-links">
             <ul>
-              <li><a href="logout.php" style="color:chocolate;"><?php echo $name;?> <i class="fa fa-sign-out"
-                    style="font-size:18px"></i></a></li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <li><a href="logout.php" style="color:chocolate;"> <i class="fa fa-sign-out"
+                    style="font-size:18px"></i></a></li>
             </ul>
           </div>
         </div>
@@ -221,13 +221,13 @@
                 <div class="text-end pt-1">
                   <p class="text-sm mb-0 text-capitalize">Available Airlines</p>
                  
-                  <h4 class="mb-0"><?php echo $count;?></h4>
+                  <h4 class="mb-0"></h4>
                 </div>
                
               </div>
               <hr class="dark horizontal my-0">
               <div class="card-footer p-3">
-                <p class="mb-0"><span class="text-success text-sm font-weight-bolder"><?php echo $latestAirlineName;?> </span>lastly added</p>
+                <p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span>lastly added</p>
               </div>
             </div>
           </a>
