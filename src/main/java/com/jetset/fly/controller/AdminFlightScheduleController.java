@@ -7,12 +7,15 @@ import com.jetset.fly.repository.*;
 import com.jetset.fly.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/flights")
@@ -150,36 +153,67 @@ public class AdminFlightScheduleController {
         return "redirect:/admin/flights/view";
     }
     
-    @GetMapping("/admin/view-schedules")
+    @GetMapping("/view-schedules")
     public String viewSchedules(Model model) {
-        List<Class> allClasses = classService.getAllClasses(); // For dynamic headers
+        List<FlightSchedule> schedules = flightScheduleService.getActiveAirlines();
 
-        List<FlightSchedule> schedules = flightScheduleService.findAll();
-        List<ScheduleViewDTO> dtos = new ArrayList<>();
+        List<Class> classList = classService.getAllClasses();
+        Map<Long, String> classMap = classList.stream()
+                .collect(Collectors.toMap(Class::getId, Class::getName));
 
-        for (FlightSchedule schedule : schedules) {
-            ScheduleViewDTO dto = new ScheduleViewDTO();
-            dto.setId(schedule.getId());
-            dto.setAirlineName(schedule.getFlight().getAirline().getAname());
-            dto.setFlightNumber(schedule.getFlightNumber());
-            dto.setSourceCity(schedule.getSource().getCityname());
-            dto.setDestinationCity(schedule.getDestination().getCityname());
-            dto.setDepartAt(schedule.getDepartAt());
-            dto.setArriveAt(schedule.getArriveAt());
+        List<Map<String, Object>> scheduleViewData = new ArrayList<>();
 
-            Map<String, Double> rates = new HashMap<>();
-            List<FlightScheduleRate> scheduleRates = flightScheduleRateService.getBySchedule(schedule.getId());
-            for (FlightScheduleRate rate : scheduleRates) {
-                rates.put(rate.getFlightClass().getName(), rate.getRate());
+        for (int i = 0; i < schedules.size(); i++) {
+            FlightSchedule schedule = schedules.get(i);
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("srNo", i + 1);
+
+            // Airline name
+            Airline airline = airlineService.getById(schedule.getAirlineId());
+            row.put("airlineName", airline != null ? airline.getAname() : "Unknown");
+
+            // Other flight details
+            row.put("flightNumber", schedule.getFlightNumber());
+            row.put("source", schedule.getSource().getCityname());
+            row.put("destination", schedule.getDestination().getCityname());
+            row.put("departAt", schedule.getDepartAt());
+            row.put("arriveAt", schedule.getArriveAt());
+            row.put("scheduleId", schedule.getId());
+
+
+            // Class cost map
+            Map<Long, Double> classCosts = new HashMap<>();
+            List<FlightScheduleRate> rates = flightScheduleRateService.getBySchedule(schedule.getId());
+
+            for (FlightScheduleRate rate : rates) {
+                Long classId = rate.getFlightClass().getId();
+                classCosts.put(classId, rate.getRate());
             }
-            dto.setClassRates(rates);
 
-            dtos.add(dto);
+
+            row.put("classCosts", classCosts);
+            scheduleViewData.add(row);
         }
 
-        model.addAttribute("allClasses", allClasses);
-        model.addAttribute("schedules", dtos);
-        return "admin/viewSchedule";
+        model.addAttribute("columns", classList); // instead of just names
+        model.addAttribute("schedules", scheduleViewData);
+
+        return "admin/viewSchedule"; // Thymeleaf file
     }
+    
+    @PostMapping("/delete-schedule/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
+        FlightSchedule schedule = flightScheduleService.findById(id);
+        if (schedule != null) {
+            schedule.setStatus("DELETED");
+            flightScheduleService.save(schedule);
+            return ResponseEntity.ok("Deleted");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
+        }
+    }
+
+
 
 }

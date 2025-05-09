@@ -34,6 +34,17 @@ public class FlightSchedule {
     @Column(name = "airline_id", nullable = false)
     private Long airlineId;
 
+    @Column(nullable = false)
+    private String status = "ACTIVE"; // default to ACTIVE
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     // Optional: createdAt tracking
     private LocalDateTime createdAt;
 

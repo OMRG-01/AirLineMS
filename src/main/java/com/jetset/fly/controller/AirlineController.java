@@ -70,13 +70,14 @@ public class AirlineController {
                                     Model model) {
     	List<Airline> airlines = airlineService.getActiveAirlines();
         model.addAttribute("airlines", airlineRepository.findByStatus("ACTIVE"));
-        model.addAttribute("classes", classRepository.findAll());
+        model.addAttribute("classes", classRepository.findByStatus("ACTIVE"));
         return "admin/addFlight";
     }
     
     
     @PostMapping("/flight/add")
-    public String addFlight(@RequestParam Long airlineId,
+    public String addFlight(
+    		@RequestParam Long airlineId,
                             @RequestParam String fnumber,
                             @RequestParam int totalSeat,
                             @RequestParam(name = "classIds") List<Long> classIds,
@@ -84,7 +85,8 @@ public class AirlineController {
 
         // Send everything to the service layer
         flightService.addFlightWithClasses(airlineId, fnumber, totalSeat, classIds, allParams);
-
+        
+        
         return "redirect:/admin/flights/add?success"; // Redirect with success
     }
 

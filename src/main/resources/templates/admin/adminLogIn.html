@@ -4,7 +4,8 @@
     <title>Admin Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" th:href="@{/images/fg.png}">
+
+	<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root {
@@ -255,7 +256,7 @@
             Invalid email or password
         </div>
 
-        <form th:action="@{/submit}" method="post">
+        <form th:action="@{/admin/doLogin}" method="post">
             <div class="input-container">
                 <i class='bx bx-user'></i>
                 <input type="email" id="email" name="email" required>

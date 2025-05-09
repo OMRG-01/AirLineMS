@@ -22,5 +22,6 @@ public interface AirFlightRepository extends JpaRepository<AirFlight, Long> {
     List<AirFlight> findByAirlineIdAndStatus(Long airlineId, String status);
 
 
+    int countByAirlineAndStatus(Airline airline, String status);
 
 }

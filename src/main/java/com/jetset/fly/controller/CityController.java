@@ -1,7 +1,10 @@
 package com.jetset.fly.controller;
 
 import com.jetset.fly.model.City;
+import com.jetset.fly.model.Class;
 import com.jetset.fly.service.CityService;
+import com.jetset.fly.service.ClassService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +18,9 @@ public class CityController {
 
     @Autowired
     private CityService cityService;
+    
+    @Autowired
+    private ClassService classService;
 
     // 1. Go to addCity.html
     @GetMapping("/add")
@@ -28,12 +34,28 @@ public class CityController {
         cityService.addCity(cityname);
         return "redirect:/admin/cities/view";
     }
+    
+    @GetMapping("/class/delete/{id}")
+    public String deleteClass(@PathVariable("id") Long id) {
+        classService.softDeleteClass(id);
+        return "redirect:/admin/cities/view";
+    }
+    
+    @PostMapping("/class/add")
+    public String addClass(@RequestParam("classname") String classname) {
+        classService.addClass(classname);
+        return "redirect:/admin/cities/view";
+    }
+    
+
 
     // 3. View all active cities
     @GetMapping("/view")
     public String viewCities(Model model) {
         List<City> cities = cityService.getAllActiveCities();
+        List<Class> classes = classService.getAllActiveClasses();
         model.addAttribute("cities", cities);
+        model.addAttribute("classes",classes);
         return "admin/viewCity";
     }
 
@@ -54,7 +76,7 @@ public class CityController {
     }
 
     // 6. Soft delete city
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteCity(@PathVariable("id") Long id) {
         cityService.softDeleteCity(id);
         return "redirect:/admin/cities/view";

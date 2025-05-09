@@ -1,5 +1,11 @@
 package com.jetset.fly.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -7,11 +13,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jetset.fly.model.AirFlight;
 import com.jetset.fly.model.Airline;
+import com.jetset.fly.model.FlightSchedule;
 import com.jetset.fly.model.Role;
 import com.jetset.fly.model.User;
+import com.jetset.fly.repository.FlightScheduleRepository;
 import com.jetset.fly.repository.RoleRepository;
 import com.jetset.fly.repository.UserRepository;
 import com.jetset.fly.service.AdminService;
@@ -36,7 +45,8 @@ public class AuthController {
     private AirlineService airlineService;
     @Autowired
     private AirFlightService airFlightService;
-    
+    @Autowired
+    private FlightScheduleRepository flightScheduleRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
@@ -55,26 +65,65 @@ public class AuthController {
 	    }
 
 	 @Autowired
-	    private AdminService adminService;
+	    private UserService adminService;
 
-	    @PostMapping("/submit")
-	    public String login(@RequestParam String email,
-	                        @RequestParam String password,
-	                        HttpSession session) {
-	        boolean authenticated = adminService.authenticateAdmin(email, password, session);
+	 @PostMapping("/admin/doLogin")
+	 public String login(@RequestParam String email,
+	                     @RequestParam String password,
+	                     HttpSession session) {
+	     User user = adminService.findByEmailAndPassword(email, password);
 
-	        if (authenticated) {
-	            return "redirect:/admin/dashboard"; // success
-	        } else {
-	            return "redirect:/admin/login?error"; // failure
-	        }
-	    }
+	     if (user != null && user.getRole().getId() == 1) { // Ensure role = 1 => ADMIN
+	         session.setAttribute("admin", user); // store entire User object as 'admin'
+	         return "redirect:/admin/dashboard";
+	     }
+
+	     return "redirect:/admin/login?error";
+	 }
+
 	    @GetMapping("/admin/dashboard")
 	    public String adminDashboard(HttpSession session, Model model) {
+	    	User admin = (User) session.getAttribute("admin");
 	        if (session.getAttribute("admin") == null) {
 	            return "redirect:/admin/login"; // Not logged in
 	        }
+	        
+	        List<Airline> airlines = airlineService.getActiveAirlines(); // Only ACTIVE airlines
+	        List<Map<String, Object>> airlineFlightData = new ArrayList<>();
+	        
+	        for (Airline airline : airlines) {
+	            int flightCount = airFlightService.countByAirlineAndStatus(airline, "ACTIVE");
+	            Map<String, Object> data = new HashMap<>();
+	            data.put("label", airline.getAname());
+	            data.put("value", flightCount);
+	            airlineFlightData.add(data);
+	        }
+	        
+	        List<FlightSchedule> schedules = flightScheduleRepository.findByStatus("ACTIVE");
 
+	        int notDeparted = 0;
+	        int inFlight = 0;
+	        int arrived = 0;
+	        
+	        LocalDateTime now = LocalDateTime.now();
+
+	        for (FlightSchedule schedule : schedules) {
+	            if (now.isBefore(schedule.getDepartAt())) {
+	                notDeparted++;
+	            } else if (now.isAfter(schedule.getDepartAt()) && now.isBefore(schedule.getArriveAt())) {
+	                inFlight++;
+	            } else if (now.isAfter(schedule.getArriveAt()) || now.isEqual(schedule.getArriveAt())) {
+	                arrived++;
+	            }
+	        }
+
+	        model.addAttribute("notDeparted", notDeparted);
+	        model.addAttribute("inFlight", inFlight);
+	        model.addAttribute("arrived", arrived);
+	        
+	        
+	        model.addAttribute("airlineFlightData", airlineFlightData);
+	        
 	        // Airline data
 	        long airlineCount = airlineService.countByStatus("ACTIVE");
 	        Airline latestAirline = airlineService.findLatestByStatus("ACTIVE");
@@ -85,15 +134,103 @@ public class AuthController {
 
 	        model.addAttribute("airlineCount", airlineCount);
 	        model.addAttribute("latestAirlineName", latestAirline != null ? latestAirline.getAname() : "N/A");
-
+	        model.addAttribute("admin", admin);
 	        model.addAttribute("flightCount", flightCount);
 	        model.addAttribute("latestFlightNumber", latestFlight != null ? latestFlight.getFnumber() : "N/A");
 
 	        return "admin/adminDash";
 	    }
 
-
 	    
+	    //admin profile edit 
+	    
+	    @GetMapping("/admin/editProfile")
+	    public String editAdminProfile(HttpSession session, Model model) {
+	        User admin = (User) session.getAttribute("admin");
+
+	        if (admin == null || admin.getRole().getId() != 1) {
+	            return "redirect:/admin/login";
+	        }
+
+	        model.addAttribute("admin", admin);
+	        return "admin/editProfile"; // maps to templates/admin/editProfile.html
+	    }
+	    
+	    @PostMapping("/admin/updateProfile")
+	    public String updateProfile(@RequestParam String name,
+	                                @RequestParam String mobile,
+	                                @RequestParam String currentPassword,
+	                                @RequestParam(required = false) String newPassword,
+	                                @RequestParam(required = false) String confirmPassword,
+	                                HttpSession session,
+	                                RedirectAttributes redirectAttributes) {
+	        User admin = (User) session.getAttribute("admin");
+
+	        if (admin == null) {
+	            return "redirect:/admin/login";
+	        }
+
+	        if (!passwordEncoder.matches(currentPassword, admin.getPassword())) {
+	            redirectAttributes.addFlashAttribute("error", "Current password is incorrect.");
+	            return "redirect:/admin/editProfile";
+	        }
+
+	        // Update name and mobile
+	        admin.setName(name);
+	        admin.setMobile(mobile);
+
+	        // If new password is provided and matches confirm password, update it
+	        if (newPassword != null && !newPassword.isEmpty()) {
+	            if (!newPassword.equals(confirmPassword)) {
+	                redirectAttributes.addFlashAttribute("error", "New password and confirm password do not match.");
+	                return "redirect:/admin/editProfile";
+	            }
+	            admin.setPassword(passwordEncoder.encode(newPassword));
+	        }
+
+	        userService.save(admin); // Update in DB
+	        redirectAttributes.addFlashAttribute("success", "Profile updated successfully.");
+	        return "redirect:/admin/editProfile";
+	    }
+
+
+	    //add memeber as admin
+	    
+	    @GetMapping("/admin/add")
+	    public String showAddAdminForm() {
+	        return "admin/addAdmin";
+	    }
+
+	    @PostMapping("/admin/saveAdmin")
+	    public String saveAdmin(@RequestParam String title,
+	                            @RequestParam String firstName,
+	                            @RequestParam String lastName,
+	                            @RequestParam String email,
+	                            @RequestParam String password,
+	                            @RequestParam String mobile,
+	                            RedirectAttributes redirectAttributes) {
+
+	        if (userService.existsByEmail(email)) {
+	            redirectAttributes.addFlashAttribute("error", "Email already in use.");
+	            return "redirect:/admin/add";
+	        }
+
+	        User admin = new User();
+	        admin.setTitle(title);
+	        admin.setName(firstName + " " + lastName);
+	        admin.setEmail(email);
+	        admin.setPassword(passwordEncoder.encode(password));
+	        admin.setMobile(mobile);
+
+	        Role adminRole = new Role();
+	        adminRole.setId(1L); // ADMIN
+	        admin.setRole(adminRole);
+
+	        userService.save(admin);
+	        redirectAttributes.addFlashAttribute("success", "Admin added successfully.");
+	        return "redirect:/admin/add";
+	    }
+
 	    
 	    @PostMapping("/login/submit")
 	    public String processLogin(@RequestParam String email,
@@ -165,5 +302,12 @@ public class AuthController {
 	 	public String showAboutUsPage() {
 		 return "user/aboutus";
 	 }
+	 
+	 @GetMapping("/admin/logout")
+	 public String logout(HttpSession session) {
+	     session.invalidate(); // Clear session data
+	     return "redirect:/admin/login?logout"; // Redirect to login with a message
+	 }
+
 	
 }

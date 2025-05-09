@@ -1,5 +1,6 @@
 package com.jetset.fly.service;
 
+import com.jetset.fly.model.Airline;
 import com.jetset.fly.model.FlightSchedule;
 import com.jetset.fly.repository.FlightScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class FlightScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    public List<FlightSchedule> findAll() {
-        return scheduleRepository.findAll();
+    public List<FlightSchedule> getActiveAirlines() {
+        return scheduleRepository.findByStatus("ACTIVE");
     }
 
     public FlightSchedule findById(Long id) {
@@ -28,4 +29,9 @@ public class FlightScheduleService {
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
     }
+    
+    public List<FlightSchedule> getAll() {
+        return scheduleRepository.findAll();
+    }
+
 }

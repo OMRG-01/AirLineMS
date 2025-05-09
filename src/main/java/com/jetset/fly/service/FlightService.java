@@ -36,6 +36,8 @@ public class FlightService {
                                      List<Long> classIds, Map<String, String> allParams) {
 
         // 1. Save the flight
+    	 Airline airline = airlineRepository.findById(airlineId).orElseThrow(() -> new RuntimeException("Airline not found"));
+
         AirFlight flight = new AirFlight();
         flight.setAirline(airlineRepository.findById(airlineId).orElseThrow());
         flight.setFnumber(fnumber);
@@ -55,7 +57,12 @@ public class FlightService {
                 flightClassRepository.save(fc);
             }
         }
+        
+        airline.setNoOfFlight(airline.getNoOfFlight() + 1);
+        airlineRepository.save(airline);
     }
+    
+    
     public List<AirFlight> getAllActiveFlights() {
         List<AirFlight> flights = airFlightRepository.findByStatus("ACTIVE");
         for (AirFlight flight : flights) {
@@ -67,7 +74,7 @@ public class FlightService {
 
 
     public List<Class> getAllClasses() {
-        return classRepository.findAll();
+        return classRepository.findByStatus("ACTIVE");
     }
 
     public int getSeatForClass(AirFlight flight, Class flightClass) {

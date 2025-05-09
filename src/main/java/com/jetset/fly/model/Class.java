@@ -1,5 +1,7 @@
 package com.jetset.fly.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,13 @@ public class Class  {
     @Column(nullable = false, unique = true)
     private String name; // Business, Economy, First Class
 
+    @Column(nullable = false)
+    private String status = "ACTIVE"; // ACTIVE or DELETED
+    
+    @PrePersist
+    protected void onCreate() {
+        this.status = "ACTIVE";
+    }
     public Class() {}
 
 	public Class(Long id) {
@@ -24,6 +33,13 @@ public class Class  {
         this.name = name;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     // Getter for id
     public Long getId() {
         return id;

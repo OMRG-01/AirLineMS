@@ -46,5 +46,9 @@ public class AirlineService {
     public Airline findLatestByStatus(String status) {
         return airlineRepo.findTopByStatusOrderByIdDesc(status);
     }
+    
+    public Airline getById(Long id) {
+        return airlineRepo.findById(id).orElse(null);
+    }
 
 }
