@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Airline Management</title>
   <meta charset="utf-8" />
@@ -90,14 +90,14 @@
             <span class="nav-link-text ms-1">Airline Management</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="flights-available.php">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">view_in_ar</i>
-            </div>
-            <span class="nav-link-text ms-1">Flights Management</span>
-          </a>
-        </li>
+		<li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/flights/view}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">view_in_ar</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Flights Management</span>
+		          </a>
+		        </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="scheduled-flight-details.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">

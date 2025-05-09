@@ -1,5 +1,10 @@
 package com.jetset.fly.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +17,7 @@ public class AirFlight {
 
     @ManyToOne
     @JoinColumn(name = "airline_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // 
     private Airline airline;
 
     @Column(nullable = false, unique = true)
@@ -19,6 +25,22 @@ public class AirFlight {
 
     @Column(nullable = false)
     private int totalSeat;
+
+    @Column(nullable = false)
+    private String status = "ACTIVE"; // ACTIVE or DELETED
+
+    
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<FlightClass> flightClasses = new ArrayList<>();
+
+    // Getter & Setter
+    public List<FlightClass> getFlightClasses() {
+        return flightClasses;
+    }
+
+    public void setFlightClasses(List<FlightClass> flightClasses) {
+        this.flightClasses = flightClasses;
+    }
 
     // Default Constructor
     public AirFlight() {
@@ -36,6 +58,13 @@ public class AirFlight {
         return id;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     // Setter for id
     public void setId(Long id) {
         this.id = id;

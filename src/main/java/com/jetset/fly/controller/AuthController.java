@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.jetset.fly.model.AirFlight;
+import com.jetset.fly.model.Airline;
 import com.jetset.fly.model.Role;
 import com.jetset.fly.model.User;
 import com.jetset.fly.repository.RoleRepository;
 import com.jetset.fly.repository.UserRepository;
 import com.jetset.fly.service.AdminService;
+import com.jetset.fly.service.AirFlightService;
+import com.jetset.fly.service.AirlineService;
 import com.jetset.fly.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -27,6 +31,11 @@ public class AuthController {
 
     @Autowired
     private RoleRepository roleRepository;
+    
+    @Autowired
+    private AirlineService airlineService;
+    @Autowired
+    private AirFlightService airFlightService;
     
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -61,12 +70,28 @@ public class AuthController {
 	        }
 	    }
 	    @GetMapping("/admin/dashboard")
-	    public String adminDashboard(HttpSession session) {
+	    public String adminDashboard(HttpSession session, Model model) {
 	        if (session.getAttribute("admin") == null) {
 	            return "redirect:/admin/login"; // Not logged in
 	        }
-	        return "admin/adminDash"; // show dashboard
+
+	        // Airline data
+	        long airlineCount = airlineService.countByStatus("ACTIVE");
+	        Airline latestAirline = airlineService.findLatestByStatus("ACTIVE");
+
+	        // Flight data
+	        long flightCount = airFlightService.countByStatus("ACTIVE");
+	        AirFlight latestFlight = airFlightService.findLatestByStatus("ACTIVE");
+
+	        model.addAttribute("airlineCount", airlineCount);
+	        model.addAttribute("latestAirlineName", latestAirline != null ? latestAirline.getAname() : "N/A");
+
+	        model.addAttribute("flightCount", flightCount);
+	        model.addAttribute("latestFlightNumber", latestFlight != null ? latestFlight.getFnumber() : "N/A");
+
+	        return "admin/adminDash";
 	    }
+
 
 	    
 	    

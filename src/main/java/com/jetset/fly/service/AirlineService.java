@@ -29,5 +29,22 @@ public class AirlineService {
         airline.setStatus("DELETED");
         airlineRepo.save(airline);
     }
+    
+    public List<Airline> getAllAirlines() {
+        return airlineRepo.findAll();
+    }
+    
+    public Airline findById(Long id) {
+        return airlineRepo.findById(id).orElseThrow(() -> new RuntimeException("Airline not found"));
+    }
+
+
+    public long countByStatus(String status) {
+        return airlineRepo.countByStatus(status);
+    }
+
+    public Airline findLatestByStatus(String status) {
+        return airlineRepo.findTopByStatusOrderByIdDesc(status);
+    }
 
 }

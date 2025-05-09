@@ -8,5 +8,8 @@ import com.jetset.fly.model.Airline;
 
 public interface AirlineRepository extends JpaRepository<Airline, Long> {
 	List<Airline> findByStatus(String status);
+	
+	long countByStatus(String status);
+	Airline findTopByStatusOrderByIdDesc(String status);
 
 }

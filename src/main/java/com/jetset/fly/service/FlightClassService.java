@@ -1,0 +1,28 @@
+package com.jetset.fly.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.jetset.fly.model.FlightClass;
+import com.jetset.fly.repository.FlightClassRepository;
+
+@Service
+public class FlightClassService {
+
+    @Autowired
+    private FlightClassRepository flightClassRepository;
+
+    public List<FlightClass> getByFlightId(Long flightId) {
+        return flightClassRepository.findByFlightId(flightId);
+    }
+
+    public void deleteByFlightId(Long flightId) {
+        flightClassRepository.deleteByFlightId(flightId);
+    }
+
+    public void save(FlightClass flightClass) {
+        flightClassRepository.save(flightClass);
+    }
+}

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <title>Add Flight</title>
+  <title>Edit Flight</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> 
   <link rel="icon" type="image/png" th:href="@{/assets/fg.png}">  <!--this for show your LOGO on tab HA AAPLA TAKU-->
@@ -195,30 +195,30 @@
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
-		<li class="nav-item">
-		          <a class="nav-link text-white" th:href="@{/admin/dashboard}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">dashboard</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Dashboard</span>
-		          </a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/airline-management}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">table_view</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Airline Management</span>
-		          </a>
-		        </li>
-		<li class="nav-item">
-		          <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/flights/view}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">view_in_ar</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Flights Management</span>
-		          </a>
-		        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="dashboard.php">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">dashboard</i>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="airline-management.PHP">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Airline Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white active bg-gradient-primary" href="flights-available.php">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">view_in_ar</i>
+            </div>
+            <span class="nav-link-text ms-1">Flights Management</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="scheduled-flight-details.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -305,76 +305,93 @@
           <div class="col-lg-10 col-md-12 mx-auto">
             <div class="form-container">
               <div class="form-title">
-                <h4 class="mb-0"><i class="fa fa-plane me-2"></i>ADD A FLIGHT</h4>
+                <h4 class="mb-0"><i class="fa fa-edit me-2"></i>EDIT FLIGHT</h4>
                 <a th:href="@{/admin/flights/view}" class="btn btn-warning">
                   <i class="fa fa-list me-1"></i>VIEW FLIGHT(S)
                 </a>
               </div>
-              
-              <form th:action="@{/admin/flight/add}" method="post" class="mt-4">
+
+              <form th:action="@{/admin/flights/update}" method="post" class="mt-4">
+                <input type="hidden" name="id" th:value="${flight.id}" />
+
                 <div class="row">
                   <div class="col-md-6">
                     <!-- Select Airline -->
-					<div class="form-group">
-					  <label for="airlineId" class="form-label">Select Airline:</label>
-					  <select name="airlineId" id="airlineId" class="form-select" required>
-					    <option value="">-- Select Airline --</option>
-					    <option th:each="airline : ${airlines}" 
-					            th:value="${airline.id}" 
-					            th:text="${airline.aname}" 
-					            th:selected="${airline.id} == ${selectedAirlineId}">
-					    </option>
-					  </select>
-					</div>
+                    <div class="form-group">
+                      <label for="airlineId" class="form-label">Select Airline:</label>
+                      <select name="airlineId" id="airlineId" class="form-select" required>
+                        <option value="">-- Select Airline --</option>
+                        <option th:each="airline : ${airlines}"
+                                th:value="${airline.id}"
+                                th:text="${airline.aname}"
+                                th:selected="${airline.id} == ${selectedAirlineId}">
+                        </option>
+                      </select>
+                    </div>
                   </div>
-                  
+
                   <div class="col-md-6">
                     <!-- Flight Number -->
                     <div class="form-group">
                       <label for="fnumber" class="form-label">Flight Number:</label>
-                      <input type="text" name="fnumber" id="fnumber" class="form-control" placeholder="e.g. FL123" required />
+                      <input type="text" name="fnumber" id="fnumber" class="form-control"
+                             th:value="${flight.fnumber}" placeholder="e.g. FL123" required />
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-group mt-4">
                   <label class="form-label">Select Classes for this Flight:</label>
                   <div class="class-checkbox-group">
                     <div th:each="classType : ${classes}" class="class-checkbox">
                       <div class="d-flex align-items-center w-100">
-                        <input type="checkbox" 
-                               th:id="'class_' + ${classType.id}" 
-                               name="classIds" 
-                               th:value="${classType.id}" 
+                        <input type="checkbox"
+                               th:id="'class_' + ${classType.id}"
+                               name="classIds"
+                               th:value="${classType.id}"
+                               th:checked="${seatMap.containsKey(classType.id)}"
                                th:attr="onchange=|toggleSeatInput(${classType.id})|">
-                        <label th:for="'class_' + ${classType.id}" class="mb-0 ms-2" th:text="${classType.name}">Class Name</label>
-                        
-                        <!-- Seat Input (hidden initially) -->
+                        <label th:for="'class_' + ${classType.id}" class="mb-0 ms-2" th:text="${classType.name}"></label>
+
+                        <!-- Seat Input when class selected -->
                         <input type="number"
                                th:id="'seat_' + ${classType.id}"
                                th:name="'seat_' + ${classType.id}"
                                min="1"
                                class="form-control seat-input ms-auto"
                                placeholder="Seats"
+                               th:if="${seatMap.containsKey(classType.id)}"
+                               th:value="${seatMap[classType.id]}"
+                               style="display:block;" />
+
+                        <!-- Hidden seat input for unchecked classes -->
+                        <input type="number"
+                               th:id="'seat_' + ${classType.id}"
+                               th:name="'seat_' + ${classType.id}"
+                               min="1"
+                               class="form-control seat-input ms-auto"
+                               placeholder="Seats"
+                               th:unless="${seatMap.containsKey(classType.id)}"
                                style="display:none;" />
                       </div>
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="row mt-4">
                   <div class="col-md-6">
                     <!-- Total Seat -->
                     <div class="form-group">
                       <label for="totalSeat" class="form-label">Total Seats:</label>
-                      <input type="number" name="totalSeat" id="totalSeat" min="1" class="form-control" required />
+                      <input type="number" name="totalSeat" id="totalSeat"
+                             class="form-control" min="1" th:value="${flight.totalSeat}" required />
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="form-group mt-4 text-end">
                   <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-plus me-2"></i>Add Flight
+                    <i class="fa fa-save me-2"></i>Update Flight
                   </button>
                 </div>
               </form>

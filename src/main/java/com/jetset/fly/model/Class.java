@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "class")
-public class Class {
+public class Class  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,9 +13,11 @@ public class Class {
     @Column(nullable = false, unique = true)
     private String name; // Business, Economy, First Class
 
-    // Default Constructor
-    public Class() {
-    }
+    public Class() {}
+
+	public Class(Long id) {
+	    this.id = id;
+	}
 
     // Parameterized Constructor
     public Class(String name) {

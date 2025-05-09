@@ -28,6 +28,14 @@ public class Airline {
         this.createdAt = LocalDateTime.now();
         this.status = "ACTIVE";
     }	
+    
+    public Airline(Long id) {
+        this.id = id;
+    }
+    
+    public Airline() {
+        // required by JPA
+    }
 
 
     // Getters and Setters

@@ -1,12 +1,16 @@
 package com.jetset.fly.service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 
 import com.jetset.fly.model.AirFlight;
+import com.jetset.fly.model.Airline;
 import com.jetset.fly.model.Class;
 import com.jetset.fly.model.FlightClass;
 import com.jetset.fly.repository.*;
@@ -52,4 +56,38 @@ public class FlightService {
             }
         }
     }
+    public List<AirFlight> getAllActiveFlights() {
+        List<AirFlight> flights = airFlightRepository.findByStatus("ACTIVE");
+        for (AirFlight flight : flights) {
+            // Trigger lazy loading manually
+            flight.getFlightClasses().size();
+        }
+        return flights;
+    }
+
+
+    public List<Class> getAllClasses() {
+        return classRepository.findAll();
+    }
+
+    public int getSeatForClass(AirFlight flight, Class flightClass) {
+        return flight.getFlightClasses().stream()
+            .filter(fc -> fc.getFlightClass().getId().equals(flightClass.getId()))
+            .map(FlightClass::getSeat)
+            .findFirst()
+            .orElse(0);
+    }
+    
+    public boolean softDeleteFlight(Long flightId) {
+        Optional<AirFlight> optionalFlight = airFlightRepository.findById(flightId);
+        if (optionalFlight.isPresent()) {
+            AirFlight flight = optionalFlight.get();
+            flight.setStatus("DELETED");
+            airFlightRepository.save(flight);
+            return true;
+        }
+        return false;
+    }
+
+
 }
