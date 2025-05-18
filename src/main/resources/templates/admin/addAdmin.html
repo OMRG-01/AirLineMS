@@ -32,47 +32,94 @@
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-	  width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
+
     
     /* Improved Form Styles */
 	.profile-form-container {
@@ -238,6 +285,14 @@
             <span class="nav-link-text ms-1">Schedule Flight</span>
           </a>
         </li>
+		<li class="nav-item">
+					          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+					            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+					              <i class="material-icons opacity-10">connecting_airports</i>
+					            </div>
+					            <span class="nav-link-text ms-1">City Management</span>
+					          </a>
+					        </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="passenger-lists.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -325,7 +380,15 @@
             <div class="form-header">
               <h4><span class="material-icons-round opacity-8 me-2">person_add</span> Add New Administrator</h4>
             </div>
-            
+			<div th:if="${success}" class="alert alert-success alert-dismissible fade show px-4" role="alert">
+			              <span th:text="${success}"></span>
+			              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			            </div>
+						<div th:if="${error}" class="alert alert-danger alert-dismissible fade show px-4" role="alert">
+						              <span th:text="${error}"></span>
+						              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+
             <form method="post" th:action="@{/admin/saveAdmin}">
               <div class="row mb-4">
                 <div class="col-md-4">

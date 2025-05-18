@@ -35,6 +35,14 @@ public class AirFlightService {
         return airFlightRepository.findTopByStatusOrderByIdDesc(status);
     }
     
+    public List<Airline> getActiveAirlines() {
+        return airlineRepository.findByStatus("ACTIVE");
+    }
+
+    public List<AirFlight> getActiveFlightsByAirline(Long airlineId) {
+        return airFlightRepository.findByAirlineIdAndStatus(airlineId, "ACTIVE");
+    }
+    
     public List<AirFlight> getFlightsByAirline(Long airlineId) {
         return airFlightRepository.findByAirlineIdAndStatus(airlineId, "ACTIVE");
     }

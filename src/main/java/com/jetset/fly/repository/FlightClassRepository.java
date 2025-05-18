@@ -14,5 +14,8 @@ public interface FlightClassRepository extends JpaRepository<FlightClass, Long> 
     Optional<FlightClass> findByFlightAndFlightClass(AirFlight flight, Class flightClass);
 
     void deleteByFlightId(Long flightId);
+    
+        List<FlightClass> findByFlight_IdAndFlight_Status(Long flightId, String status);
+  
 
 }

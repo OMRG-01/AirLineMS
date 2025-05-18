@@ -25,41 +25,93 @@
       width: 165px;
       margin-right: 10px;
     }
-    .container2 {display : flex; justify-content: space-between;}
-    .nav-links
-    {
-      flex:1; 
-      text-align: left;
-      max-height: 20px;
-    }
-	.nav-links ul li {
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
+
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
+
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
+
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
+
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
+
+	    .nav-links ul li {
 	      list-style: none;
 	      display: inline-block;
 	      padding: 8px 12px;
-		  width: 170px;
+	      width: auto;
 	      position: relative;
 	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 	    }
-    .nav-links ul li a
-    {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
-    }
-    .nav-links ul li::after
-    {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
-    .nav-links ul li:hover::after
-    {
-      width: 100%;
-    }
+
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
+
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
     
     /* Improved Form Styling */
     .form-container {
@@ -126,13 +178,20 @@
       box-shadow: 0 5px 15px rgba(142, 33, 87, 0.4);
     }
     
-    .btn-warning {
-      background-color: #fb8c00;
-      border: none;
-      border-radius: 7px;
-      padding: 10px 20px;
-      font-weight: 500;
-    }
+	.btn-warning {
+	      background-color: #8E2157;
+		  color: white;
+	      border: none;
+	      border-radius: 7px;
+	      padding: 10px 20px;
+	      font-weight: 500;
+	    }
+		.btn-warning:hover {
+		      background-color: #751845;
+			  color: white;
+		      transform: translateY(-2px);
+		      box-shadow: 0 5px 15px rgba(142, 33, 87, 0.4);
+		    }
     
     .class-checkbox-group {
       background-color: #f8f9fa;
@@ -213,6 +272,14 @@
             <span class="nav-link-text ms-1">Schedule Flight</span>
           </a>
         </li>
+		<li class="nav-item">
+					          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+					            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+					              <i class="material-icons opacity-10">connecting_airports</i>
+					            </div>
+					            <span class="nav-link-text ms-1">City Management</span>
+					          </a>
+					        </li>
         <li class="nav-item">
           <a class="nav-link text-white " href="passenger-lists.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -262,28 +329,35 @@
 
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
-      <div class="container-fluid py-1 px-3">
-        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
-        <div class="container2">
-			<div class="nav-links">
-			             <ul>
-			                <li><a th:href="index.php"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT </a></li>
-			             </ul>
-			          </div>
-			          <div class="nav-links">
-			            <ul>
-			                <li><a href="create-new-tc.php"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a></li>
-			            </ul>
-			          </div>
-          <div class="nav-links">
-            <ul>
-              <li><a href="logout.php" style="color:chocolate;"><i class="fa fa-sign-out" style="font-size:18px"></i></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
+	<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+	      data-scroll="true">
+	      <div class="container-fluid py-1 px-3">
+	        <button id="sidenav-toggler" class="navbar-toggler" type="button">
+	          <i class="material-icons navbar-toggler-icon">menu</i>
+	        </button>
+	        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
+	        <div class="container2">
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD NEW FLIGHT
+	                </a></li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+	              </li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+	                    style="font-size:18px"></i><span class="ms-1 font-weight-bold">LOGOUT</span></a></li>
+	            </ul>
+	          </div>
+	        </div>
+	      </div>
+	    </nav>
 
     <div class="content-wrapper">
       <div class="container py-4">
@@ -296,7 +370,14 @@
                   <i class="fa fa-list me-1"></i>VIEW FLIGHT(S)
                 </a>
               </div>
-              
+			  <div th:if="${success}" class="alert alert-success" role="alert">
+			  				        <span th:text="${success}"></span>
+			  				    </div>
+
+			  				    <!-- Error Message -->
+			  				    <div th:if="${error}" class="alert alert-danger" role="alert">
+			  				        <span th:text="${error}"></span>
+			  				    </div>
               <form th:action="@{/admin/flight/add}" method="post" class="mt-4">
                 <div class="row">
                   <div class="col-md-6">
@@ -305,11 +386,11 @@
 					  <label for="airlineId" class="form-label">Select Airline:</label>
 					  <select name="airlineId" id="airlineId" class="form-select" required>
 					    <option value="">-- Select Airline --</option>
-					    <option th:each="airline : ${airlines}" 
-					            th:value="${airline.id}" 
-					            th:text="${airline.aname}" 
-					            th:selected="${airline.id} == ${selectedAirlineId}">
-					    </option>
+						<option th:each="airline : ${airlines}" 
+						        th:value="${airline.id}" 
+						        th:text="${airline.aname}" 
+						        th:attr="selected=${selectedAirlineId != null and airline.id == selectedAirlineId ? 'selected' : null}">
+						</option>
 					  </select>
 					</div>
                   </div>

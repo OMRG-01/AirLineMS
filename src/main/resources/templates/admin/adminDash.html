@@ -64,45 +64,264 @@
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
-      width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
+
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
+
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
+		.dashboard {
+		            display: flex;
+		            flex-wrap: wrap;
+		            justify-content: center;
+		            gap: 20px;
+		            max-width: 1200px;
+		            margin: 0 auto;
+					margin-bottom: 50px;
+		        }
+		.clock-container {
+		            background-color: #fff;
+		            border-radius: 10px;
+		            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		            padding: 15px;
+		            text-align: center;
+		            transition: all 0.3s ease;
+		        }
+		        
+		        .clock {
+		            position: relative;
+		            width: 200px;
+		            height: 200px;
+		            border-radius: 50%;
+		            background-color: #f8f8f8;
+		            border: 8px solid #333;
+		            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+		            margin: 0 auto;
+		        }
+		        
+		        .center-dot {
+		            position: absolute;
+		            width: 12px;
+		            height: 12px;
+		            background-color: #333;
+		            border-radius: 50%;
+		            top: 50%;
+		            left: 50%;
+		            transform: translate(-50%, -50%);
+		            z-index: 10;
+		        }
+		        
+		        .hour-marks {
+		            position: absolute;
+		            width: 100%;
+		            height: 100%;
+		            top: 0;
+		            left: 0;
+		        }
+		        
+		        .hour-marks span {
+		            position: absolute;
+		            width: 4px;
+		            height: 12px;
+		            background-color: #333;
+		            left: 50%;
+		            margin-left: -2px;
+		            transform-origin: 2px 94px;
+		        }
+		        
+		        .minute-marks span {
+		            position: absolute;
+		            width: 2px;
+		            height: 6px;
+		            background-color: #999;
+		            left: 50%;
+		            margin-left: -1px;
+		            transform-origin: 1px 94px;
+		        }
+		        
+		        .hour-hand, .minute-hand, .second-hand {
+		            position: absolute;
+		            background-color: #333;
+		            transform-origin: bottom center;
+		            bottom: 50%;
+		            left: 50%;
+		            border-radius: 10px 10px 0 0;
+		        }
+		        
+		        .hour-hand {
+		            width: 6px;
+		            height: 50px;
+		            margin-left: -3px;
+		        }
+		        
+		        .minute-hand {
+		            width: 4px;
+		            height: 70px;
+		            margin-left: -2px;
+		            background-color: #666;
+		        }
+		        
+		        .second-hand {
+		            width: 2px;
+		            height: 80px;
+		            margin-left: -1px;
+		            background-color: #f00;
+		        }
+		        
+		        .location {
+		            font-size: 18px;
+		            font-weight: bold;
+		            margin-top: 15px;
+		            color: #333;
+		        }
+		        
+		        .digital-time {
+		            font-size: 16px;
+		            color: #666;
+		            margin: 5px 0;
+		        }
+		        
+		        .controls {
+		            position: fixed;
+		            bottom: 20px;
+		            left: 50%;
+		            transform: translateX(-50%);
+		            background-color: #fff;
+		            padding: 15px;
+		            border-radius: 10px;
+		            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+		            display: flex;
+		            align-items: center;
+		            gap: 10px;
+		            z-index: 100;
+		        }
+		        
+		        .size-label {
+		            font-weight: bold;
+		            color: #333;
+		        }
+		        
+		        .size-slider {
+		            width: 200px;
+		        }
+		        
+		        /* For Thymeleaf specific styling if needed */
+		        [th\:text], [th\:with], [th\:if], [th\:unless], [th\:each] {
+		            display: block;
+		        }
+		        
+		        @media (max-width: 768px) {
+		            .dashboard {
+		                flex-direction: column;
+		                align-items: center;
+		            }
+		            
+		            .clock {
+		                width: 150px;
+		                height: 150px;
+		            }
+		            
+		            .hour-marks span {
+		                transform-origin: 2px 69px;
+		            }
+		            
+		            .minute-marks span {
+		                transform-origin: 1px 69px;
+		            }
+		            
+		            .hour-hand {
+		                height: 40px;
+		            }
+		            
+		            .minute-hand {
+		                height: 55px;
+		            }
+		            
+		            .second-hand {
+		                height: 65px;
+		            }
+		        }
   </style>
 </head>
 
@@ -129,14 +348,14 @@
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/airline-management}">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
-            </div>
-            <span class="nav-link-text ms-1">Airline Management</span>
-          </a>
-        </li>
+		<li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/airline-management}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">table_view</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Airline Management</span>
+		          </a>
+		        </li>
         <li class="nav-item">
           <a class="nav-link text-white " th:href="@{/admin/flights/view}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -229,8 +448,8 @@
           </div>
           <div class="nav-links">
             <ul>
-              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
-                    style="font-size:18px"></i><span class="ms-1 font-weight-bold " th:text="${admin.name}">Admin Name</span></a></li>
+				<li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+				style="font-size:18px"></i><span class="ms-1 font-weight-bold">LOGOUT</span></a></li>
             </ul>
           </div>
         </div>
@@ -293,7 +512,7 @@
                 </div>
                 <div class="text-end pt-1">
                   <p class="text-sm mb-0 text-capitalize">Total Bookings</p>
-                  <h4 class="mb-0"><?php echo $count;?></h4>
+                  <h4 class="mb-0"></h4>
                 </div>
               </div>
               <hr class="dark horizontal my-0">
@@ -325,6 +544,62 @@
         </div>
       </div>
       <br>
+	  <div class="dashboard" id="clockDashboard">
+		
+	         <div class="clock-container" th:with="timezone='Europe/London'" id="uk-clock">
+	             <div class="clock">
+	                 <div class="center-dot"></div>
+	                 <div class="hour-marks" id="hourMarksUK"></div>
+	                 <div class="minute-marks" id="minuteMarksUK"></div>
+	                 <div class="hour-hand" id="hourHandUK"></div>
+	                 <div class="minute-hand" id="minuteHandUK"></div>
+	                 <div class="second-hand" id="secondHandUK"></div>
+	             </div>
+	             <div class="location">London (UK)</div>
+	             <div class="digital-time" id="digitalTimeUK"></div>
+	         </div>
+	         
+	         <div class="clock-container" th:with="timezone='America/New_York'" id="usa-clock">
+	             <div class="clock">
+	                 <div class="center-dot"></div>
+	                 <div class="hour-marks" id="hourMarksUSA"></div>
+	                 <div class="minute-marks" id="minuteMarksUSA"></div>
+	                 <div class="hour-hand" id="hourHandUSA"></div>
+	                 <div class="minute-hand" id="minuteHandUSA"></div>
+	                 <div class="second-hand" id="secondHandUSA"></div>
+	             </div>
+	             <div class="location">New York (USA)</div>
+	             <div class="digital-time" id="digitalTimeUSA"></div>
+	         </div>
+	         
+	         <div class="clock-container" th:with="timezone='Asia/Kolkata'" id="india-clock">
+	             <div class="clock">
+	                 <div class="center-dot"></div>
+	                 <div class="hour-marks" id="hourMarksIndia"></div>
+	                 <div class="minute-marks" id="minuteMarksIndia"></div>
+	                 <div class="hour-hand" id="hourHandIndia"></div>
+	                 <div class="minute-hand" id="minuteHandIndia"></div>
+	                 <div class="second-hand" id="secondHandIndia"></div>
+	             </div>
+	             <div class="location">New Delhi (India)</div>
+	             <div class="digital-time" id="digitalTimeIndia"></div>
+	         </div>
+	         
+	         <div class="clock-container" th:with="timezone='Asia/Dubai'" id="dubai-clock">
+	             <div class="clock">
+	                 <div class="center-dot"></div>
+	                 <div class="hour-marks" id="hourMarksDubai"></div>
+	                 <div class="minute-marks" id="minuteMarksDubai"></div>
+	                 <div class="hour-hand" id="hourHandDubai"></div>
+	                 <div class="minute-hand" id="minuteHandDubai"></div>
+	                 <div class="second-hand" id="secondHandDubai"></div>
+	             </div>
+	             <div class="location">Dubai (UAE)</div>
+	             <div class="digital-time" id="digitalTimeDubai"></div>
+	         </div>
+	     </div>
+	     
+	    
       <div class="card card-danger">
         <div class="card-header">
             <h3 class="card-title">Flight Analytics</h3>
@@ -437,5 +712,119 @@
 		chart.render();
     });
 </script>
+<script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create clock marks for all clocks
+            const clocks = ['UK', 'USA', 'India', 'Dubai'];
+            
+            clocks.forEach(clock => {
+                createClockMarks(clock);
+            });
+            
+            // Initialize and start all clocks
+            updateAllClocks();
+            setInterval(updateAllClocks, 1000);
+            
+            // Initialize size slider
+            const sizeSlider = document.getElementById('sizeSlider');
+            sizeSlider.addEventListener('input', updateClockSize);
+        });
+        
+        function createClockMarks(clock) {
+            const hourMarks = document.getElementById('hourMarks' + clock);
+            const minuteMarks = document.getElementById('minuteMarks' + clock);
+            
+            // Create hour marks
+            for (let i = 0; i < 12; i++) {
+                const hourMark = document.createElement('span');
+                hourMark.style.transform = `rotate(${i * 30}deg)`;
+                hourMarks.appendChild(hourMark);
+            }
+            
+            // Create minute marks
+            for (let i = 0; i < 60; i++) {
+                if (i % 5 !== 0) {  // Skip positions where hour marks are
+                    const minuteMark = document.createElement('span');
+                    minuteMark.style.transform = `rotate(${i * 6}deg)`;
+                    minuteMarks.appendChild(minuteMark);
+                }
+            }
+        }
+        
+        function updateAllClocks() {
+            updateClock('UK', 'Europe/London');
+            updateClock('USA', 'America/New_York');
+            updateClock('India', 'Asia/Kolkata');
+            updateClock('Dubai', 'Asia/Dubai');
+        }
+        
+        function updateClock(clockId, timezone) {
+            const now = new Date();
+            
+            // Format the time based on the timezone
+            const options = {
+                timeZone: timezone,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            
+            const timeString = now.toLocaleTimeString('en-US', options);
+            document.getElementById('digitalTime' + clockId).textContent = timeString;
+            
+            // Calculate timezone offset
+            const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+            const tzDate = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+            const offset = (tzDate - utcDate) / 1000 / 60 / 60;
+            
+            // Get hours, minutes, seconds adjusted for timezone
+            const hours = (now.getUTCHours() + offset) % 24;
+            const minutes = now.getUTCMinutes();
+            const seconds = now.getUTCSeconds();
+            
+            // Calculate rotation angles
+            const hourRotation = (hours % 12) * 30 + minutes * 0.5;
+            const minuteRotation = minutes * 6;
+            const secondRotation = seconds * 6;
+            
+            // Set hand rotations
+            document.getElementById('hourHand' + clockId).style.transform = `translateX(-50%) rotate(${hourRotation}deg)`;
+            document.getElementById('minuteHand' + clockId).style.transform = `translateX(-50%) rotate(${minuteRotation}deg)`;
+            document.getElementById('secondHand' + clockId).style.transform = `translateX(-50%) rotate(${secondRotation}deg)`;
+        }
+        
+        function updateClockSize() {
+            const clockSize = document.getElementById('sizeSlider').value;
+            const clocks = document.querySelectorAll('.clock');
+            
+            clocks.forEach(clock => {
+                clock.style.width = clockSize + 'px';
+                clock.style.height = clockSize + 'px';
+                
+                // Adjust the transform origin for the hands and marks
+                const hourMarks = clock.querySelectorAll('.hour-marks span');
+                const minuteMarks = clock.querySelectorAll('.minute-marks span');
+                const halfSize = clockSize / 2 - 6; // Subtract border/padding
+                
+                hourMarks.forEach(mark => {
+                    mark.style.transformOrigin = `2px ${halfSize}px`;
+                });
+                
+                minuteMarks.forEach(mark => {
+                    mark.style.transformOrigin = `1px ${halfSize}px`;
+                });
+                
+                // Adjust hand sizes proportionally
+                const hourHand = clock.querySelector('.hour-hand');
+                const minuteHand = clock.querySelector('.minute-hand');
+                const secondHand = clock.querySelector('.second-hand');
+                
+                hourHand.style.height = (clockSize * 0.25) + 'px';
+                minuteHand.style.height = (clockSize * 0.35) + 'px';
+                secondHand.style.height = (clockSize * 0.4) + 'px';
+            });
+        }
+    </script>
 </body>
 </html>

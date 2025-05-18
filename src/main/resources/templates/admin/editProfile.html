@@ -2,127 +2,173 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>Dashboard</title>
+  <title>Profile</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="icon" type="image/png" th:href="@{/img/fg.png}">
 
   <link rel="stylesheet" type="text/css"
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" /> <!--FONT-->
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  <!-- Material Icons INCOME HE TE -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- CSS Files -->
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <link id="pagestyle" th:href="@{/assets/css/my.css?v=3.1.0}" rel="stylesheet" />
   <style>
-    .disl
-    {
-      display:flex;
+    .disl {
+      display: flex;
     }
+
     .aaa {
       height: 50px;
       width: 165px;
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-	  width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
-    
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
+
+
     /* Improved Form Styles */
     .profile-form-container {
-		      background-color: #fff;
-		      border-radius: 15px;
-		      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-		      padding: 30px;
-		      margin-bottom: 30px;
-		      width: 1200px;
-		      max-width: 90%;
-		      margin-left: auto;
-		      margin-right: auto;
-		    }
-    
-	.input-group-text {
-	      background-color: #f8f9fa;
-	      border-right: none;
-	      color: #8E2157;
-	      padding-right: 0px;
-	      display: flex;
-	      align-items: center;
-	      justify-content: center;
-	      width: 45px;
-	    }
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 30px;
+      width: 1200px;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .input-group-text {
+      background-color: #f8f9fa;
+      border-right: none;
+      color: #8E2157;
+      padding-right: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 45px;
+    }
+
     .form-header {
       border-bottom: 1px solid #eee;
       margin-bottom: 25px;
       padding-bottom: 15px;
     }
-    
+
     .form-header h4 {
       font-weight: 600;
       color: #344767;
       margin-bottom: 0;
     }
-    
+
     .input-group {
       position: relative;
       margin-bottom: 20px;
     }
-    
+
     .input-group i {
       position: absolute;
       left: 15px;
       top: 15px;
       color: #8E2157;
     }
-    
+
     .form-control {
       padding-left: 45px;
       border-radius: 8px;
@@ -130,66 +176,136 @@
       transition: all 0.3s ease;
       height: 45px;
     }
-    
+
     .form-control:focus {
       border-color: #8E2157;
       box-shadow: 0 0 0 0.25rem rgba(142, 33, 87, 0.15);
     }
-    
+
     .form-label {
       font-weight: 500;
       color: #344767;
       margin-bottom: 8px;
     }
-    
-    .password-section {
+
+    .readonly-field {
       background-color: #f8f9fa;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 20px;
-      margin-bottom: 25px;
+      cursor: not-allowed;
     }
-    
-    .password-section h5 {
-      color: #344767;
-      font-size: 16px;
-      margin-bottom: 15px;
-      font-weight: 600;
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
     }
-    
-    .btn-update {
-      background: linear-gradient(135deg, #8E2157, #5b1638);
-      border: none;
+
+    /* Button Styles */
+    .btn-update, .btn-change-pass {
       padding: 12px 30px;
       color: white;
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(142, 33, 87, 0.3);
       transition: all 0.3s ease;
       font-weight: 500;
+      border: none;
     }
-    
+
+    .btn-update {
+      background: linear-gradient(135deg, #8E2157, #5b1638);
+    }
+
+    .btn-change-pass {
+      background: linear-gradient(135deg, #344767, #1a2438);
+    }
+
+    .btn-update:hover, .btn-change-pass:hover {
+      transform: translateY(-2px);
+    }
+
     .btn-update:hover {
       background: linear-gradient(135deg, #5b1638, #8E2157);
-      transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(142, 33, 87, 0.4);
+	  color: white;
     }
-    
-    .readonly-field {
-      background-color: #f8f9fa;
-      cursor: not-allowed;
+
+    .btn-change-pass:hover {
+      background: linear-gradient(135deg, #1a2438, #344767);
+      box-shadow: 0 6px 15px rgba(26, 36, 56, 0.4);
+	  color: white;
     }
-    
-    .form-footer {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 30px;
+
+    /* Modal Styles */
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #8E2157, #5b1638);
+      color: white;
+      border-radius: 15px 15px 0 0;
+      border-bottom: none;
+      padding: 20px 30px;
+    }
+
+    .modal-title {
+      font-weight: 600;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .modal-footer {
+      border-top: none;
+      padding: 0 30px 30px 30px;
+    }
+
+    .btn-modal-confirm {
+      background: linear-gradient(135deg, #8E2157, #5b1638);
+      border: none;
+      padding: 10px 25px;
+      color: white;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-modal-confirm:hover {
+      background: linear-gradient(135deg, #5b1638, #8E2157);
+      transform: translateY(-2px);
+    }
+
+    .btn-modal-cancel {
+      background: #f8f9fa;
+      border: 1px solid #d2d6da;
+      padding: 10px 25px;
+      color: #344767;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-modal-cancel:hover {
+      background: #e9ecef;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-footer {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn-update, .btn-change-pass {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
-<body class="g-sidenav-show  bg-gray-200">
+<body class="g-sidenav-show bg-gray-200">
   <aside
-    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -200,10 +316,10 @@
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/dashboard}">
+          <a class="nav-link text-white" th:href="@{/admin/dashboard}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -211,7 +327,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/airline-management}">
+          <a class="nav-link text-white" th:href="@{/admin/airline-management}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -219,23 +335,32 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/flights/view}">
+          <a class="nav-link text-white" th:href="@{/admin/flights/view}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">view_in_ar</i>
             </div>
             <span class="nav-link-text ms-1">Flights Management</span>
           </a>
         </li>
+		
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/flights/view-schedules}">
+          <a class="nav-link text-white" th:href="@{/admin/flights/view-schedules}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
             <span class="nav-link-text ms-1">Schedule Flight</span>
           </a>
         </li>
+		<li class="nav-item">
+					          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+					            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+					              <i class="material-icons opacity-10">connecting_airports</i>
+					            </div>
+					            <span class="nav-link-text ms-1">City Management</span>
+					          </a>
+					        </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="passenger-lists.php">
+          <a class="nav-link text-white" href="passenger-lists.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
             </div>
@@ -243,7 +368,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="feedback.php">
+          <a class="nav-link text-white" href="feedback.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">notifications</i>
             </div>
@@ -262,7 +387,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/logout}">
+          <a class="nav-link text-white" th:href="@{/admin/logout}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">login</i>
             </div>
@@ -270,7 +395,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/add}">
+          <a class="nav-link text-white" th:href="@{/admin/add}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">assignment</i>
             </div>
@@ -280,7 +405,7 @@
       </ul>
     </div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
 
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -290,24 +415,25 @@
         <div class="container2">
           <div class="nav-links">
             <ul>
-              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT
+              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD
+                  NEW FLIGHT
                 </a></li>
             </ul>
           </div>
           <div class="nav-links">
             <ul>
-              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE
+                </a>
               </li>
             </ul>
           </div>
           <div class="nav-links">
             <ul>
-              <li><a href="logout.php" style="color:chocolate;"> <i class="fa fa-sign-out"
-                    style="font-size:18px"></i></a></li>
+              <li><a href="logout.php" style="color:chocolate;"> <i class="fa fa-sign-out" style="font-size:18px"></i></a>
+              </li>
             </ul>
           </div>
         </div>
-      </div>
       </div>
     </nav>
     <!-- End Navbar -->
@@ -319,29 +445,37 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="profile-form-container">
             <div class="form-header">
-              <h4><i class="fa fa-user-circle"></i> Update Profile Information</h4>
+              <h4><i class="fa fa-user-circle"></i> Profile Information</h4>
             </div>
-            
-            <form method="post" th:action="@{/admin/updateProfile}">
+			<div th:if="${success}" class="alert alert-success alert-dismissible fade show px-4" role="alert">
+			              <span th:text="${success}"></span>
+			              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			            </div>
+						<div th:if="${error}" class="alert alert-danger alert-dismissible fade show px-4" role="alert">
+						              <span th:text="${error}"></span>
+						              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+
+            <form id="profileForm">
               <input type="hidden" name="id" th:value="${admin.id}" />
-              
+
               <div class="mb-4">
                 <label class="form-label">Email Address</label>
                 <div class="input-group">
-                   <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                  <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                   <input type="email" class="form-control readonly-field" th:value="${admin.email}" readonly />
                 </div>
                 <small class="text-muted">Email cannot be changed</small>
               </div>
-              
+
               <div class="mb-4">
                 <label class="form-label">Full Name</label>
                 <div class="input-group">
-                   <span class="input-group-text"><i class="fa fa-user"></i></span>
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
                   <input type="text" class="form-control" name="name" th:value="${admin.name}" />
                 </div>
               </div>
-              
+
               <div class="mb-4">
                 <label class="form-label">Mobile Number</label>
                 <div class="input-group">
@@ -349,32 +483,12 @@
                   <input type="text" class="form-control" name="mobile" th:value="${admin.mobile}" />
                 </div>
               </div>
-              
-              <div class="password-section">
-                <h5><i class="fa fa-lock"></i> Change Password</h5>
-                <div class="mb-3">
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-key"></i></span>
-                    <input type="password" class="form-control" name="currentPassword" placeholder="Current Password" required />
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                    <input type="password" class="form-control" name="newPassword" placeholder="New Password" />
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
-                    <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm New Password" />
-                  </div>
-                  <small class="text-muted">Need To Enter Current Password For Editing</small>
-                </div>
-              </div>
-              
+
               <div class="form-footer">
-                <button type="submit" class="btn btn-update">
+                <button type="button" class="btn btn-change-pass" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                  <i class="fa fa-lock me-2"></i> Change Password
+                </button>
+                <button type="button" class="btn btn-update" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
                   <i class="fa fa-save me-2"></i> Update Profile
                 </button>
               </div>
@@ -382,8 +496,85 @@
           </div>
         </div>
       </div>
-      
-      <footer class="footer py-4  ">
+
+      <!-- Change Password Modal -->
+      <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="changePasswordModalLabel"><i class="fa fa-lock me-2"></i>Change Password</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" th:action="@{/admin/updatePassword}">
+              <div class="modal-body">
+                <input type="hidden" name="id" th:value="${admin.id}" />
+                
+                <div class="mb-3">
+                  <label class="form-label">Current Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                    <input type="password" class="form-control" name="currentPassword" placeholder="Enter your current password" required />
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">New Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    <input type="password" class="form-control" name="newPassword" placeholder="Enter new password" required />
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Confirm New Password</label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-check-circle"></i></span>
+                    <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm new password" required />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-modal-confirm">Change Password</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Profile Modal -->
+      <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateProfileModalLabel"><i class="fa fa-user-circle me-2"></i>Confirm Profile Update</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" th:action="@{/admin/updateProfile}">
+              <div class="modal-body">
+                <input type="hidden" name="id" th:value="${admin.id}" />
+                <input type="hidden" id="nameField" name="name" />
+                <input type="hidden" id="mobileField" name="mobile" />
+                
+                <p>Please enter your password to confirm profile updates:</p>
+                
+                <div class="mb-3">
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                    <input type="password" class="form-control" name="currentPassword" placeholder="Enter your password" required />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-modal-confirm">Update Profile</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer py-4">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
             <div class="col-lg-6 mb-lg-0 mb-4">
@@ -419,6 +610,23 @@
       </footer>
     </div>
   </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Transfer form data to update modal when it's opened
+      document.getElementById('updateProfileModal').addEventListener('show.bs.modal', function() {
+        var nameInput = document.querySelector('input[name="name"]');
+        var mobileInput = document.querySelector('input[name="mobile"]');
+        
+        document.getElementById('nameField').value = nameInput.value;
+        document.getElementById('mobileField').value = mobileInput.value;
+      });
+    });
+  </script>
 </body>
 
 </html>

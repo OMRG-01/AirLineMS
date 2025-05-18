@@ -48,10 +48,15 @@ public class AirlineController {
 
     @PostMapping("/add-airline")
     public String addAirline(@RequestParam("aname") String aname, Model model) {
-        airlineService.addAirline(aname);
-        model.addAttribute("success", "Airline added successfully!");
+        boolean added = airlineService.addAirline(aname);
+        if (!added) {
+            model.addAttribute("error", "Airline with the same name already exists!");
+        } else {
+            model.addAttribute("success", "Airline added successfully!");
+        }
         return "admin/addAirline";
     }
+
     
     @GetMapping("/airline-management")
     public String viewAirline(Model model) {
@@ -68,27 +73,36 @@ public class AirlineController {
     @GetMapping("/flights/add")
     public String showAddFlightForm(@RequestParam(value = "id", required = false) Long selectedAirlineId,
                                     Model model) {
-    	List<Airline> airlines = airlineService.getActiveAirlines();
-        model.addAttribute("airlines", airlineRepository.findByStatus("ACTIVE"));
+        List<Airline> airlines = airlineService.getActiveAirlines();
+        model.addAttribute("airlines", airlines);
         model.addAttribute("classes", classRepository.findByStatus("ACTIVE"));
+
+        // 👇 Add this line to pre-select in the dropdown
+        model.addAttribute("selectedAirlineId", selectedAirlineId);
+
         return "admin/addFlight";
     }
+
     
     
     @PostMapping("/flight/add")
     public String addFlight(
-    		@RequestParam Long airlineId,
-                            @RequestParam String fnumber,
-                            @RequestParam int totalSeat,
-                            @RequestParam(name = "classIds") List<Long> classIds,
-                            @RequestParam Map<String, String> allParams) {
-
-        // Send everything to the service layer
-        flightService.addFlightWithClasses(airlineId, fnumber, totalSeat, classIds, allParams);
-        
-        
-        return "redirect:/admin/flights/add?success"; // Redirect with success
+            @RequestParam Long airlineId,
+            @RequestParam String fnumber,
+            @RequestParam int totalSeat,
+            @RequestParam(name = "classIds", required = false) List<Long> classIds,
+            @RequestParam Map<String, String> allParams,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        try {
+            flightService.addFlightWithClasses(airlineId, fnumber, totalSeat, classIds, allParams);
+            redirectAttributes.addFlashAttribute("success", "Flight added successfully!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/flights/add";
     }
+
 
     @GetMapping("/flights/view")
     public String viewFlights(Model model) {

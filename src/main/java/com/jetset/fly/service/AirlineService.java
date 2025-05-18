@@ -14,10 +14,15 @@ public class AirlineService {
     @Autowired
     private AirlineRepository airlineRepo;
 
-    public void addAirline(String name) {
+    public boolean addAirline(String aname) {
+        if (airlineRepo.existsByAnameIgnoreCaseAndStatus(aname, "ACTIVE")) {
+            return false;
+        }
+
         Airline airline = new Airline();
-        airline.setAname(name);
+        airline.setAname(aname);
         airlineRepo.save(airline);
+        return true;
     }
     
     public List<Airline> getActiveAirlines() {

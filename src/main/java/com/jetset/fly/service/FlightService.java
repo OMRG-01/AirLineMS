@@ -35,33 +35,44 @@ public class FlightService {
     public void addFlightWithClasses(Long airlineId, String fnumber, int totalSeat,
                                      List<Long> classIds, Map<String, String> allParams) {
 
-        // 1. Save the flight
-    	 Airline airline = airlineRepository.findById(airlineId).orElseThrow(() -> new RuntimeException("Airline not found"));
+        // 🔐 Check for duplicate flight number
+        if (airFlightRepository.existsByFnumber(fnumber)) {
+            throw new RuntimeException("Flight number '" + fnumber + "' already exists.");
+        }
 
+        // ✅ 1. Get the Airline
+        Airline airline = airlineRepository.findById(airlineId)
+                .orElseThrow(() -> new RuntimeException("Airline not found"));
+
+        // ✅ 2. Create and Save Flight
         AirFlight flight = new AirFlight();
-        flight.setAirline(airlineRepository.findById(airlineId).orElseThrow());
+        flight.setAirline(airline);
         flight.setFnumber(fnumber);
         flight.setTotalSeat(totalSeat);
-        airFlightRepository.save(flight); // Save first to get flight ID
+        airFlightRepository.save(flight); // Save to get ID
 
-        // 2. For each class selected, create a FlightClass entry
+        // ✅ 3. Create FlightClass records
         for (Long classId : classIds) {
             String seatParamKey = "seat_" + classId;
             if (allParams.containsKey(seatParamKey)) {
-                int seat = Integer.parseInt(allParams.get(seatParamKey));
+                String seatValue = allParams.get(seatParamKey);
+                if (seatValue != null && !seatValue.trim().isEmpty()) {
+                    int seat = Integer.parseInt(seatValue);
 
-                FlightClass fc = new FlightClass();
-                fc.setFlight(flight);
-                fc.setFlightClass(classRepository.findById(classId).orElseThrow());
-                fc.setSeat(seat);
-                flightClassRepository.save(fc);
+                    FlightClass fc = new FlightClass();
+                    fc.setFlight(flight);
+                    fc.setFlightClass(classRepository.findById(classId).orElseThrow());
+                    fc.setSeat(seat);
+                    flightClassRepository.save(fc);
+                }
             }
         }
-        
+
+        // ✅ 4. Update airline's flight count
         airline.setNoOfFlight(airline.getNoOfFlight() + 1);
         airlineRepository.save(airline);
     }
-    
+
     
     public List<AirFlight> getAllActiveFlights() {
         List<AirFlight> flights = airFlightRepository.findByStatus("ACTIVE");

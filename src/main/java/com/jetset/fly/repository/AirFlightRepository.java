@@ -12,8 +12,11 @@ import com.jetset.fly.model.FlightClass;
 import com.jetset.fly.model.Class;
 
 public interface AirFlightRepository extends JpaRepository<AirFlight, Long> {
+	
     boolean existsByFnumber(String fnumber); // Optional: prevent duplicate flight numbers
     
+    boolean existsByAirlineIdAndFnumber(Long airlineId, String fnumber);
+
     List<AirFlight> findByStatus(String status);
     
     long countByStatus(String status);

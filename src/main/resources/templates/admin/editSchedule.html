@@ -309,154 +309,142 @@
       </div>
     </nav>
 
-    <form th:action="@{/admin/flights/schedule/save}" method='POST' onsubmit="return validateDateTime()">
-      <div class="container">
-        <br>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-header">
-                <h4>SCHEDULE A FLIGHT</h4>
-                <small class='form-text text-muted' style="font-size:15px;">
-                  (If Flight added already and you want to update then click on 
-                  <a th:href="@{'/admin/flights/edit/' + ${flight.id}}">update flight</a>)
-				  
-				 
-                </small>
-              </div>
-			  <div th:if="${error}" class="alert alert-danger" role="alert">
-			    <span th:text="${error}"></span>
-			  </div>
+	<!-- Change the form action for edit -->
+	<form th:action="@{/admin/flights/schedule/update}" method="POST" onsubmit="return validateDateTime()">
+	  <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+	  <input type="hidden" name="flightId" th:value="${flight.id}" />
 
-              <div class="card-body">
-                <input type="hidden" name="flightId" th:value="${flight.id}" />
+	  <div class="container">
+	    <div class="row">
+	      <div class="col-md-12">
+	        <div class="card">
+	          <div class="card-header">
+	            <h4>EDIT FLIGHT SCHEDULE</h4>
+	          </div>
+	          <div class="card-body">
 
-                <!-- Prefilled Flight Info -->
-                <div class="row mb-4">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Airline</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fa fa-plane"></i></span>
-                        <input type="text" class="form-control" th:value="${airline.aname}" readonly>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Flight Number</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
-                        <input type="text" class="form-control" th:value="${flight.fnumber}" readonly>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+	            <!-- Airline & Flight Number side by side -->
+	            <div class="row mb-4">
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Airline</label>
+	                  <div class="input-group">
+	                    <span class="input-group-text"><i class="fa fa-plane"></i></span>
+	                    <input type="text" class="form-control" th:value="${airline.aname}" readonly>
+	                  </div>
+	                </div>
+	              </div>
 
-                <!-- Class & Seat Info -->
-                <div class="mb-4">
-                  <label class="form-label">Flight Classes & Seats</label>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div th:each="cls : ${allClasses}" class="flight-class-info" th:if="${seatMap[cls.id]} != null">
-                        <div class="d-flex align-items-center">
-                          <i class="fa fa-seat-recline-normal me-2" style="font-size:18px"></i>
-                          <span th:text="${cls.name} + ' : ' + ${seatMap[cls.id]} + ' seats'" style="font-weight: 500;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Flight Number</label>
+	                  <div class="input-group">
+	                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+	                    <input type="text" class="form-control" th:value="${flight.fnumber}" readonly>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
 
-                <!-- Source & Destination Cities -->
-                <div class="row mb-4">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Source City</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
-                        <select id="sourceCity" name="sourceId" class="form-select" required onchange="filterDestinations()">
-                          <option value="">-- Select Source --</option>
-                          <option th:each="city : ${cities}" 
-                                  th:value="${city.id}" 
-                                  th:text="${city.cityname}">
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Destination City</label>
-                      <div class="input-group">
-                        <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
-                        <select id="destinationCity" name="destinationId" class="form-select" required onchange="filterSources()">
-                          <option value="">-- Select Destination --</option>
-                          <option th:each="city : ${cities}" 
-                                  th:value="${city.id}" 
-                                  th:text="${city.cityname}">
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+	            <!-- Source & Destination Cities side by side -->
+	            <div class="row mb-4">
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Source City</label>
+	                  <div class="input-group">
+	                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+	                    <select id="sourceCity" name="sourceId" class="form-select" required>
+	                      <option th:each="city : ${cities}" 
+	                              th:value="${city.id}" 
+	                              th:selected="${city.id == schedule.source.id}" 
+	                              th:text="${city.cityname}">
+	                      </option>
+	                    </select>
+	                  </div>
+	                </div>
+	              </div>
 
-                <!-- Date & Time -->
-                <div class="row mb-4">
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Departure Time</label>
-                      <div class="input-group datetime-container">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        <input type="datetime-local" class="form-control" id="departAt" name="departAt"  min="{{#temporarily use JS below}}"  required>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label class="form-label">Arrival Time</label>
-                      <div class="input-group datetime-container">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                        <input type="datetime-local" class="form-control" id="arriveAt" name="arriveAt"  min="{{#temporarily use JS below}}"  required>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Destination City</label>
+	                  <div class="input-group">
+	                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+	                    <select id="destinationCity" name="destinationId" class="form-select" required>
+	                      <option th:each="city : ${cities}" 
+	                              th:value="${city.id}" 
+	                              th:selected="${city.id == schedule.destination.id}" 
+	                              th:text="${city.cityname}">
+	                      </option>
+	                    </select>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
 
-                <!-- Class-wise Cost Input -->
-                <div class="mb-4">
-                  <label class="form-label">Class-wise Seat Cost</label>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div th:each="cls : ${allClasses}" th:if="${seatMap[cls.id]} != null" class="class-cost-card">
-                        <div class="form-group">
-                          <label th:for="${'rate_' + cls.id}" th:text="'Enter Seat Cost for ' + ${cls.name}"></label>
-                          <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-money"></i></span>
-                            <input type="number" step="0.01" min="0" class="form-control"
-                                  th:id="${'rate_' + cls.id}"
-                                  th:name="${'rate_' + cls.id}" required placeholder="Enter price">
-                            <input type="hidden" th:name="classIds" th:value="${cls.id}" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+	            <!-- Departure & Arrival Time side by side -->
+	            <div class="row mb-4">
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Departure Time</label>
+	                  <div class="input-group datetime-container">
+	                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+	                    <input type="datetime-local" id="departAt" name="departAt" class="form-control" 
+	                           th:value="${departAtFormatted}" required>
+	                  </div>
+	                </div>
+	              </div>
 
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <button type="button" class="btn btn-secondary me-2" th:onclick="'window.location.href=\'' + @{/admin/flights/view} + '\''">Cancel</button>
-                  <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-save me-2"></i>Save Schedule
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                  <label class="form-label">Arrival Time</label>
+	                  <div class="input-group datetime-container">
+	                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+	                    <input type="datetime-local" id="arriveAt" name="arriveAt" class="form-control" 
+	                           th:value="${arriveAtFormatted}" required>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+
+	            <!-- Class-wise Cost Inputs -->
+	            <div class="mb-4">
+	              <label class="form-label">Class-wise Seat Cost</label>
+	              <div class="row">
+	                <div class="col-md-12">
+	                  <div th:each="cls : ${allClasses}" th:if="${seatMap[cls.flightClass.id]} != null" class="class-cost-card mb-3">
+	                    <div class="form-group">
+	                      <label th:for="${'rate_' + cls.flightClass.id}">
+	                        <span th:text="'Seat Cost for ' + ${cls.flightClass.name} + ' (' + ${seatMap[cls.flightClass.id]} + ' seats)'"></span>
+	                      </label>
+	                      <div class="input-group">
+	                        <span class="input-group-text"><i class="fa fa-money"></i></span>
+	                        <input type="number" step="0.01" min="0" class="form-control"
+	                               th:id="${'rate_' + cls.flightClass.id}"
+	                               th:name="${'rate_' + cls.flightClass.id}"
+	                               th:value="${rateMap[cls.flightClass.id]}" required />
+	                        <input type="hidden" name="classIds" th:value="${cls.flightClass.id}" />
+	                      </div>
+	                    </div>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+
+	            <!-- Buttons -->
+	            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+	              <button type="button" class="btn btn-secondary me-2" th:onclick="'window.location.href=\'' + @{/admin/flights/view} + '\''">Cancel</button>
+	              <button type="submit" class="btn btn-primary">
+	                <i class="fa fa-save me-2"></i> Update Schedule
+	              </button>
+	            </div>
+
+	          </div> <!-- card-body -->
+	        </div> <!-- card -->
+	      </div> <!-- col-md-12 -->
+	    </div> <!-- row -->
+	  </div> <!-- container -->
+	</form>
+
     
     <footer class="footer py-4">
       <div class="container-fluid">

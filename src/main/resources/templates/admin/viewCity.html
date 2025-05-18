@@ -33,47 +33,94 @@
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-	  width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
+
 	.sticky-navbar {
 	  position: sticky;
 	  top: 0;
@@ -270,14 +317,14 @@
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="">
         <img th:src="@{/img/PH.jpg}" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
-		<span class="ms-1 font-weight-bold text-white" >Admin Name</span>
+		<span class="ms-1 font-weight-bold text-white" ></span>
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/dashboard}">
+          <a class="nav-link text-white " th:href="@{/admin/dashboard}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -309,7 +356,7 @@
           </a>
         </li>
 		<li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+		          <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/cities/view}">
 		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 		              <i class="material-icons opacity-10">connecting_airports</i>
 		            </div>
@@ -385,7 +432,7 @@
           <div class="nav-links">
             <ul>
               <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
-                    style="font-size:18px"></i><span class="ms-1 font-weight-bold " >Admin Name</span></a></li>
+                    style="font-size:18px"></i><span class="ms-1 font-weight-bold " >LOGOUT</span></a></li>
 				
             </ul>
           </div>
@@ -405,7 +452,18 @@
 	        <h2>City Management</h2>
 	        <p class="subtitle">Manage all available cities in the system</p>
 	      </div>
-	      
+		  <div class="add-section">
+		          <h3>Add New City</h3>
+		          <form th:action="@{/admin/cities/add}" method="post" class="add-form">
+		            <div class="form-input-container">
+		              <input type="text" name="cityname" id="cityname" placeholder=" " required>
+		              <label for="cityname">City Name</label>
+		            </div>
+		            <button type="submit" class="add-btn">
+		              <i class="fa fa-plus-circle"></i> Add City
+		            </button>
+		          </form>
+		        </div>
 	      <!-- City List Table -->
 	      <div class="table-container">
 	        <table class="data-table">
@@ -429,18 +487,7 @@
 	      </div>
 	      
 	      <!-- Add City Form -->
-	      <div class="add-section">
-	        <h3>Add New City</h3>
-	        <form th:action="@{/admin/cities/add}" method="post" class="add-form">
-	          <div class="form-input-container">
-	            <input type="text" name="cityname" id="cityname" placeholder=" " required>
-	            <label for="cityname">City Name</label>
-	          </div>
-	          <button type="submit" class="add-btn">
-	            <i class="fa fa-plus-circle"></i> Add City
-	          </button>
-	        </form>
-	      </div>
+	     
 	    </div>
 	    
 	    <!-- Right Side: Class Management -->
@@ -449,7 +496,18 @@
 	        <h2>Class Management</h2>
 	        <p class="subtitle">Manage all available flight classes</p>
 	      </div>
-	      
+		  <div class="add-section">
+		  	        <h3>Add New Class</h3>
+		  	        <form th:action="@{/admin/cities/class/add}" method="post" class="add-form">
+		  	          <div class="form-input-container">
+		  	            <input type="text" name="classname" id="classname" placeholder=" " required>
+		  	            <label for="classname">Class Name</label>
+		  	          </div>
+		  	          <button type="submit" class="add-btn">
+		  	            <i class="fa fa-plus-circle"></i> Add Class
+		  	          </button>
+		  	        </form>
+		  	      </div>
 	      <!-- Class List Table -->
 	      <div class="table-container">
 			<table class="data-table">
@@ -473,18 +531,7 @@
 	      </div>
 	      
 	      <!-- Add Class Form -->
-	      <div class="add-section">
-	        <h3>Add New Class</h3>
-	        <form th:action="@{/admin/cities/class/add}" method="post" class="add-form">
-	          <div class="form-input-container">
-	            <input type="text" name="classname" id="classname" placeholder="Enter New Class Name" required>
-	            <label for="classname">Class Name</label>
-	          </div>
-	          <button type="submit" class="add-btn">
-	            <i class="fa fa-plus-circle"></i> Add Class
-	          </button>
-	        </form>
-	      </div>
+	      
 	    </div>
 	  </div>
 	</div>

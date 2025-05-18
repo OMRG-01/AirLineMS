@@ -2,6 +2,9 @@ package com.jetset.fly.service;
 
 import com.jetset.fly.model.City;
 import com.jetset.fly.repository.CityRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +49,10 @@ public class CityService {
             city.setStatus("DELETED");
             cityRepository.save(city);
         }
+    }
+    
+    public City findById(Long id) {
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("City not found with id: " + id));
     }
 }

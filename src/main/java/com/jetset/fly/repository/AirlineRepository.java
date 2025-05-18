@@ -11,5 +11,7 @@ public interface AirlineRepository extends JpaRepository<Airline, Long> {
 	
 	long countByStatus(String status);
 	Airline findTopByStatusOrderByIdDesc(String status);
+	
+	  boolean existsByAnameIgnoreCaseAndStatus(String aname, String status);
 
 }

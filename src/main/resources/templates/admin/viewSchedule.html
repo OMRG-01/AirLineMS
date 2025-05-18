@@ -15,6 +15,15 @@
   <link id="pagestyle" th:href="@{/assetsp/css/my.css?v=3.1.0}" rel="stylesheet" />
   
   <style>
+	.count-badge {
+	      background-color: #8E2157;
+	      color: white;
+	      border-radius: 100%;
+	      padding: 5px 10px;
+	      font-size: 0.8rem;
+	      font-weight: 600;
+	    }
+	    
     /* Preserved original styles */
     .aaa {
       height: 50px;
@@ -22,45 +31,93 @@
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
-      width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
+
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
+
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
 
     /* New improved table styles */
     .flight-schedule-card {
@@ -167,15 +224,202 @@
       font-size: 0.75rem;
     }
     
-    .chart-container {
-      margin-top: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      background: white;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    	/* Chart Container Styling */
+	.chart-container {
+	  margin: 2rem auto;
+	  width: 100%;
+	  max-width: 800px;
+	  background: white;
+	  border-radius: 12px;
+	  padding: 2rem;
+	  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+	  transition: all 0.3s ease;
+	  display: none; /* Hidden by default */
+	}
+
+	/* Add fade-in animation when chart appears */
+	.chart-container.show {
+	  animation: fadeIn 0.5s ease;
+	}
+
+	@keyframes fadeIn {
+	  from { opacity: 0; transform: translateY(-20px); }
+	  to { opacity: 1; transform: translateY(0); }
+	}
+
+	/* Chart dimensions to ensure proper aspect ratio */
+	#bookingChart {
+	  height: 400px !important;
+	  width: 100% !important;
+	  margin: 0 auto;
+	}
+
+	/* Chart title and labels styling */
+	.chart-title {
+	  font-size: 1.25rem;
+	  font-weight: 600;
+	  color: #333;
+	  text-align: center;
+	  margin-bottom: 1.5rem;
+	  padding-bottom: 0.75rem;
+	  border-bottom: 1px solid #eaeaea;
+	}
+
+	/* Legend styling */
+	.chart-legend {
+	  display: flex;
+	  justify-content: center;
+	  flex-wrap: wrap;
+	  margin-top: 1rem;
+	  padding: 0.5rem;
+	}
+
+	.chart-legend-item {
+	  display: flex;
+	  align-items: center;
+	  margin: 0.5rem 1rem;
+	}
+
+	.chart-legend-color {
+	  width: 12px;
+	  height: 12px;
+	  border-radius: 3px;
+	  margin-right: 0.5rem;
+	}
+
+	/* Tab options for different chart types */
+	.chart-tabs {
+	  display: flex;
+	  justify-content: center;
+	  margin-bottom: 1rem;
+	  border-bottom: 1px solid #eaeaea;
+	}
+
+	.chart-tab {
+	  padding: 0.75rem 1.5rem;
+	  cursor: pointer;
+	  border: none;
+	  background: transparent;
+	  font-weight: 500;
+	  color: #777;
+	  transition: all 0.2s ease;
+	}
+
+	.chart-tab.active {
+	  color: #007bff;
+	  border-bottom: 2px solid #007bff;
+	}
+
+	.chart-tab:hover:not(.active) {
+	  color: #0056b3;
+	}
+
+	/* Make chart responsive on different screens */
+	@media (max-width: 992px) {
+	  .chart-container {
+	    padding: 1.5rem;
+	  }
+	  
+	  #bookingChart {
+	    height: 350px !important;
+	  }
+	}
+
+	@media (max-width: 768px) {
+	  .chart-container {
+	    padding: 1rem;
+	  }
+	  
+	  #bookingChart {
+	    height: 300px !important;
+	  }
+	  
+	  .chart-title {
+	    font-size: 1.1rem;
+	  }
+	}
+
+	@media (max-width: 576px) {
+	  .chart-container {
+	    padding: 0.75rem;
+	  }
+	  
+	  #bookingChart {
+	    height: 250px !important;
+	  }
+	  
+	  .chart-tabs {
+	    flex-wrap: wrap;
+	  }
+	  
+	  .chart-tab {
+	    padding: 0.5rem 1rem;
+	    font-size: 0.9rem;
+	  }
+	}
+
+    /* Stats button styles */
+    .stats-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .stats-button:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats-button i {
+      margin-right: 5px;
+    }
+    
+    /* Table row hover effects */
+    .flight-table tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      z-index: 1;
+      position: relative;
+    }
+    
+    /* Sticky footer styles */
+    html, body {
+      height: 100%;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .main-content {
+      flex: 1 0 auto;
+    }
+    
+    footer {
+      flex-shrink: 0;
+    }
+    
+    /* Advanced table styling */
+    .flight-table th {
+      position: sticky;
+      top: 0;
+      background-color: #f8f9fa;
+      box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .flight-table .action-cell {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
     }
     
     @media (max-width: 992px) {
@@ -217,6 +461,161 @@
         padding: 0.4rem 0.8rem;
       }
     }
+	.btn-demo {
+	      background-color: #8E2157;
+	      border-color: #8E2157;
+	      color: white;
+	      border-radius: 20px;
+	      padding: 8px 20px;
+	      transition: all 0.3s ease;
+	    }
+	    
+	    .btn-demo:hover {
+	      background-color: #7a1c4a;
+	      border-color: #7a1c4a;
+	      transform: translateY(-2px);
+	      box-shadow: 0 5px 15px rgba(142, 33, 87, 0.3);
+		  color: white;
+	    }
+		.filter-container {
+		      background-color: #f9f9f9;
+		      border-radius: 8px;
+		      padding: 15px;
+		      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+		      margin-bottom: 20px;
+		    }
+		    
+		    .filter-container .form-control,
+		    .filter-container .form-select {
+		      border-radius: 4px;
+		      height: 38px;
+		      border-color: #d9d9d9;
+		    }
+		    
+		    .filter-container .input-group-text {
+		      background-color: #f1f1f1;
+		      border-color: #d9d9d9;
+		    }
+		    
+		    .filter-container label,
+		    .filter-container small {
+		      color: #666;
+		      font-size: 0.8rem;
+		      margin-top: 3px;
+		      display: block;
+		    }
+		    
+		    /* Table Styling */
+		    .flight-table {
+		      border-collapse: separate;
+		      border-spacing: 0;
+		      width: 100%;
+		      border: 1px solid #dee2e6;
+		      border-radius: 4px;
+		      overflow: hidden;
+		    }
+		    
+		    .flight-table th {
+		      background-color: #f2f2f2;
+		      font-weight: 600;
+		      text-transform: uppercase;
+		      font-size: 0.85rem;
+		      padding: 12px 8px;
+		      vertical-align: middle;
+		    }
+		    
+		    .flight-table td {
+		      padding: 12px 8px;
+		      vertical-align: middle;
+		    }
+		    
+		    /* Action Buttons */
+		    .action-cell {
+		      min-width: 120px;
+		    }
+		    
+		    .action-cell .btn {
+		      margin-right: 5px;
+		      padding: 4px 8px;
+		      font-size: 0.8rem;
+		    }
+		    
+		    /* Filter Summary */
+		    #filterSummary {
+		      font-size: 0.85rem;
+		      padding: 6px 12px;
+		    }
+		    
+		    #resultCount {
+		      font-size: 0.85rem;
+		      padding: 6px 12px;
+		    }
+		    
+		    /* Reset Button */
+		    #resetFilters {
+		      height: 38px;
+		      display: flex;
+		      align-items: center;
+		      justify-content: center;
+		      gap: 5px;
+		    }
+		    
+		    /* Flight Schedule Card */
+		    .flight-schedule-card {
+		      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+		      border-radius: 8px;
+		      overflow: hidden;
+		      border: none;
+		    }
+		    
+		    .flight-schedule-card .card-header {
+		      background-color: #fff;
+		      border-bottom: 1px solid #eee;
+		      padding: 20px;
+		    }
+		    
+		    .flight-schedule-card .card-body {
+		      padding: 20px;
+		    }
+		    
+		    .card-title {
+		      color: #333;
+		      font-weight: 600;
+		    }
+		    
+		    #statsButton {
+		      padding: 6px 12px;
+		      font-size: 0.85rem;
+		    }
+		    
+		    /* No Results Message */
+		    #noResultsMessage {
+		      padding: 15px;
+		      border-radius: 4px;
+		      font-size: 1rem;
+		    }
+		    
+		    /* Make form elements more consistent in height */
+		    .form-control, .form-select, .btn-demo {
+		      height: 38px;
+		    }
+		    
+		    /* Improve spacing between filter elements */
+		    .filter-container .row > div {
+		      display: flex;
+		      flex-direction: column;
+		    }
+		    
+		    /* Custom styling for main buttons */
+		    
+		    
+		    /* Responsive adjustments */
+		    @media (max-width: 768px) {
+		      .filter-container .col-md-2,
+		      .filter-container .col-md-3 {
+		        margin-bottom: 10px;
+		      }
+		    }
   </style>
 </head>
 
@@ -268,8 +667,16 @@
               <span class="nav-link-text ms-1">Schedule Flight</span>
             </a>
           </li>
+		  <li class="nav-item">
+		  			          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+		  			            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		  			              <i class="material-icons opacity-10">connecting_airports</i>
+		  			            </div>
+		  			            <span class="nav-link-text ms-1">City Management</span>
+		  			          </a>
+		  			        </li>
           <li class="nav-item">
-            <a class="nav-link text-white " href="passenger-lists.php">
+            <a class="nav-link text-white " th:href="@{/admin/passenger-lists}">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
               </div>
@@ -277,7 +684,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white " href="feedback.php">
+            <a class="nav-link text-white " th:href="@{/admin/feedback}">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">notifications</i>
               </div>
@@ -287,62 +694,65 @@
           <li class="nav-item mt-3">
             <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
           </li>
-		  <li class="nav-item">
-		            <a class="nav-link text-white " th:href="@{/admin/editProfile}">
-		              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		                <i class="material-icons opacity-10">person</i>
-		              </div>
-		              <span class="nav-link-text ms-1">Profile</span>
-		            </a>
-		          </li>
-		          <li class="nav-item">
-		            <a class="nav-link text-white " th:href="@{/admin/logout}">
-		              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		                <i class="material-icons opacity-10">login</i>
-		              </div>
-		              <span class="nav-link-text ms-1">Logout</span>
-		            </a>
-		          </li>
-		          <li class="nav-item">
-		            <a class="nav-link text-white " th:href="@{/admin/add}">
-		              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		                <i class="material-icons opacity-10">assignment</i>
-		              </div>
-		              <span class="nav-link-text ms-1">Add New Member</span>
-		            </a>
-		          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/editProfile}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">person</i>
+              </div>
+              <span class="nav-link-text ms-1">Profile</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/logout}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">login</i>
+              </div>
+              <span class="nav-link-text ms-1">Logout</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/add}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">assignment</i>
+              </div>
+              <span class="nav-link-text ms-1">Add New Member</span>
+            </a>
+          </li>
         </ul>
       </div>
     </aside>
   
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
     <!-- Navbar section preserved exactly as original -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
-      data-scroll="true">
-      <div class="container-fluid py-1 px-3">
-        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
-        <div class="container2">
-          <div class="nav-links">
-            <ul>
-              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT
-                </a></li>
-            </ul>
-          </div>
-          <div class="nav-links">
-            <ul>
-              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
-              </li>
-            </ul>
-          </div>
-          <div class="nav-links">
-            <ul>
-              <li><a href="logout.php" style="color:chocolate;"> <i class="fa fa-sign-out"
-                    style="font-size:18px"></i></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
+	<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+	      data-scroll="true">
+	      <div class="container-fluid py-1 px-3">
+	        <button id="sidenav-toggler" class="navbar-toggler" type="button">
+	          <i class="material-icons navbar-toggler-icon">menu</i>
+	        </button>
+	        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
+	        <div class="container2">
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD NEW FLIGHT
+	                </a></li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+	              </li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+	                    style="font-size:18px"></i><span class="ms-1 font-weight-bold">LOGOUT</span></a></li>
+	            </ul>
+	          </div>
+	        </div>
+	      </div>
+	    </nav>
     <!-- End Navbar -->
 
     <!-- Improved Main Content -->
@@ -351,95 +761,164 @@
         <div class="col-12">
           <div class="flight-schedule-card card">
             <div class="card-header d-flex justify-content-between align-items-center">
-              <h4 class="card-title mb-0">
-                <h1>
-                  Scheduled Flight Details
-                </h1>
-              </h4>
+              <div>
+                <h1 class="card-title mb-0">Scheduled Flight Details</h1>
+                <button class="btn-demo mt-2" id="statsButton">
+                  <i class="fa fa-bar-chart"></i> See Stats
+                </button>
+              </div>
+			  <div>
+			  <a th:href="@{/admin/flights/bulk-schedule}">
+			                  <button class="btn btn-demo float-end">
+			                    <b><i class="fa fa-plane" style="font-size:20px"></i> SCHEDULE BULK FLIGHT</b>
+			                  </button>
+			                </a>
               <a th:href="@{/admin/flights/schedule/manual}">
-                <button class="btn btn-warning float-end">
-                  <b><i class="fa fa-plane" style="font-size:20px"></i> SCHEDULE NEW FLIGHT</b>
+                <button style="margin-right: 20px;"  class="btn btn-demo float-end">
+                  <b><i class="fa fa-plane" style="font-size:20px"></i> SCHEDULE SINGLE FLIGHT</b>
                 </button>
               </a>
+			  </div>
             </div>
             
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show px-4" role="alert">
+              <span th:text="${success}"></span>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+			<div th:if="${error}" class="alert alert-error alert-dismissible fade show px-4" role="alert">
+			              <span th:text="${error}"></span>
+			              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+
             <div class="card-body">
-              <!-- Improved Search Form - maintaining original functionality -->
-              <form method="GET">
-                <div class="row">
-                  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                    <input type="text" name="search" class="form-control"
-                           placeholder="you can search here" />
+              <!-- Improved Search Form with Dynamic Filters -->
+              <div class="mb-4 filter-container">
+                <div class="d-flex gap-3 flex-wrap mb-3">
+                  <!-- Flight Number Search -->
+                  <div class="col-md-3">
+                    <label for="flightSearch">Flight Number</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fa fa-search"></i></span>
+                      <input type="text" id="flightSearch" class="form-control"
+                             placeholder="Enter flight number" />
+                    </div>
                   </div>
-                  <div class="col-xl-5 col-sm-6 mb-xl-0 mb-4">
-                    <button type="submit" class="btn btn-primary">
-                      Search &nbsp;<i class="fa fa-search" style="font-size:15px"></i>
+                  
+                  <!-- Status/Action Filter -->
+                  <div class="col-md-3">
+                    <label for="actionFilter">Flight Status</label>
+                    <select id="actionFilter" class="form-select">
+                      <option value="">All Statuses</option>
+                      <option value="edit">Can Edit</option>
+                      <option value="in-flight">In Flight</option>
+                      <option value="arrived">Arrived</option>
+                    </select>
+                  </div>
+
+                  <!-- Departure Date Filter -->
+                  <div class="col-md-2">
+                    <label for="departDateFilter">Departure Date</label>
+                    <input type="date" id="departDateFilter" class="form-control" />
+                  </div>
+
+                  <!-- Arrival Date Filter -->
+                  <div class="col-md-2">
+                    <label for="arriveDateFilter">Arrival Date</label>
+                    <input type="date" id="arriveDateFilter" class="form-control" />
+                  </div>
+
+                  <!-- Reset Button -->
+                  <div class="col-md-2">
+                    <button id="resetFilters" class="btn btn-demo w-100">
+                      <i class="fa fa-refresh"></i> Reset Filters
                     </button>
-                    <small class='form-text text-muted'>
-                      (You can search flight details using flight no)
-                    </small>
                   </div>
                 </div>
-              </form>
+                
+                <div class="row mt-3">
+                  <div class="col-12 d-flex align-items-center">
+                    <span id="filterSummary" class="badge bg-info d-none">Active filters: <span id="activatedFilters"></span></span>
+                    <span id="resultCount" class="badge bg-secondary ms-2">Showing all flights</span>
+                  </div>
+                </div>
+              </div>
 
-              <br>
+              <!-- Statistical Chart - Hidden by default -->
+              <div class="chart-container" id="chartSection" style="display: none;">
+                <div class="row">
+                  <div class="col-md-8 mx-auto">
+                    <h5 class="text-center mb-3">Flight Booking Statistics</h5>
+                    <canvas id="bookingChart"></canvas>
+                  </div>
+                </div>
+              </div>
 
-              <!-- Responsive Table -->
+              <!-- Responsive Table with Improved Styling -->
               <div class="table-responsive">
                 <table class="flight-table table table-bordered table-striped table-hover">
                   <thead>
                     <tr align="center">
-                      <th>#</th>
+                      <th>Sr.No.</th>
                       <th>AIRLINE NAME</th>
                       <th>FLIGHT NO</th>
-                      <th>SRC</th>
-                      <th>DEST</th>
-                      <th>DDT</th> <!-- Depart DateTime -->
-                      <th>ADT</th> <!-- Arrive DateTime -->
+                      <th>SOURCE</th>
+                      <th>DESTINATION</th>
+                      <th>DEPARTURE</th>
+                      <th>ARRIVAL</th>
                       <!-- Dynamic Class Headers -->
                       <th th:each="col : ${columns}" th:text="${col.name}">Class</th>
-                      <th>Make Change</th>
+                      <th>ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="row : ${schedules}" align="center">
-                      <td th:text="${row.srNo}"></td>
+                    <tr th:each="row : ${schedules}" align="center" class="flight-row">
+                      <td  >
+						<span class="count-badge" th:text="${row.srNo}">0</span>
+					  </td>
                       <td th:text="${row.airlineName}"></td>
-                      <td th:text="${row.flightNumber}"></td>
+                      <td class="flight-number" th:text="${row.flightNumber}"></td>
                       <td th:text="${row.source}"></td>
                       <td th:text="${row.destination}"></td>
-                      <td th:text="${#temporals.format(row.departAt, 'yyyy-MM-dd HH:mm')}"></td>
-                      <td th:text="${#temporals.format(row.arriveAt, 'yyyy-MM-dd HH:mm')}"></td>
+                      <td class="depart-date" th:text="${#temporals.format(row.departAt, 'yyyy-MM-dd HH:mm')}" 
+                          th:attr="data-date=${#temporals.format(row.departAt, 'yyyy-MM-dd')}"></td>
+                      <td class="arrive-date" th:text="${#temporals.format(row.arriveAt, 'yyyy-MM-dd HH:mm')}"
+                          th:attr="data-date=${#temporals.format(row.arriveAt, 'yyyy-MM-dd')}"></td>
                       <!-- Dynamic Class Rates -->
                       <td th:each="col : ${columns}"
                           th:text="${row.classCosts[col.id] != null ? row.classCosts[col.id] : '-'}"></td>
                       
                       <!-- Improved Actions Column -->
-                      <td>
+                      <td class="action-cell text-center">
                         <!-- Always visible -->
-                        <a th:href="@{/admin/passenger/passengerByFlight(scheduleId=${row.scheduleId})}">
-                          <button class="btn btn-sm btn-info mb-1">View</button>
+                        <a th:href="@{/admin/passenger/passengerByFlight(scheduleId=${row.scheduleId})}" class="btn btn-sm btn-info mb-1">
+                          <i class="fa fa-users"></i> View
                         </a>
 
                         <!-- Status-based buttons -->
                         <span th:with="now=${T(java.time.LocalDateTime).now()}">
                           <!-- Before departure: Show Edit + Remove -->
-                          <span th:if="${now.isBefore(row.departAt)}">
-                            <a th:href="@{/admin/edit-schedule(scheduleId=${row.scheduleId})}">
-                              <button class="btn btn-sm btn-primary mb-1">Edit</button>
-                            </a>
+                          <span th:if="${now.isBefore(row.departAt)}" class="action-status" data-status="edit">
+							<a th:href="@{'/admin/flights/edit-schedule/' + ${row.scheduleId}}" class="btn btn-sm btn-primary mb-1">
+							  <i class="fa fa-edit"></i> Edit
+							</a>
                             <button class="btn btn-sm btn-danger mb-1" 
-                                    th:onclick="'removeSchedule(' + ${row.scheduleId} + ')'">Remove</button>
+                                    th:onclick="'removeSchedule(' + ${row.scheduleId} + ')'">
+                              <i class="fa fa-trash"></i> Remove
+                            </button>
                           </span>
 
                           <!-- During flight: Show Running -->
-                          <span th:if="${now.isAfter(row.departAt)} and ${now.isBefore(row.arriveAt)}">
-                            <button class="btn btn-sm btn-warning mb-1">Running</button>
+                          <span th:if="${now.isAfter(row.departAt)} and ${now.isBefore(row.arriveAt)}" class="action-status" data-status="in-flight">
+                            <button class="btn btn-sm btn-warning mb-1">
+                              <i class="fa fa-plane"></i> In Flight
+                            </button>
                           </span>
 
                           <!-- After arrival: Show Arrived -->
-                          <span th:if="${now.isAfter(row.arriveAt)}">
-                            <button class="btn btn-sm btn-success mb-1">Arrived</button>
+                          <span th:if="${now.isAfter(row.arriveAt)}" class="action-status" data-status="arrived">
+                            <button class="btn btn-sm btn-success mb-1">
+                              <i class="fa fa-check-circle"></i> Arrived
+                            </button>
                           </span>
                         </span>
                       </td>
@@ -447,11 +926,10 @@
                   </tbody>
                 </table>
               </div>
-
-              <!-- Only Booking Statistics Chart, using real data -->
-              <div class="chart-container">
-                <h5 class="text-center mb-3">Booking Statistics</h5>
-                <canvas id="bookingChart"></canvas>
+              
+              <!-- No Results Message -->
+              <div id="noResultsMessage" class="alert alert-info text-center d-none my-4">
+                <i class="fa fa-info-circle fa-lg me-2"></i> No flights match your current filters. Try adjusting your search criteria.
               </div>
             </div> <!-- card-body -->
           </div> <!-- card -->
@@ -459,47 +937,52 @@
       </div>
     </div>
 
-    <!-- Footer - preserved exactly as original -->
-    <div class="container-fluid py-4">
-      <footer class="footer py-4  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                ©
-                <script>
-                  document.write(new Date().getFullYear())
-                </script>,
-                Copyright All rights reserved. Team :
-                <a href="" class="font-weight-bold" target="_blank">GMADS <i class="fa fa-heart"></i></a>
-                for a better web.
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-facebook-f"></i></a>
-                </li>
-                <li class="nav-item">
-                  <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-twitter"></i></a>
-                </li>
-                <li class="nav-item">
-                  <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-instagram"></i></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="nav-link text-muted"
-                    target="_blank"><i class="fa fa-youtube-play"></i></a>
-                </li>
-              </ul>
+    <!-- Footer - preserved exactly as original but made sticky -->
+    <footer class="footer py-4">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              ©
+              <script>
+                document.write(new Date().getFullYear())
+              </script>,
+              Copyright All rights reserved. Team :
+              <a href="" class="font-weight-bold" target="_blank">GMADS <i class="fa fa-heart"></i></a>
+              for a better web.
             </div>
           </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-facebook-f"></i></a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-twitter"></i></a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-instagram"></i></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="nav-link text-muted"
+                  target="_blank"><i class="fa fa-youtube-play"></i></a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </footer>
   </main>
 
-  <!-- JavaScript for functionality and real-data chart -->
+  <!-- Required Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- JavaScript for functionality and charts -->
   <script>
+    // Function to handle schedule removal
     function removeSchedule(id) {
       if (confirm("Are you sure you want to delete this schedule?")) {
         fetch('/admin/flights/delete-schedule/' + id, {
@@ -516,9 +999,140 @@
       }
     }
     
-    // Using real data from schedules for the booking chart
     document.addEventListener('DOMContentLoaded', function() {
-      // Get data from the table to populate the chart
+      // Elements for various features
+      const statsButton = document.getElementById('statsButton');
+      const chartSection = document.getElementById('chartSection');
+      const flightSearch = document.getElementById('flightSearch');
+      const actionFilter = document.getElementById('actionFilter');
+      const departDateFilter = document.getElementById('departDateFilter');
+      const arriveDateFilter = document.getElementById('arriveDateFilter');
+      const resetFiltersBtn = document.getElementById('resetFilters');
+      const tableRows = document.querySelectorAll('.flight-table tbody tr');
+      const noResultsMessage = document.getElementById('noResultsMessage');
+      const filterSummary = document.getElementById('filterSummary');
+      const activatedFilters = document.getElementById('activatedFilters');
+      const resultCount = document.getElementById('resultCount');
+      
+      // Toggle chart visibility
+      if (statsButton && chartSection) {
+        statsButton.addEventListener('click', function() {
+          if (chartSection.style.display === 'none' || chartSection.style.display === '') {
+            chartSection.style.display = 'block';
+            statsButton.innerHTML = '<i class="fa fa-times"></i> Hide Stats';
+          } else {
+            chartSection.style.display = 'none';
+            statsButton.innerHTML = '<i class="fa fa-bar-chart"></i> See Stats';
+          }
+        });
+      }
+      
+      // Function to apply all filters
+      function applyFilters() {
+        const searchTerm = flightSearch.value.toLowerCase();
+        const actionValue = actionFilter.value;
+        const departDate = departDateFilter.value;
+        const arriveDate = arriveDateFilter.value;
+        
+        // Update active filters display
+        let activeFiltersText = [];
+        if (searchTerm) activeFiltersText.push(`Flight: "${searchTerm}"`);
+        if (actionValue) activeFiltersText.push(`Status: ${actionFilter.options[actionFilter.selectedIndex].text}`);
+        if (departDate) activeFiltersText.push(`Depart: ${departDate}`);
+        if (arriveDate) activeFiltersText.push(`Arrive: ${arriveDate}`);
+        
+        if (activeFiltersText.length > 0) {
+          activatedFilters.textContent = activeFiltersText.join(' | ');
+          filterSummary.classList.remove('d-none');
+        } else {
+          filterSummary.classList.add('d-none');
+        }
+        
+        // Counter for visible rows
+        let visibleCount = 0;
+        
+        // Apply filters to each row
+        tableRows.forEach(row => {
+          const flightNumberCell = row.querySelector('.flight-number');
+          const departDateCell = row.querySelector('.depart-date');
+          const arriveDateCell = row.querySelector('.arrive-date');
+          const actionStatusElement = row.querySelector('.action-status');
+          
+          // Default to visible
+          let isVisible = true;
+          
+          // Flight number filter
+          if (searchTerm && flightNumberCell) {
+            isVisible = isVisible && flightNumberCell.textContent.toLowerCase().includes(searchTerm);
+          }
+          
+          // Action/status filter
+          if (actionValue && actionStatusElement) {
+            isVisible = isVisible && actionStatusElement.getAttribute('data-status') === actionValue;
+          }
+          
+          // Departure date filter
+          if (departDate && departDateCell) {
+            const rowDepartDate = departDateCell.getAttribute('data-date');
+            isVisible = isVisible && rowDepartDate === departDate;
+          }
+          
+          // Arrival date filter
+          if (arriveDate && arriveDateCell) {
+            const rowArriveDate = arriveDateCell.getAttribute('data-date');
+            isVisible = isVisible && rowArriveDate === arriveDate;
+          }
+          
+          // Apply visibility
+          if (isVisible) {
+            row.style.display = '';
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        
+        // Update result count
+        resultCount.textContent = `Showing ${visibleCount} of ${tableRows.length} flights`;
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+          noResultsMessage.classList.remove('d-none');
+        } else {
+          noResultsMessage.classList.add('d-none');
+        }
+      }
+      
+      // Add event listeners for all filters
+      flightSearch.addEventListener('input', applyFilters);
+      actionFilter.addEventListener('change', applyFilters);
+      departDateFilter.addEventListener('change', applyFilters);
+      arriveDateFilter.addEventListener('change', applyFilters);
+      
+      // Reset all filters
+      resetFiltersBtn.addEventListener('click', function() {
+        flightSearch.value = '';
+        actionFilter.value = '';
+        departDateFilter.value = '';
+        arriveDateFilter.value = '';
+        
+        // Reset all rows to visible
+        tableRows.forEach(row => {
+          row.style.display = '';
+        });
+        
+        // Hide filter summary and update result count
+        filterSummary.classList.add('d-none');
+        resultCount.textContent = `Showing all flights`;
+        noResultsMessage.classList.add('d-none');
+      });
+      
+      // Initialize booking chart
+      initializeBookingChart();
+    });
+    
+    // Initialize chart with data from the table
+    function initializeBookingChart() {
       const scheduleTable = document.querySelector('.flight-table');
       if(!scheduleTable) return;
       
@@ -558,7 +1172,8 @@
       
       // Create the chart with real data
       if(document.getElementById('bookingChart')) {
-        var bookingChart = new Chart(document.getElementById('bookingChart'), {
+        var ctx = document.getElementById('bookingChart').getContext('2d');
+        var bookingChart = new Chart(ctx, {
           type: 'bar',
           data: {
             labels: classNames,
@@ -572,10 +1187,17 @@
           },
           options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
               title: {
                 display: true,
-                text: 'Flights Available by Class'
+                text: 'Flights Available by Class',
+                font: {
+                  size: 16
+                }
+              },
+              legend: {
+                position: 'top'
               }
             },
             scales: {
@@ -596,7 +1218,7 @@
           }
         });
       }
-    });
+    }
   </script>
 </body>
 </html>

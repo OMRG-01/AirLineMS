@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -19,49 +18,121 @@
   <link id="pagestyle" th:href="@{/assetsp/css/my.css?v=3.1.0}" rel="stylesheet" />
   
   <style>
-    .contain1 {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 10px;
-      margin: 0;
-      position: absolute;
-      left: 50%;
-      bottom: 2px;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
+    /* Global responsive layout */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
+    main {
+      flex: 1;
+      transition: margin-left 0.3s;
+    }
+
+    /* Logo styling */
     .aaa {
       height: 50px;
       width: 165px;
       margin-right: 10px;
     }
 
+    /* Responsive sidebar */
+    .sidenav {
+      transition: all 0.3s;
+      z-index: 1050;
+    }
+
+    @media (max-width: 992px) {
+      .sidenav {
+        transform: translateX(-100%);
+        margin-left: 0 !important;
+      }
+      
+      .sidenav.show {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+    }
+
+    /* Hamburger menu for mobile */
+    .navbar-toggler {
+      display: none;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+    }
+    
+    @media (max-width: 992px) {
+      .navbar-toggler {
+        display: block;
+      }
+    }
+    
+    .navbar-toggler-icon {
+      width: 30px;
+      height: 30px;
+      position: relative;
+      color: #8E2157;
+    }
+
+    /* Top navbar responsive adjustments */
     .container2 {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .container2 {
+        flex-direction: column;
+      }
+      
+      .nav-links {
+        margin-bottom: 10px;
+        width: 100%;
+      }
     }
 
     .nav-links {
       flex: 1;
       text-align: left;
-      max-height: 20px;
+      max-height: none;
+    }
+
+    .nav-links ul {
+      padding-left: 0;
+      margin-bottom: 0;
     }
 
     .nav-links ul li {
       list-style: none;
       display: inline-block;
       padding: 8px 12px;
-	  width: 170px;
+      width: auto;
       position: relative;
       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    @media (max-width: 576px) {
+      .nav-links ul li {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
     }
 
     .nav-links ul li a {
       color: black;
       text-decoration: none;
       font-size: 15px;
-
+      white-space: nowrap;
     }
 
     .nav-links ul li::after {
@@ -77,28 +148,171 @@
     .nav-links ul li:hover::after {
       width: 100%;
     }
-  </style>
 
+    /* View Airlines button styling */
+    .view-airlines-btn {
+      background-color: #fff;
+      color: #8E2157;
+      border: 2px solid #8E2157;
+      border-radius: 20px;
+      padding: 8px 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .view-airlines-btn:hover {
+      background-color: #8E2157;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    .view-airlines-btn i {
+      margin-right: 8px;
+    }
+
+    /* Improved form styling */
+    .airline-form {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .airline-form {
+        padding: 20px;
+        margin: 0 10px;
+      }
+    }
+
+    .airline-form .form-group {
+      margin-bottom: 25px;
+    }
+
+    .airline-form label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .airline-form input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .airline-form input[type="text"]:focus {
+      border-color: #8E2157;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(142, 33, 87, 0.1);
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 576px) {
+      .form-buttons {
+        flex-direction: column;
+      }
+      
+      .form-buttons .btn {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    .form-buttons .btn {
+      padding: 10px 30px;
+      font-weight: 600;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .form-buttons .btn-primary {
+      background-color: #8E2157;
+      border-color: #8E2157;
+    }
+
+    .form-buttons .btn-primary:hover {
+      background-color: #721a46;
+      border-color: #721a46;
+    }
+
+    .form-buttons .btn-danger:hover {
+      background-color: #bb2d3b;
+    }
+
+    .card-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0;
+    }
+    
+    /* Responsive card adjustments */
+    @media (max-width: 576px) {
+      .card-header h6 {
+        font-size: 16px;
+      }
+      
+      .card-body {
+        padding: 15px;
+      }
+    }
+    
+    /* Footer styling */
+    .footer {
+      margin-top: auto;
+      background-color: #f8f9fa;
+      width: 100%;
+      padding: 20px 0;
+    }
+    
+    @media (max-width: 768px) {
+      .footer .copyright {
+        text-align: center !important;
+        margin-bottom: 15px;
+      }
+      
+      .footer .nav-footer {
+        justify-content: center !important;
+      }
+    }
+  </style>
 </head>
 
-
-<body class="g-sidenav-show  bg-gray-200">
+<body class="g-sidenav-show bg-gray-200">
+  <!-- Side Navigation - Unchanged as requested -->
   <aside
-    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="">
         <img th:src="@{/img/PH.jpg}" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
-        <span class="ms-1 font-weight-bold text-white">GANESH MALI</span>
+        <span class="ms-1 font-weight-bold text-white"></span>
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
-    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/admin/dashboard}">
+          <a class="nav-link text-white" th:href="@{/admin/dashboard}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
@@ -113,24 +327,32 @@
             <span class="nav-link-text ms-1">Airline Management</span>
           </a>
         </li>
-		<li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/flights/view}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">view_in_ar</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Flights Management</span>
-		          </a>
-		        </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="scheduled-flight-details.php">
+          <a class="nav-link text-white" th:href="@{/admin/flights/view}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">view_in_ar</i>
+            </div>
+            <span class="nav-link-text ms-1">Flights Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="scheduled-flight-details.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
             <span class="nav-link-text ms-1">Schedule Flight</span>
           </a>
         </li>
+		<li class="nav-item">
+					          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+					            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+					              <i class="material-icons opacity-10">connecting_airports</i>
+					            </div>
+					            <span class="nav-link-text ms-1">City Management</span>
+					          </a>
+					        </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="passenger-lists.php">
+          <a class="nav-link text-white" href="passenger-lists.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
             </div>
@@ -138,7 +360,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="feedback.php">
+          <a class="nav-link text-white" href="feedback.php">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">notifications</i>
             </div>
@@ -148,112 +370,111 @@
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
         </li>
-		<li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/editProfile}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">person</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Profile</span>
-		          </a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/logout}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">login</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Logout</span>
-		          </a>
-		        </li>
-		        <li class="nav-item">
-		          <a class="nav-link text-white " th:href="@{/admin/add}">
-		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-		              <i class="material-icons opacity-10">assignment</i>
-		            </div>
-		            <span class="nav-link-text ms-1">Add New Member</span>
-		          </a>
-		        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/editProfile}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">person</i>
+            </div>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/logout}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">login</i>
+            </div>
+            <span class="nav-link-text ms-1">Logout</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/add}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">assignment</i>
+            </div>
+            <span class="nav-link-text ms-1">Add New Member</span>
+          </a>
+        </li>
       </ul>
     </div>
   </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-	<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
-	      data-scroll="true">
-	      <div class="container-fluid py-1 px-3">
-	        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
-	        <div class="container2">
-	          <div class="nav-links">
-	            <ul>
-	              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i></i> ADD NEW FLIGHT
-	                </a></li>
-	            </ul>
-	          </div>
-	          <div class="nav-links">
-	            <ul>
-	              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
-	              </li>
-	            </ul>
-	          </div>
-	          <div class="nav-links">
-	            <ul>
-	              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
-	                    style="font-size:18px"></i><span class="ms-1 font-weight-bold " >Logout</span></a></li>
-					
-	            </ul>
-	          </div>
-	        </div>
-	      </div>
-	      </div>
-	    </nav>
-    <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      <div class="container-fluid py-4">
-        
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12 mt-4">
-                <div class="card">
-                  <div class="card-header">
-                    <h4 class="card-title">
-                      <h1>Add New Airline
-                        <a th:href="@{/admin/airline-management}"><button class="btn btn-warning float-end"><b> <i class="fa fa-plane" style="font-size:20px"></i> &nbsp;VIEW AIRLINE(S)</b></button></a>
-                      </h1>
-                    </h4>
-                  </div>
-                  <div class="card-body">
-                  <form class="heading" th:action="@{/admin/add-airline}" method='POST'>
-                    <table class="table">
-                      <tbody>
-                        <tr>
-                          <td><b>Enter Airline Name </b></td>
-                          <td><b>:</b></td>
-                          <td><input type="text" size="50" class="box" name="aname" required></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <div class="contain1">
-                    <div class="form-btn">
-                      <input type="submit" class="btn btn-primary" value="Submit" name="submit">
-                      <input type="reset" class="btn btn-danger" value="Reset">
-                    </div>
-                  </div>
-                </div>
-        </form>
+  
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <!-- Navbar with mobile menu toggle button -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+      data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <button id="sidenav-toggler" class="navbar-toggler" type="button">
+          <i class="material-icons navbar-toggler-icon">menu</i>
+        </button>
+        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
+        <div class="container2">
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD NEW FLIGHT
+                </a></li>
+            </ul>
+          </div>
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+              </li>
+            </ul>
+          </div>
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+                    style="font-size:18px"></i><span class="ms-1 font-weight-bold">LOGOUT</span></a></li>
+            </ul>
+          </div>
+        </div>
       </div>
+    </nav>
+    <!-- End Navbar -->
 
+    <!-- Improved Main Content Area -->
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <div class="d-flex justify-content-between align-items-center px-4">
+                <h6 class="text-white text-capitalize mb-0">Add New Airline</h6>
+                <a th:href="@{/admin/airline-management}" class="view-airlines-btn">
+                  <i class="fa fa-plane"></i>View Airlines
+                </a>
+              </div>
+            </div>
+            <div class="card-body px-4 pb-5">
+				<div th:if="${success}" class="alert alert-success" role="alert">
+				        <span th:text="${success}"></span>
+				    </div>
+
+				    <!-- Error Message -->
+				    <div th:if="${error}" class="alert alert-danger" role="alert">
+				        <span th:text="${error}"></span>
+				    </div>
+              <form class="airline-form" th:action="@{/admin/add-airline}" method="POST">
+                <div class="form-group">
+                  <label for="airlineName">Airline Name</label>
+                  <input type="text" class="form-control" id="airlineName" name="aname" placeholder="Enter airline name" required>
+                </div>
+                <div class="form-buttons">
+                  <button type="submit" class="btn btn-primary" name="submit">
+                    <i class="fa fa-check me-2"></i>Submit
+                  </button>
+                  <button type="reset" class="btn btn-danger">
+                    <i class="fa fa-refresh me-2"></i>Reset
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <footer class="footer py-4  ">
+
+    <!-- Fixed Footer -->
+    <footer class="footer py-4">
       <div class="container-fluid">
         <div class="row align-items-center justify-content-lg-between">
           <div class="col-lg-6 mb-lg-0 mb-4">
@@ -287,8 +508,11 @@
         </div>
       </div>
     </footer>
-    </div>
   </main>
-</body>
 
+  <!-- Core JS Files for Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+    crossorigin="anonymous"></script>
+</body>
 </html>

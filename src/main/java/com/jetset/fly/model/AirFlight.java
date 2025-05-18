@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "air_flight")
+@Table(name = "air_flight",uniqueConstraints = @UniqueConstraint(columnNames = {"airline_id", "fnumber"}))
 public class AirFlight {
 
     @Id
