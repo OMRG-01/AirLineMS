@@ -898,7 +898,8 @@
                         <span th:with="now=${T(java.time.LocalDateTime).now()}">
                           <!-- Before departure: Show Edit + Remove -->
                           <span th:if="${now.isBefore(row.departAt)}" class="action-status" data-status="edit">
-							<a th:href="@{'/admin/flights/edit-schedule/' + ${row.scheduleId}}" class="btn btn-sm btn-primary mb-1">
+							<a th:href="@{'/admin/flights/edit-schedule/' + ${row.encodedScheduleId}}"
+							   class="btn btn-sm btn-primary mb-1">
 							  <i class="fa fa-edit"></i> Edit
 							</a>
                             <button class="btn btn-sm btn-danger mb-1" 

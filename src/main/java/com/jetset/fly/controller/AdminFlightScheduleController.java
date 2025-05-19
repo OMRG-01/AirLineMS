@@ -5,6 +5,8 @@ import com.jetset.fly.model.*;
 import com.jetset.fly.model.Class;
 import com.jetset.fly.repository.*;
 import com.jetset.fly.service.*;
+import com.jetset.fly.utility.IdUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -42,8 +44,13 @@ public class AdminFlightScheduleController {
     private CityService cityService;
 
     
-    @GetMapping("/schedule/{flightId}")
-    public String showAddSchedulePage(@PathVariable Long flightId, Model model) {
+    @GetMapping("/schedule/{encodedId}")
+    public String showAddSchedulePage(@PathVariable String encodedId, Model model) {
+        // 🔓 Decode the Base64-encoded ID
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedId);
+        Long flightId = Long.parseLong(new String(decodedBytes));
+
+        // ✅ Proceed as before
         AirFlight flight = airFlightService.findById(flightId);
         List<City> cities = cityService.getAllActiveCities();
         List<FlightClass> flightClasses = flightClassService.getByFlightId(flightId);
@@ -63,6 +70,7 @@ public class AdminFlightScheduleController {
 
         return "admin/addSchedule";
     }
+
     
     @Autowired
     private FlightScheduleService flightScheduleService;
@@ -86,9 +94,10 @@ public class AdminFlightScheduleController {
                 flightId, departAt, arriveAt);
 
         if (!overlappingSchedules.isEmpty()) {
-            // ❌ Add error message & redirect back to same schedule page
-            redirectAttributes.addFlashAttribute("error", "Flight " + flight.getFnumber() + " is already scheduled in this time range on " + departAt.toLocalDate());
-            return "redirect:/admin/flights/schedule/" + flightId;
+            String encodedId = Base64.getEncoder().encodeToString(flightId.toString().getBytes());
+            redirectAttributes.addFlashAttribute("error",
+                "Flight " + flight.getFnumber() + " is already scheduled in this time range on " + departAt.toLocalDate());
+            return "redirect:/admin/flights/schedule/" + encodedId;
         }
 
         // ✅ Save Schedule
@@ -208,6 +217,7 @@ public class AdminFlightScheduleController {
             row.put("departAt", schedule.getDepartAt());
             row.put("arriveAt", schedule.getArriveAt());
             row.put("scheduleId", schedule.getId());
+            row.put("encodedScheduleId", IdUtil.encodeId(schedule.getId()));
 
 
             // Class cost map
@@ -284,8 +294,9 @@ public class AdminFlightScheduleController {
         return "redirect:/admin/flights/view-schedules";
     }
 
-    @GetMapping("/edit-schedule/{scheduleId}")
-    public String editSchedule(@PathVariable Long scheduleId, Model model) {
+    @GetMapping("/edit-schedule/{encodedId}")
+    public String editSchedule(@PathVariable("encodedId") String encodedId, Model model) {
+        Long scheduleId = IdUtil.decodeId(encodedId); // 👈 Decode the ID first
         FlightSchedule schedule = flightScheduleService.findById(scheduleId);
         AirFlight flight = schedule.getFlight();
         Airline airline = airlineService.findById(schedule.getAirlineId());
@@ -318,56 +329,106 @@ public class AdminFlightScheduleController {
         model.addAttribute("rateMap", rateMap);
         model.addAttribute("departAtFormatted", departAtFormatted);
         model.addAttribute("arriveAtFormatted", arriveAtFormatted);
+       model.addAttribute("encodedScheduleId", IdUtil.encodeId(schedule.getId()));
 
         return "admin/editSchedule";
     }
+//    @GetMapping("/edit-schedule/{encodedId}")
+//    public String showEditSchedule(@PathVariable("encodedId") String encodedId, Model model) {
+//        Long scheduleId = IdUtil.decodeId(encodedId);
+//
+//        FlightSchedule schedule = flightScheduleService.findById(scheduleId);
+//        List<FlightScheduleRate> rates = flightScheduleRateService.findByScheduleId(scheduleId);
+//        List<City> cities = cityService.getAllActiveCities();
+//        List<FlightClass> classSeats = flightClassService.findByFlightId(schedule.getFlight().getId());
+//
+//        // Map classId -> rate for easier access in view
+//        Map<Long, Double> rateMap = new HashMap<>();
+//        for (FlightScheduleRate rate : rates) {
+//            rateMap.put(rate.getFlightClass().getId(), rate.getRate());
+//        }
+//
+//        model.addAttribute("schedule", schedule);
+//        model.addAttribute("encodedScheduleId", encodedId);
+//        model.addAttribute("rates", rates);
+//        model.addAttribute("rateMap", rateMap); // ✅ add this
+//        model.addAttribute("cities", cities);
+//        model.addAttribute("classSeats", classSeats);
+//
+//        return "admin/editSchedule";
+//    }
 
 
     @PostMapping("/schedule/update")
     public String updateSchedule(
-            @RequestParam("scheduleId") Long scheduleId,
-            @RequestParam("flightId") Long flightId,
-            @RequestParam("sourceId") Long sourceCityId,
-            @RequestParam("destinationId") Long destinationCityId,
+    		 @RequestParam("scheduleId") String encodedScheduleId,
+            @RequestParam("sourceId") Long sourceId,
+            @RequestParam("destinationId") Long destinationId,
             @RequestParam("departAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime departAt,
             @RequestParam("arriveAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arriveAt,
-            @RequestParam Map<String, String> allRequestParams, // for dynamic cost inputs like rate_1, rate_2 etc.
+            @RequestParam Map<String, String> params,
             RedirectAttributes redirectAttributes) {
+    	
+    	Long scheduleId = IdUtil.decodeId(encodedScheduleId);
+    	
+        FlightSchedule schedule = flightScheduleService.findById(scheduleId);
+        schedule.setSource(new City(sourceId));
+        schedule.setDestination(new City(destinationId));
+        schedule.setDepartAt(departAt);
+        schedule.setArriveAt(arriveAt);
 
-        try {
-            FlightSchedule schedule = flightScheduleService.findById(scheduleId);
-            if (schedule == null) {
-                redirectAttributes.addFlashAttribute("error", "Schedule not found");
-                return "redirect:/admin/flights/schedule/edit/" + scheduleId;
+        // Update the schedule
+        flightScheduleService.save(schedule);
+
+        // Update rates
+        flightScheduleRateService.deleteByScheduleId(scheduleId); // or update individually if preferred
+        for (String key : params.keySet()) {
+            if (key.startsWith("rate_")) {
+                Long classId = Long.parseLong(key.replace("rate_", ""));
+                Double rate = Double.parseDouble(params.get(key));
+
+                FlightScheduleRate fsr = new FlightScheduleRate();
+                fsr.setSchedule(schedule);
+                fsr.setFlight(schedule.getFlight());
+                fsr.setFlightClass(new Class(classId));
+                fsr.setRate(rate);
+
+                flightScheduleRateService.save(fsr);
             }
-
-            // Update schedule fields
-            schedule.setFlight(flightService.findById(flightId));
-            schedule.setSource(cityService.findById(sourceCityId));
-            schedule.setDestination(cityService.findById(destinationCityId));
-            schedule.setDepartAt(departAt);
-            schedule.setArriveAt(arriveAt);
-
-            flightScheduleService.save(schedule);
-
-            // Update class-wise costs (rates)
-            for (String key : allRequestParams.keySet()) {
-                if (key.startsWith("rate_")) {
-                    Long classId = Long.parseLong(key.substring(5));
-                    Double cost = Double.parseDouble(allRequestParams.get(key));
-                    flightScheduleRateService.updateOrCreateRate(scheduleId, classId, cost);
-                }
-            }
-
-            redirectAttributes.addFlashAttribute("success", "Schedule updated successfully");
-            return "redirect:/admin/flights/view-schedules";
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Failed to update schedule: " + e.getMessage());
-            return "redirect:/admin/flights/edit-schedule/" + scheduleId;
         }
+
+        redirectAttributes.addFlashAttribute("success", "Schedule updated successfully!");
+        return "redirect:/admin/flights/view-schedules";
     }
+
+
+
+//    @PostMapping("/schedule/update")
+//    public String updateSchedule(
+//            @RequestParam("scheduleId") String encodedScheduleId,
+//            @RequestParam("flightId") Long flightId,
+//            @RequestParam("sourceId") Long sourceId,
+//            @RequestParam("destinationId") Long destinationId,
+//            @RequestParam("departAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime departAt,
+//            @RequestParam("arriveAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime arriveAt,
+//            @RequestParam Map<String, String> params,
+//            RedirectAttributes redirectAttributes) {
+//
+//        try {
+//            Long scheduleId = IdUtil.decodeId(encodedScheduleId);
+//
+////            flightScheduleService.updateSchedule(scheduleId, flightId, sourceId, destinationId, departAt, arriveAt, params);
+//
+//            redirectAttributes.addFlashAttribute("success", "Schedule updated successfully.");
+//            return "redirect:/admin/flights/view-schedules";
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            redirectAttributes.addFlashAttribute("error", "Error: " + e.getMessage());
+//            return "redirect:/admin/flights/edit-schedule/" + encodedScheduleId;
+//        }
+//    }
+
 
 
 

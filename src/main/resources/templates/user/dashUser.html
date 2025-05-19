@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" th:href="@{/assets/tablogo.png}">
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" th:href="@{/css/autosearch.css}">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">           
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <title>JetSetFly - Home Page</title>
+  <style>
+    #video-container 
+    {
+      width: 27vw;
+      height: 35vh;
+      cursor: pointer;
+      border: 5px solid white;
+      box-shadow: 0 0 20px black;
+    }
+
+    #first 
+    {
+      position: relative;
+      float: right;
+      margin-left: auto;
+      width: 80%;
+      padding: 10px 0;
+      font-size: 1rem;
+      outline: none;
+      border: none;
+      border-bottom: 1px solid #a75a82;
+      color: rgb(255, 255, 255);
+      background-color: var(--primary-color);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    #first:hover 
+    {
+      background-color: #721b47;
+    }
+
+    #second 
+    {
+      float: right;
+      margin-left: auto;
+      width: 80%;
+      padding: 10px 0;
+      font-size: 1rem;
+      outline: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 500;
+      border-bottom: 1px solid #a75a82;
+      color: rgb(255, 255, 255);
+      background-color: var(--primary-color);
+    }
+
+    #second:hover 
+    {
+      background-color: #721b47;
+    }
+    #myVideo 
+    {
+      width: 100%;
+      height: 100%;
+    }
+
+    .text-muted 
+    {
+      color: #ffffff !important;
+    }
+
+    .button-container 
+    {
+      position: absolute;
+      color: var(--white);
+      width: 20%;
+      right: 510px;
+      bottom: 45px;
+    }
+
+    .button-container input 
+    {
+      border-radius: 15px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}"></div>
+    <ul class="nav__links">
+		<li class="user-log"> <i class="fa fa-user" style="font-size:20px"><span th:text="${currentUser.name}"></span></i></li>
+      <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
+      <li class="link"><a th:href="@{/user/Booking History}">MY FLIGHTS</a></li>
+      <li class="link"><a th:href="@{/aboutus}">ABOUT</a></li>
+      <li class="link"><a th:href="@{/login1}">FEEDBACK</a></li>
+    </ul>
+    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in"
+          style="font-size:15px"></i></button></a>
+  </header>
+  <section class="banner">
+    <h2 class="section__header"></h2>
+  </section>
+  <section class="section__container booking__container">
+    <div class="booking__nav">
+      <span onclick="selectSpan(this)" class="selected">Book A Flight</span>
+      <span onclick="selectSpan(this)">Flight Status</span>
+    </div>
+    <div class="bookingForm">
+      
+      <form id="searchForm" th:action="@{/loading}" method="get">
+        <div class="form__group">
+          <span><i class="ri-flight-takeoff-line"></i></span>
+          <div class="input__content">
+            <div class="input__group">
+              <select name="from" id="from" required>
+                <option value="">Select City</option>
+                <th:block th:each="city : ${cities}">
+                  <option th:value="${city.id}" th:text="${city.cityname}"></option>
+                </th:block>
+              </select>
+              <label>From</label>
+            </div>
+            <p>Your Location</p>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <span><i class="ri-flight-land-fill"></i></span>
+          <div class="input__content">
+            <div class="input__group">
+              <select name="to" id="to" required>
+                <option value="">Select City</option>
+                <th:block th:each="city : ${cities}">
+                  <option th:value="${city.id}" th:text="${city.cityname}"></option>
+                </th:block>
+              </select>
+              <label>To</label>
+            </div>
+            <p>Destination</p>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <span><i class="ri-calendar-event-fill"></i></span>
+          <div class="input__content">
+            <div class="input__group">
+              <input type="text" id="d_date" name="d_date" required placeholder="Select Date">
+              <label>Departure Date</label>
+            </div>
+            <p>Add date</p>
+          </div>
+        </div>
+
+        <div class="form__group">
+          <span><i class="ri-user-3-fill"></i></span>
+          <div class="input__content">
+            <div class="input__group">
+              <input type="number" min="1" max="10" name="nop" id="nop" value="1" required/>
+              <label>Passengers</label>
+            </div>
+            <p>Select</p>
+          </div>
+        </div>
+
+        <br>
+        <div class="button-container">
+          <input type="submit" value="Search Flight(s)" id="first">
+        </div>
+      </form>
+	
+    </div>
+    <div id="flightStatusForm" class="hidden">
+		<form id="statusForm" th:action="@{/flightstatus}" method="get">
+		        <div class="form__group">
+		          <span><i class="ri-flight-takeoff-line"></i></span>
+		          <div class="input__content">
+		            <div class="input__group">
+		              <select name="from" id="status_from" required>
+		                <option value="">Select City</option>
+		                <th:block th:each="city : ${cities}">
+		                  <option th:value="${city.id}" th:text="${city.cityname}"></option>
+		                </th:block>
+		              </select>
+		              <label>From</label>
+		            </div>
+		            <p>Your Location</p>
+		          </div>
+		        </div>
+
+		        <div class="form__group">
+		          <span><i class="ri-flight-land-fill"></i></span>
+		          <div class="input__content">
+		            <div class="input__group">
+		              <select name="to" id="status_to" required>
+		                <option value="">Select City</option>
+		                <th:block th:each="city : ${cities}">
+		                  <option th:value="${city.id}" th:text="${city.cityname}"></option>
+		                </th:block>
+		              </select>
+		              <label>To</label>
+		            </div>
+		            <p>Destination</p>
+		          </div>
+		        </div>
+
+		        <div class="form__group">
+		          <span><i class="ri-calendar-event-fill"></i></span>
+		          <div class="input__content">
+		            <div class="input__group">
+		              <input type="text" id="status_date" name="d_date" required placeholder="Select Date">
+		              <label>Departure Date</label>
+		            </div>
+		            <p>Add date</p>
+		          </div>
+		        </div>
+
+		       
+		        <br>
+		        <div class="button-container">
+		          <input type="submit" value="Check Status" id="second">
+		        </div>
+	</form>
+    </div>
+  </section>
+
+  <section class="section__container lounge__container">
+    <div class="lounge__image">
+      <img th:src="@{/assets/lounge-1.jpg}" alt="lounge" />
+      <img th:src="@{/assets/lounge-2.jpg}" alt="lounge" />
+    </div>
+    <div class="lounge__content">
+      <h2 class="section__header">Start Planning Your Next Trip</h2>
+      <div class="lounge__grid">
+        <div class="lounge__details">
+          <h4>Experience Tranquility</h4>
+          <p>
+            Serenity Haven offers a tranquil escape, featuring comfortable
+            seating, calming ambiance, and attentive service.
+          </p>
+        </div>
+        <div class="lounge__details">
+          <h4>Elevate Your Experience</h4>
+          <p>
+            Designed for discerning travelers, this exclusive lounge offers
+            premium amenities, assistance, and private workspaces.
+          </p>
+        </div>
+        <div class="lounge__details">
+          <h4>A Welcoming Space</h4>
+          <p>
+            Creating a family-friendly atmosphere, The Family Zone is the
+            perfect haven for parents and children.
+          </p>
+        </div>
+        <div class="lounge__details">
+          <h4>A Culinary Delight</h4>
+          <p>
+            Immerse yourself in a world of flavors, offering international
+            cuisines, gourmet dishes, and carefully curated beverages.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section__container travellers__container">
+    <h2 class="section__header">Explore New Places</h2>
+    <div class="travellers__grid">
+      <div class="travellers__card">
+        <img th:src="@{/assets/traveller-1.jpg}" alt="traveller" />
+        <div class="travellers__card__content">
+          <p>Agra</p>
+        </div>
+      </div>
+      <div class="travellers__card">
+        <img th:src="@{/assets/traveller-2.jpg}" alt="traveller" />
+        <div class="travellers__card__content">
+          <p>Kolkata</p>
+        </div>
+      </div>
+      <div class="travellers__card">
+        <img th:src="@{/assets/traveller-3.jpg}" alt="traveller" />
+        <div class="travellers__card__content">
+          <p>Mumbai</p>
+        </div>
+      </div>
+      <div class="travellers__card">
+        <img th:src="@{/assets/traveller-4.jpg}" alt="traveller" />
+        <div class="travellers__card__content">
+          <p>Chennai</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="section__container footer__container">
+      <div class="footer__col">
+        <!-- video div -->
+        <div id="video-container">
+          <video id="myVideo" width="320" height="240" autoplay muted loop>
+            <source th:src="@{/assets/final-video-clip-for-intro.mp4}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h3>INFORMATION</h3>
+        <p><a th:href="@{/}">Home</a></p>
+        <p><a th:href="@{/aboutus}">About</a></p>
+        <p><a th:href="@{/login1}">Feedback</a></p>
+      </div>
+      <div class="footer__col">
+        <h3>CONTACT</h3>
+        <p>jetsetfly2024@gmail.com</p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="nav__logo"><img th:src="@{/assets/jetsetflylogoinwhite.png}"></div>
+      </div>
+    </div>
+    <div class="section__container footer__bar">
+      <div>
+        <p>Copyright © 2024 Team GMADS. All rights reserved.</p>
+      </div>
+      <div class="socials">
+        <span><a href="" class="text-muted" target="_blank"><i class="ri-facebook-fill"></i></a></span>
+        <span><a href="" class="text-muted" target="_blank"><i class="ri-twitter-fill"></i></a></span>
+        <span><a href="" class="text-muted" target="_blank"><i class="ri-instagram-line"></i></a></span>
+        <span><a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="text-muted" target="_blank"><i
+              class="ri-youtube-fill"></i></a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Toggle sticky header on scroll
+    window.addEventListener("scroll", function () {
+      var header = document.querySelector("header");
+      header.classList.toggle("sticky", window.scrollY > 0);
+    });
+
+    // Toggle between booking form and flight status form
+    function selectSpan(selectedSpan) {
+      // Deselect all spans
+      var spans = document.querySelectorAll('.booking__nav span');
+      spans.forEach(function (span) {
+        span.classList.remove('selected');
+      });
+
+      // Select the clicked span
+      selectedSpan.classList.add('selected');
+
+      // Toggle between booking form and flight status form
+      var bookingForm = document.querySelector('.bookingForm');
+      var flightStatusForm = document.getElementById('flightStatusForm');
+      
+      if (selectedSpan.textContent === "Flight Status") {
+        bookingForm.style.display = "none";
+        flightStatusForm.style.display = "block";
+      } else {
+        flightStatusForm.style.display = "none";
+        bookingForm.style.display = "block";
+      }
+    }
+
+    // Intersection Observer for video playback
+    const video = document.getElementById("myVideo");
+    const videoContainer = document.getElementById("video-container");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play();
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(videoContainer);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Date picker configuration for flights booking
+    const fromEl = document.getElementById('from');
+    const toEl = document.getElementById('to');
+    const dateEl = document.getElementById('d_date');
+    
+    // Flight status form elements
+    const statusFromEl = document.getElementById('status_from');
+    const statusToEl = document.getElementById('status_to');
+    const statusDateEl = document.getElementById('status_date');
+    
+    // Initialize date pickers
+    let flightDatePicker = flatpickr(dateEl, {
+      dateFormat: "Y-m-d",
+      minDate: "today"
+    });
+    
+    let statusDatePicker = flatpickr(statusDateEl, {
+      dateFormat: "Y-m-d",
+      minDate: "today"
+    });
+    
+    // Function to update available dates for booking form
+    function updateBookingAvailableDates() {
+      const from = fromEl.value;
+      const to = toEl.value;
+      
+      if (from && to) {
+        fetch(`/api/available-dates?from=${from}&to=${to}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch available dates');
+            }
+            return response.json();
+          })
+          .then(availableDates => {
+            if (availableDates && availableDates.length > 0) {
+              // Enable only available dates
+              flightDatePicker.set('enable', availableDates);
+              flightDatePicker.clear();
+            } else {
+              // If no specific dates available, allow any future date
+              flightDatePicker.set('enable', [function(date) {
+                return date >= new Date();
+              }]);
+              flightDatePicker.clear();
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching available dates:', error);
+            // In case of error, allow any future date
+            flightDatePicker.set('enable', [function(date) {
+              return date >= new Date();
+            }]);
+          });
+      }
+    }
+    
+    // Function to update available dates for status form
+    function updateStatusAvailableDates() {
+      const from = statusFromEl.value;
+      const to = statusToEl.value;
+      
+      if (from && to) {
+        fetch(`/api/available-dates?from=${from}&to=${to}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch available dates');
+            }
+            return response.json();
+          })
+          .then(availableDates => {
+            if (availableDates && availableDates.length > 0) {
+              // Enable only available dates
+              statusDatePicker.set('enable', availableDates);
+              statusDatePicker.clear();
+            } else {
+              // If no specific dates available, allow any future date
+              statusDatePicker.set('enable', [function(date) {
+                return date >= new Date();
+              }]);
+              statusDatePicker.clear();
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching available dates for status:', error);
+            // In case of error, allow any future date
+            statusDatePicker.set('enable', [function(date) {
+              return date >= new Date();
+            }]);
+          });
+      }
+    }
+    
+    // Add event listeners for booking form
+    fromEl.addEventListener('change', updateBookingAvailableDates);
+    toEl.addEventListener('change', updateBookingAvailableDates);
+    
+    // Add event listeners for status form
+    statusFromEl.addEventListener('change', updateStatusAvailableDates);
+    statusToEl.addEventListener('change', updateStatusAvailableDates);
+    
+    // Booking form submission handling
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const d_date = document.getElementById('d_date').value;
+      const nop = document.getElementById('nop').value;
+      
+      if (!from || !to || !d_date || !nop) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Redirect to loading page
+      window.location.href = `/loading?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}&nop=${encodeURIComponent(nop)}`;
+    });
+    
+    // Flight status form submission handling
+    document.getElementById('statusForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const from = document.getElementById('status_from').value;
+      const to = document.getElementById('status_to').value;
+      const d_date = document.getElementById('status_date').value;
+      
+      if (!from || !to || !d_date) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Redirect to flight status page
+      window.location.href = `/flightstatus?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}`;
+    });
+  </script>
+</body>
+</html>

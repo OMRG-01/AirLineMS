@@ -423,6 +423,14 @@
             <span class="nav-link-text ms-1">Add New Member</span>
           </a>
         </li>
+		<li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/clock-settings}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">settings</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Settings</span>
+		          </a>
+		        </li>
       </ul>
     </div>
   </aside>
@@ -532,21 +540,22 @@
                 </div>
                 <div class="text-end pt-1">
                   <p class="text-sm mb-0 text-capitalize">Total Earnings</p>
-                  <h4 class="mb-0">INR <?php echo $total; ?></h4>
+                  <h4 class="mb-0"></h4>
                 </div>
               </div>
               <hr class="dark horizontal my-0">
               <div class="card-footer p-3">
-                <p class="mb-0">Today's Earnings<span class="text-success text-sm font-weight-bolder"> INR <?php echo $total1; ?></span></p>
+                <p class="mb-0">Today's Earnings<span class="text-success text-sm font-weight-bolder"> </span></p>
               </div>
             </div>
           </a>
         </div>
+		
       </div>
       <br>
 	  <div class="dashboard" id="clockDashboard">
 		
-	         <div class="clock-container" th:with="timezone='Europe/London'" id="uk-clock">
+	         <div class="clock-container"th:if="${visibleClocks.contains('UK')}"  th:with="timezone='Europe/London'" id="uk-clock">
 	             <div class="clock">
 	                 <div class="center-dot"></div>
 	                 <div class="hour-marks" id="hourMarksUK"></div>
@@ -559,7 +568,7 @@
 	             <div class="digital-time" id="digitalTimeUK"></div>
 	         </div>
 	         
-	         <div class="clock-container" th:with="timezone='America/New_York'" id="usa-clock">
+	         <div class="clock-container" th:if="${visibleClocks.contains('USA')}" th:with="timezone='America/New_York'" id="usa-clock">
 	             <div class="clock">
 	                 <div class="center-dot"></div>
 	                 <div class="hour-marks" id="hourMarksUSA"></div>
@@ -572,7 +581,7 @@
 	             <div class="digital-time" id="digitalTimeUSA"></div>
 	         </div>
 	         
-	         <div class="clock-container" th:with="timezone='Asia/Kolkata'" id="india-clock">
+	         <div class="clock-container" th:if="${visibleClocks.contains('India')}" th:with="timezone='Asia/Kolkata'" id="india-clock">
 	             <div class="clock">
 	                 <div class="center-dot"></div>
 	                 <div class="hour-marks" id="hourMarksIndia"></div>
@@ -585,7 +594,7 @@
 	             <div class="digital-time" id="digitalTimeIndia"></div>
 	         </div>
 	         
-	         <div class="clock-container" th:with="timezone='Asia/Dubai'" id="dubai-clock">
+	         <div class="clock-container" th:if="${visibleClocks.contains('Dubai')}" th:with="timezone='Asia/Dubai'" id="dubai-clock">
 	             <div class="clock">
 	                 <div class="center-dot"></div>
 	                 <div class="hour-marks" id="hourMarksDubai"></div>
@@ -713,22 +722,33 @@
     });
 </script>
 <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create clock marks for all clocks
-            const clocks = ['UK', 'USA', 'India', 'Dubai'];
-            
-            clocks.forEach(clock => {
-                createClockMarks(clock);
-            });
-            
-            // Initialize and start all clocks
-            updateAllClocks();
-            setInterval(updateAllClocks, 1000);
-            
-            // Initialize size slider
-            const sizeSlider = document.getElementById('sizeSlider');
-            sizeSlider.addEventListener('input', updateClockSize);
-        });
+	document.addEventListener('DOMContentLoaded', function() {
+	    const availableClocks = [];
+
+	    if (document.getElementById('uk-clock')) {
+	        createClockMarks('UK');
+	        availableClocks.push('UK');
+	    }
+	    if (document.getElementById('usa-clock')) {
+	        createClockMarks('USA');
+	        availableClocks.push('USA');
+	    }
+	    if (document.getElementById('india-clock')) {
+	        createClockMarks('India');
+	        availableClocks.push('India');
+	    }
+	    if (document.getElementById('dubai-clock')) {
+	        createClockMarks('Dubai');
+	        availableClocks.push('Dubai');
+	    }
+
+	    updateAllClocks();
+	    setInterval(updateAllClocks, 1000);
+
+	    const sizeSlider = document.getElementById('sizeSlider');
+	    sizeSlider.addEventListener('input', updateClockSize);
+	});
+
         
         function createClockMarks(clock) {
             const hourMarks = document.getElementById('hourMarks' + clock);
@@ -752,10 +772,18 @@
         }
         
         function updateAllClocks() {
-            updateClock('UK', 'Europe/London');
-            updateClock('USA', 'America/New_York');
-            updateClock('India', 'Asia/Kolkata');
-            updateClock('Dubai', 'Asia/Dubai');
+			if (document.getElementById('uk-clock')) {
+			       updateClock('UK', 'Europe/London');
+			   }
+			   if (document.getElementById('usa-clock')) {
+			       updateClock('USA', 'America/New_York');
+			   }
+			   if (document.getElementById('india-clock')) {
+			       updateClock('India', 'Asia/Kolkata');
+			   }
+			   if (document.getElementById('dubai-clock')) {
+			       updateClock('Dubai', 'Asia/Dubai');
+			   }
         }
         
         function updateClock(clockId, timezone) {

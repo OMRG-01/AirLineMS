@@ -34,45 +34,93 @@
       margin-right: 10px;
     }
 
-    .container2 {
-      display: flex;
-      justify-content: space-between;
-    }
+	.navbar-toggler {
+	      display: none;
+	      background-color: transparent;
+	      border: none;
+	      cursor: pointer;
+	      padding: 10px;
+	    }
+	    
+	    @media (max-width: 992px) {
+	      .navbar-toggler {
+	        display: block;
+	      }
+	    }
+	    
+	    .navbar-toggler-icon {
+	      width: 30px;
+	      height: 30px;
+	      position: relative;
+	      color: #8E2157;
+	    }
 
-    .nav-links {
-      flex: 1;
-      text-align: left;
-      max-height: 20px;
-    }
+	    /* Top navbar responsive adjustments */
+	    .container2 {
+	      display: flex;
+	      justify-content: space-between;
+	      flex-wrap: wrap;
+	    }
 
-    .nav-links ul li {
-      list-style: none;
-      display: inline-block;
-      padding: 8px 12px;
-      width: 170px;
-      position: relative;
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    }
+	    @media (max-width: 768px) {
+	      .container2 {
+	        flex-direction: column;
+	      }
+	      
+	      .nav-links {
+	        margin-bottom: 10px;
+	        width: 100%;
+	      }
+	    }
 
-    .nav-links ul li a {
-      color: black;
-      text-decoration: none;
-      font-size: 15px;
-    }
+	    .nav-links {
+	      flex: 1;
+	      text-align: left;
+	      max-height: none;
+	    }
 
-    .nav-links ul li::after {
-      content: "";
-      width: 0%;
-      height: 3px;
-      background: #8E2157;
-      display: block;
-      margin: auto;
-      transition: 1s;
-    }
+	    .nav-links ul {
+	      padding-left: 0;
+	      margin-bottom: 0;
+	    }
 
-    .nav-links ul li:hover::after {
-      width: 100%;
-    }
+	    .nav-links ul li {
+	      list-style: none;
+	      display: inline-block;
+	      padding: 8px 12px;
+	      width: auto;
+	      position: relative;
+	      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	    }
+
+	    @media (max-width: 576px) {
+	      .nav-links ul li {
+	        display: block;
+	        width: 100%;
+	        text-align: center;
+	      }
+	    }
+
+	    .nav-links ul li a {
+	      color: black;
+	      text-decoration: none;
+	      font-size: 15px;
+	      white-space: nowrap;
+	    }
+
+	    .nav-links ul li::after {
+	      content: "";
+	      width: 0%;
+	      height: 3px;
+	      background: #8E2157;
+	      display: block;
+	      margin: auto;
+	      transition: 1s;
+	    }
+
+	    .nav-links ul li:hover::after {
+	      width: 100%;
+	    }
 
     select {
       height: 30px;
@@ -311,8 +359,18 @@
 
 	<!-- Change the form action for edit -->
 	<form th:action="@{/admin/flights/schedule/update}" method="POST" onsubmit="return validateDateTime()">
-	  <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
-	  <input type="hidden" name="flightId" th:value="${flight.id}" />
+	  <input type="hidden" name="flightId" th:value="${schedule.flight.id}" />
+	  <input type="hidden" name="scheduleId" th:value="${encodedScheduleId}" />
+
+	  <!-- Success & Error Messages -->
+	  <div th:if="${success}" class="alert alert-success alert-dismissible fade show px-4" role="alert">
+	    <span th:text="${success}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	  </div>
+	  <div th:if="${error}" class="alert alert-danger alert-dismissible fade show px-4" role="alert">
+	    <span th:text="${error}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	  </div>
 
 	  <div class="container">
 	    <div class="row">
@@ -323,127 +381,112 @@
 	          </div>
 	          <div class="card-body">
 
-	            <!-- Airline & Flight Number side by side -->
+	            <!-- Airline and Flight Info -->
 	            <div class="row mb-4">
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Airline</label>
-	                  <div class="input-group">
-	                    <span class="input-group-text"><i class="fa fa-plane"></i></span>
-	                    <input type="text" class="form-control" th:value="${airline.aname}" readonly>
-	                  </div>
+	                <label class="form-label">Airline</label>
+	                <div class="input-group">
+	                  <span class="input-group-text"><i class="fa fa-plane"></i></span>
+	                  <input type="text" class="form-control" th:value="${schedule.flight.airline.aname}" readonly>
 	                </div>
 	              </div>
-
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Flight Number</label>
-	                  <div class="input-group">
-	                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
-	                    <input type="text" class="form-control" th:value="${flight.fnumber}" readonly>
-	                  </div>
+	                <label class="form-label">Flight Number</label>
+	                <div class="input-group">
+	                  <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+	                  <input type="text" class="form-control" th:value="${schedule.flight.fnumber}" readonly>
 	                </div>
 	              </div>
 	            </div>
 
-	            <!-- Source & Destination Cities side by side -->
+	            <!-- Source & Destination -->
 	            <div class="row mb-4">
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Source City</label>
-	                  <div class="input-group">
-	                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
-	                    <select id="sourceCity" name="sourceId" class="form-select" required>
-	                      <option th:each="city : ${cities}" 
-	                              th:value="${city.id}" 
-	                              th:selected="${city.id == schedule.source.id}" 
-	                              th:text="${city.cityname}">
-	                      </option>
-	                    </select>
-	                  </div>
+	                <label class="form-label">Source City</label>
+	                <div class="input-group">
+	                  <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+	                  <select name="sourceId" class="form-select" required>
+	                    <option th:each="city : ${cities}"
+	                            th:value="${city.id}"
+	                            th:selected="${city.id == schedule.source.id}"
+	                            th:text="${city.cityname}"></option>
+	                  </select>
 	                </div>
 	              </div>
-
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Destination City</label>
-	                  <div class="input-group">
-	                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
-	                    <select id="destinationCity" name="destinationId" class="form-select" required>
-	                      <option th:each="city : ${cities}" 
-	                              th:value="${city.id}" 
-	                              th:selected="${city.id == schedule.destination.id}" 
-	                              th:text="${city.cityname}">
-	                      </option>
-	                    </select>
-	                  </div>
+	                <label class="form-label">Destination City</label>
+	                <div class="input-group">
+	                  <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+	                  <select name="destinationId" class="form-select" required>
+	                    <option th:each="city : ${cities}"
+	                            th:value="${city.id}"
+	                            th:selected="${city.id == schedule.destination.id}"
+	                            th:text="${city.cityname}"></option>
+	                  </select>
 	                </div>
 	              </div>
 	            </div>
 
-	            <!-- Departure & Arrival Time side by side -->
+	            <!-- Departure & Arrival -->
 	            <div class="row mb-4">
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Departure Time</label>
-	                  <div class="input-group datetime-container">
-	                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-	                    <input type="datetime-local" id="departAt" name="departAt" class="form-control" 
-	                           th:value="${departAtFormatted}" required>
-	                  </div>
+	                <label class="form-label">Departure Time</label>
+	                <div class="input-group datetime-container">
+	                  <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+	                  <input type="datetime-local" name="departAt" class="form-control" th:value="${departAtFormatted}" required>
 	                </div>
 	              </div>
-
 	              <div class="col-md-6">
-	                <div class="form-group">
-	                  <label class="form-label">Arrival Time</label>
-	                  <div class="input-group datetime-container">
-	                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-	                    <input type="datetime-local" id="arriveAt" name="arriveAt" class="form-control" 
-	                           th:value="${arriveAtFormatted}" required>
-	                  </div>
+	                <label class="form-label">Arrival Time</label>
+	                <div class="input-group datetime-container">
+	                  <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+	                  <input type="datetime-local" name="arriveAt" class="form-control" th:value="${arriveAtFormatted}" required>
 	                </div>
 	              </div>
 	            </div>
 
-	            <!-- Class-wise Cost Inputs -->
-	            <div class="mb-4">
-	              <label class="form-label">Class-wise Seat Cost</label>
-	              <div class="row">
-	                <div class="col-md-12">
-	                  <div th:each="cls : ${allClasses}" th:if="${seatMap[cls.flightClass.id]} != null" class="class-cost-card mb-3">
-	                    <div class="form-group">
-	                      <label th:for="${'rate_' + cls.flightClass.id}">
-	                        <span th:text="'Seat Cost for ' + ${cls.flightClass.name} + ' (' + ${seatMap[cls.flightClass.id]} + ' seats)'"></span>
-	                      </label>
-	                      <div class="input-group">
-	                        <span class="input-group-text"><i class="fa fa-money"></i></span>
-	                        <input type="number" step="0.01" min="0" class="form-control"
-	                               th:id="${'rate_' + cls.flightClass.id}"
-	                               th:name="${'rate_' + cls.flightClass.id}"
-	                               th:value="${rateMap[cls.flightClass.id]}" required />
-	                        <input type="hidden" name="classIds" th:value="${cls.flightClass.id}" />
-	                      </div>
-	                    </div>
-	                  </div>
-	                </div>
-	              </div>
-	            </div>
+	            <!-- Class-wise Cost -->
+				<div class="mb-4">
+					              <label class="form-label">Class-wise Seat Cost</label>
+					              <div class="row">
+					                <div class="col-md-12">
+					                  <div th:each="cls : ${allClasses}" th:if="${seatMap[cls.flightClass.id]} != null" class="class-cost-card mb-3">
+					                    <div class="form-group">
+					                      <label th:for="${'rate_' + cls.flightClass.id}">
+					                        <span th:text="'Seat Cost for ' + ${cls.flightClass.name} + ' (' + ${seatMap[cls.flightClass.id]} + ' seats)'"></span>
+					                      </label>
+					                      <div class="input-group">
+					                        <span class="input-group-text"><i class="fa fa-money"></i></span>
+					                        <input type="number" step="0.01" min="0" class="form-control"
+					                               th:id="${'rate_' + cls.flightClass.id}"
+					                               th:name="${'rate_' + cls.flightClass.id}"
+					                               th:value="${rateMap[cls.flightClass.id]}" required />
+					                        <input type="hidden" name="classIds" th:value="${cls.flightClass.id}" />
+					                      </div>
+					                    </div>
+					                  </div>
+					                </div>
+					              </div>
+				</div>
 
 	            <!-- Buttons -->
 	            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-	              <button type="button" class="btn btn-secondary me-2" th:onclick="'window.location.href=\'' + @{/admin/flights/view} + '\''">Cancel</button>
+	              <button type="button" class="btn btn-secondary me-2"
+	                      th:onclick="'window.location.href=\'' + @{/admin/flights/view} + '\''">
+	                Cancel
+	              </button>
 	              <button type="submit" class="btn btn-primary">
 	                <i class="fa fa-save me-2"></i> Update Schedule
 	              </button>
 	            </div>
 
-	          </div> <!-- card-body -->
-	        </div> <!-- card -->
-	      </div> <!-- col-md-12 -->
-	    </div> <!-- row -->
-	  </div> <!-- container -->
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
 	</form>
+
 
     
     <footer class="footer py-4">

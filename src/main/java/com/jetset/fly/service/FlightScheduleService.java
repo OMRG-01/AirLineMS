@@ -1,6 +1,7 @@
 package com.jetset.fly.service;
 
 import com.jetset.fly.model.AirFlight;
+import com.jetset.fly.dto.FlightWithClassDetailsDTO;
 import com.jetset.fly.model.*;
 import com.jetset.fly.model.Class;
 import com.jetset.fly.model.FlightSchedule;
@@ -123,4 +124,114 @@ public class FlightScheduleService {
 		    }
 			}
 }
+    
+    @Autowired
+    private FlightService flightService;
+    
+//    public void updateSchedule(Long scheduleId, Long flightId, Long sourceId, Long destinationId,
+//            LocalDateTime departAt, LocalDateTime arriveAt, Map<String, String> params) {
+//
+//FlightSchedule schedule = scheduleRepository.findById(scheduleId)
+//.orElseThrow(() -> new RuntimeException("Schedule not found"));
+//
+//Flight flight = flightRepository.findById(flightId)
+//.orElseThrow(() -> new RuntimeException("Flight not found"));
+//City source = cityRepository.findById(sourceId)
+//.orElseThrow(() -> new RuntimeException("Source city not found"));
+//City destination = cityRepository.findById(destinationId)
+//.orElseThrow(() -> new RuntimeException("Destination city not found"));
+//
+//schedule.setFlight(flight);
+//schedule.setSource(source);
+//schedule.setDestination(destination);
+//schedule.setDepartAt(departAt);
+//schedule.setArriveAt(arriveAt);
+//
+//flightScheduleRepository.save(schedule);
+//
+//// Update rates
+//for (String key : params.keySet()) {
+//if (key.startsWith("rate_")) {
+//Long classId = Long.parseLong(key.substring(5));
+//double rate = Double.parseDouble(params.get(key));
+//
+//FlightClass flightClass = flightClassRepository.findById(classId)
+// .orElseThrow(() -> new RuntimeException("Flight class not found"));
+//
+//FlightScheduleRate rateObj = flightScheduleRateRepository
+// .findByFlightSchedule_IdAndFlightClass_Id(scheduleId, classId)
+// .orElse(new FlightScheduleRate(schedule, flightClass));
+//
+//rateObj.setCost(rate);
+//flightScheduleRateRepository.save(rateObj);
+//}
+//}
+//}
+    public List<LocalDate> findAvailableDatesBetweenCities(int fromId, int toId) {
+        List<java.sql.Date> sqlDates = scheduleRepository.findDistinctDepartureDates(fromId, toId);
+        return sqlDates.stream()
+                       .map(java.sql.Date::toLocalDate)
+                       .collect(Collectors.toList());
+    }
+
+
+
+    
+    public List<FlightSchedule> findFlightsForRouteAndDate(Long sourceId, Long destinationId, LocalDate date) {
+        LocalDateTime start;
+        LocalDateTime end = date.atTime(23, 59, 59); // End of the selected day
+
+        if (date.equals(LocalDate.now())) {
+            start = LocalDateTime.now(); // Current time to avoid past flights
+        } else {
+            start = date.atStartOfDay(); // 00:00 if future date
+        }
+
+        return scheduleRepository.findBySourceIdAndDestinationIdAndDepartAtBetweenAndStatus(
+            sourceId, destinationId, start, end, "ACTIVE"
+        );
+    }
+
+    
+    public List<FlightSchedule> findFlightsStatus(Long fromId, Long toId, LocalDate date) {
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.plusDays(1).atStartOfDay();
+
+        return scheduleRepository.findBySourceIdAndDestinationIdAndDepartAtBetweenAndStatus(
+            fromId, toId, start, end, "ACTIVE"
+        );
+    }
+
+    @Autowired
+    private FlightScheduleRateRepository rateRepository;
+
+
+    public List<FlightWithClassDetailsDTO> getFlightWithClassDetails(Long from, Long to, LocalDate date) {
+        List<FlightSchedule> schedules = findFlightsForRouteAndDate(from, to, date);
+
+        List<FlightWithClassDetailsDTO> dtos = new ArrayList<>();
+        for (FlightSchedule schedule : schedules) {
+            List<FlightScheduleRate> rates = rateRepository.findBySchedule(schedule);
+
+            List<FlightWithClassDetailsDTO.ClassRateDetail> rateDetails = rates.stream().map(rate -> {
+                FlightWithClassDetailsDTO.ClassRateDetail detail = new FlightWithClassDetailsDTO.ClassRateDetail();
+                detail.setClassName(rate.getFlightClass().getName());
+                detail.setRate(rate.getRate());
+                detail.setAvailableSeats(0); // or calculate available
+                detail.setClassId(rate.getFlightClass().getId());
+                return detail;
+            }).collect(Collectors.toList());
+
+            FlightWithClassDetailsDTO dto = new FlightWithClassDetailsDTO();
+            dto.setSchedule(schedule);
+            dto.setClassRates(rateDetails);
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
+
+    
     }

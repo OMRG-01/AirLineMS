@@ -20,10 +20,13 @@ public class FlightScheduleRate {
     @ManyToOne
     @JoinColumn(name = "class_id", nullable = false)
     private Class flightClass;
+    
+    
 
     @Column(nullable = false)
     private Double rate;
-
+    
+    
     // Getters and Setters
     public Long getId() {
         return id;

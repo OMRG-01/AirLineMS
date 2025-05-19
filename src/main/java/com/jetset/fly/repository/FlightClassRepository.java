@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.jetset.fly.model.Class;
 import com.jetset.fly.model.AirFlight;
 import com.jetset.fly.model.FlightClass;
@@ -17,5 +20,7 @@ public interface FlightClassRepository extends JpaRepository<FlightClass, Long> 
     
         List<FlightClass> findByFlight_IdAndFlight_Status(Long flightId, String status);
   
+        @Query("SELECT fc FROM FlightClass fc WHERE fc.flight.id = :flightId AND fc.flightClass.id = :classId")
+        FlightClass findByFlightIdAndClassId(@Param("flightId") Long flightId, @Param("classId") Long classId);
 
 }

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Flight Status</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/assets/tablogo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/44f557ccce.js"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+
+        :root {
+            --primary-color: #8E2157;
+            --primary-color-dark: #6b0f3d;
+            --text-dark: #0b0f18;
+            --text-light: #503744;
+            --extra-light: #f1f5f9;
+            --white: #ffffff;
+            --max-width: 1400px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+        }
+
+        /*-----------------HEADER------------------------*/
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.6s;
+            padding: 10px 20px 0 30px;
+            z-index: 10000;
+        }
+
+        header .logo {
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.6s;
+        }
+
+        header ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header ul li {
+            margin-right: 15px;
+            list-style: none;
+        }
+
+        header ul li:last-child {
+            margin-right: 0;
+        }
+
+        header ul li a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            font-weight: 700;
+            transition: 0.6s;
+        }
+
+        .nav__logo img {
+            height: 50px;
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav__links li {
+            list-style: none;
+            display: inline-block;
+            padding: 8px 12px;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nav__links li a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .nav__links li::after {
+            content: '';
+            width: 0%;
+            height: 2px;
+            background: var(--primary-color);
+            display: block;
+            margin: auto;
+            transition: 0.5s;
+        }
+
+        .nav__links li:hover::after {
+            width: 80%;
+        }
+
+        .login {
+            display: flex;
+            align-items: center;
+        }
+
+        .login i {
+            position: relative;
+            right: 40px;
+            top: 0px;
+        }
+
+        .login div {
+            position: relative;
+            right: 35px;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            outline: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--white);
+            background-color: var(--primary-color);
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn a {
+            color: var(--extra-light);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        /*--------------------FOOTER CSS------------------*/
+        .footer {
+            position: static;
+            bottom: 0px;
+            width: 100%;
+            background-color: var(--primary-color);
+            padding: 20px 0;
+            margin-top: 160px;
+        }
+
+        .footer__bar1 {
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .footer__bar1 p {
+            font-size: 1rem;
+            color: white;
+            padding: 0 80px;
+        }
+
+        .footer__container {
+            display: grid;
+            grid-template-columns: 2fr repeat(2, 1fr);
+            gap: 5rem;
+            padding: 18px 8px;
+        }
+
+        .social {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .social span {
+            font-size: 1.2rem;
+            color: var(--extra-light);
+        }
+
+        .social span a {
+            text-decoration: none;
+            color: var(--extra-light)
+        }
+
+        .n_logo {
+            display: flex;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .n_logo img {
+            height: 50px;
+            width: 150px;
+            margin-right: 10px;
+        }
+
+        /* Improved Flight Card CSS */
+        .flight-container {
+            width: 70%;
+            margin: 20px auto 0;
+        }
+
+        .flight-row {
+            display: flex;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .flight-details {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 75%;
+            margin-right: 20px;
+        }
+
+        .class-options {
+            display: flex;
+            width: 25%;
+        }
+
+        .class-card {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px 15px;
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .flight-path {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .flight-path hr {
+            flex-grow: 1;
+            height: 2px;
+            background-color: var(--primary-color);
+            border: none;
+        }
+
+        .flight-path .origin-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .flight-path i {
+            color: var(--primary-color);
+            margin: 0 5px;
+        }
+
+        .flight-time {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .select-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 30px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 80%;
+        }
+
+        .select-btn:hover {
+            background-color: var(--primary-color-dark);
+        }
+
+        .select-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .no-flight-container {
+            width: 85%;
+            margin: 150px auto 0;
+            text-align: center;
+        }
+
+        .no-flight-box {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .route-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+		.route-info hr {
+		    width: 90%;
+		    height: 2px;
+		    background-color: var(--primary-color);
+		    border: none;
+		    margin: 0 auto; /* Centers the <hr> horizontally */
+		}
+
+				
+
+        .unavailable-class {
+            color: #ff0000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .flight-details-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+		.class-options {
+		      display: flex;
+		      width: 25%;
+		  }
+		  
+		  #main-box2 {
+		      background-color: white;
+		      border-radius: 20px;
+		      box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+		      padding: 20px 15px;
+		      width: 100%;
+		      display: flex;
+		      flex-direction: column;
+		      position: relative;
+		  }
+		  
+		  .status-indicator {
+		      position: absolute;
+		      top: 15px;
+		      right: 15px;
+		  }
+		  
+		  .status {
+		      padding: 5px 10px;
+		      border-radius: 12px;
+		      font-size: 0.85rem;
+		      font-weight: bold;
+		  }
+		  
+		  .not-departed {
+		      background-color: #FFF3CD;
+		      color: #856404;
+		  }
+		  
+		  .departed {
+		      background-color: #D1ECF1;
+		      color: #0C5460;
+		  }
+		  
+		  .arrived {
+		      background-color: #D4EDDA;
+		      color: #155724;
+		  }
+		  
+		  .airline-info {
+		      display: flex;
+		      flex-direction: column;
+		      align-items: center;
+		      justify-content: center;
+		      height: 100%;
+		      text-align: center;
+		  }
+		  
+		  .airline-info h3 {
+		      font-size: 1.5rem;
+		      margin-bottom: 10px;
+		      color: var(--primary-color);
+		  }
+		  
+		  .flight-number {
+		      font-size: 1.1rem;
+		      color: var(--text-light);
+		  }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="nav__logo"><img src="/assets/jetsetflylogo.png"></div>
+        <ul class="nav__links">
+            <li class="link1"><a href="/">HOME</a></li>
+            <li class="link1"><a href="/about">ABOUT</a></li>
+            
+            <li class="link1"><a href="/feedback">FEEDBACK</a></li>
+        </ul>
+        <div class="login">
+            <button class="btn"><a href="/login">Login</a></button>
+        </div>
+    </header>
+
+    <div class="page-title">
+        <h1>Flight Status</h1>
+    </div>
+    
+    <div class="route-info">
+        <h4 th:text="${from} + ' To ' + ${to}"></h4>
+        <h5 th:text="${#temporals.format(date, 'dd MMMM yyyy')}"></h5>
+		
+		
+		<hr>
+    </div>
+    
+    <!-- Display flights if available -->
+    <div th:if="${not #lists.isEmpty(flights)}" class="flight-container">
+        <div th:each="flight : ${flights}" th:if="${flight.status == 'ACTIVE'}" class="flight-row">
+            <!-- Flight Details Card -->
+            <div class="flight-details">
+                <!-- Source & Destination -->
+                <div class="text-row">
+                    <div>
+                        <h2 th:text="${flight.source.cityname}"></h2>
+                    </div>
+                    <div>
+                        <h2 th:text="${flight.destination.cityname}"></h2>
+                    </div>
+                </div>
+
+                <!-- Labels -->
+                <div class="text-row">
+                    <div>Departed</div>
+                    <div>Arrived</div>
+                </div>
+
+                <!-- Times -->
+                <div class="text-row">
+                    <div>
+                        <h1 class="flight-time" th:text="${#temporals.format(flight.departAt, 'HH:mm')}"></h1>
+                    </div>
+                    <div>
+                        <h1 class="flight-time" th:text="${#temporals.format(flight.arriveAt, 'HH:mm')}"></h1>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div class="text-row">
+                    <div th:text="${#temporals.format(flight.departAt, 'EEE, dd MMM')}"></div>
+                    <div th:text="${#temporals.format(flight.arriveAt, 'EEE, dd MMM')}"></div>
+                </div>
+
+                <!-- Visual Line with Plane -->
+				<!-- Visual Line with Plane -->
+				<!-- BEFORE departure -->
+				<div class="flight-path" th:if="${flight.departAt.isAfter(now)}">
+				    <div class="origin-dot"></div>
+				    <i class="fa fa-fighter-jet fa-2x"></i>
+				    <hr>
+				    <hr>
+				</div>
+
+				<!-- IN FLIGHT -->
+				<div class="flight-path" 
+				     th:if="${!flight.departAt.isAfter(now)} and ${flight.arriveAt.isAfter(now)}">
+					 <div class="origin-dot"></div>
+					 
+				    <hr>
+					<i class="fa fa-fighter-jet fa-2x"></i>
+				    <hr>
+				</div>
+
+				<!-- AFTER Arrival -->
+				<div class="flight-path" 
+				     th:if="${!flight.arriveAt.isAfter(now)}">
+					 <div class="origin-dot"></div>
+				    
+				    <hr>
+				    <hr>
+					<i class="fa fa-fighter-jet fa-2x"></i>
+				</div>
+
+                <!-- Flight Number, Airline -->
+               
+            </div>
+			<div class="class-options">
+			    <div id="main-box2" class="class-card">
+			        <div class="status-indicator">
+			            <!-- Status will show as "Not Departed", "In Flight", or "Arrived" -->
+			            <span th:if="${flight.departAt.isAfter(now)}" class="status not-departed">Not Departed</span>
+			            <span th:if="${!flight.departAt.isAfter(now)} and ${flight.arriveAt.isAfter(now)}" class="status departed">In Flight</span>
+			            <span th:if="${!flight.arriveAt.isAfter(now)}" class="status arrived">Arrived</span>
+			        </div>
+			        <div class="airline-info">
+						<h7>Take off From</h7>
+			            <h3 th:text="${flight.flight.airline.aname}">Airline Name</h3>
+			            <p class="flight-number" th:text="'Flight: ' + ${flight.flightNumber}">Flight Number</p>
+			        </div>
+			    </div>
+			</div>
+           
+            
+        </div>
+    </div>
+    
+    <!-- Display if no flights are available -->
+    <div th:if="${#lists.isEmpty(flights)}" class="no-flight-container">
+        <div class="no-flight-box">
+            <h5>No Flights Available</h5>
+        </div>
+    </div>
+    
+   
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!-- templates/settings.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Clock Settings</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Clock Settings</h2>
+        <form action="/admin/save-clock-settings" method="post">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="clocks" value="UK" 
+                       th:checked="${selectedClocks.contains('UK')}">
+                <label class="form-check-label">London (UK)</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="clocks" value="USA" 
+                       th:checked="${selectedClocks.contains('USA')}">
+                <label class="form-check-label">New York (USA)</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="clocks" value="India" 
+                       th:checked="${selectedClocks.contains('India')}">
+                <label class="form-check-label">New Delhi (India)</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="clocks" value="Dubai" 
+                       th:checked="${selectedClocks.contains('Dubai')}">
+                <label class="form-check-label">Dubai (UAE)</label>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -19,6 +19,10 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
+    public City getCityById(Long id) {
+        return cityRepository.findById(id).orElseThrow(() -> new RuntimeException("City not found"));
+    }
+
     public void addCity(String cityname) {
         City city = new City();
         city.setCityname(cityname);

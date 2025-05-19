@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Loading...</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .back-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .text-overlay {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 34px;
+      font-weight: bold;
+      text-align: center;
+      z-index: 2;
+      color: white;
+    }
+
+    .text-overlay1 {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      text-align: center;
+      z-index: 2;
+      color: #eee;
+    }
+
+    .text-overlay2 {
+      position: absolute;
+      top: 21%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      color: #eee;
+      font-size: 15px;
+    }
+
+    .hr-line {
+      position: absolute;
+      top: 17%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30%;
+      z-index: 2;
+    }
+
+    .hr-line1 {
+      position: absolute;
+      top: 21%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8%;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .hr-line hr,
+    .hr-line1 hr {
+      border: none;
+      height: 1px;
+      background-color: #eee;
+    }
+
+    .hr-line hr {
+      animation: loadingAnimation 2s linear infinite;
+    }
+
+    .hr-line1 hr {
+      background: linear-gradient(to right, white, white 50%, transparent 50%, transparent);
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      animation: loadingAnimation1 2s linear infinite;
+    }
+
+    @keyframes loadingAnimation1 {
+      to {
+        background-position: -100% 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="video-container">
+    <video autoplay loop muted playsinline class="back-video" id="myVideo">
+      <source th:src="@{/assets/blue.mp4}" type="video/mp4" th:if="${nop == 1}">
+      <source th:src="@{/assets/red.mp4}" type="video/mp4" th:if="${nop == 2}">
+      <source th:src="@{/assets/yellow.mp4}" type="video/mp4" th:if="${nop == 3}">
+      <source th:src="@{/assets/purple.mp4}" type="video/mp4" th:if="${nop != 1 and nop != 2 and nop != 3}">
+    </video>
+    <div class="text-overlay" th:text="${fromCity} + ' to ' + ${toCity}"></div>
+    <div class="text-overlay1"><small th:text="${d_date} + ' . ' + ${nop} + ' passenger(s)'"></small></div>
+    <div class="hr-line"><hr></div>
+    <div class="text-overlay2">Loading best fares...</div>
+    <div class="hr-line1"><hr></div>
+  </div>
+
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    const from = /*[[${from}]]*/ 0;
+    const to = /*[[${to}]]*/ 0;
+    const d_date = /*[[${d_date}]]*/ '2025-05-20';
+    const nop = /*[[${nop}]]*/ 1;
+
+    setTimeout(() => {
+      window.location.href = `/fair-flight?from=${from}&to=${to}&d_date=${d_date}&nop=${nop}`;
+    }, 5000);
+    /*]]>*/
+  </script>
+
+
+</body>
+
+</html>

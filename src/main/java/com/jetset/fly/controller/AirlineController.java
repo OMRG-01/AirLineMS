@@ -1,6 +1,7 @@
 package com.jetset.fly.controller;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.jetset.fly.repository.AirlineRepository;
 import com.jetset.fly.repository.*;
 import com.jetset.fly.service.*;
 import com.jetset.fly.service.FlightService;
+import com.jetset.fly.utility.IdUtil;
 
 import org.springframework.ui.Model;
 
@@ -60,9 +62,19 @@ public class AirlineController {
     
     @GetMapping("/airline-management")
     public String viewAirline(Model model) {
-    	 model.addAttribute("airlines", airlineService.getActiveAirlines());
+        List<Airline> airlines = airlineService.getActiveAirlines();
+        model.addAttribute("airlines", airlines);
+
+        // 👉 Encode airline IDs
+        Map<Long, String> encodedIdMap = new HashMap<>();
+        for (Airline airline : airlines) {
+            encodedIdMap.put(airline.getId(), IdUtil.encodeId(airline.getId()));
+        }
+        model.addAttribute("encodedIdMap", encodedIdMap);
+
         return "admin/viewAirline";
     }
+
     
     @PostMapping("/delete-airline/{id}")
     public String deleteAirline(@PathVariable Long id) {
@@ -71,17 +83,23 @@ public class AirlineController {
     }
     
     @GetMapping("/flights/add")
-    public String showAddFlightForm(@RequestParam(value = "id", required = false) Long selectedAirlineId,
+    public String showAddFlightForm(@RequestParam(value = "id", required = false) String encodedAirlineId,
                                     Model model) {
+        Long selectedAirlineId = null;
+        if (encodedAirlineId != null && !encodedAirlineId.isBlank()) {
+            selectedAirlineId = IdUtil.decodeId(encodedAirlineId);
+        }
+
         List<Airline> airlines = airlineService.getActiveAirlines();
         model.addAttribute("airlines", airlines);
         model.addAttribute("classes", classRepository.findByStatus("ACTIVE"));
 
-        // 👇 Add this line to pre-select in the dropdown
+        // 👇 This will pre-select the airline in the form dropdown
         model.addAttribute("selectedAirlineId", selectedAirlineId);
 
         return "admin/addFlight";
     }
+
 
     
     
@@ -118,8 +136,15 @@ public class AirlineController {
             }
             seatMap.put(flight.getId(), classSeatMap);
         }
+        
+        Map<Long, String> encodedIdMap = new HashMap<>();
+        for (AirFlight flight : flights) {
+            String encodedId = Base64.getEncoder().encodeToString(flight.getId().toString().getBytes());
+            encodedIdMap.put(flight.getId(), encodedId);
+        }
 
         model.addAttribute("flights", flights);
+        model.addAttribute("encodedIdMap", encodedIdMap);
         model.addAttribute("allClasses", allClasses);
         model.addAttribute("seatMap", seatMap);  // 👈 add this
         return "admin/viewFlight";
@@ -144,77 +169,89 @@ public class AirlineController {
     private CityService cityService;
     
     
-    @GetMapping("/flights/edit/{id}")
-    public String showEditFlightForm(@PathVariable Long id, Model model) {
-        AirFlight flight = airFlightService.findById(id);
-        List<Class> classes = classService.getAllClasses();
-        List<Airline> airlines = airlineService.getAllAirlines();
-        List<FlightClass> flightClasses = flightClassService.getByFlightId(id);
+    @GetMapping("/flights/edit/{encodedId}")
+    public String showEditFlightForm(@PathVariable String encodedId, Model model) {
+        try {
+            Long id = Long.parseLong(new String(Base64.getDecoder().decode(encodedId)));
+            AirFlight flight = airFlightService.findById(id);
+            List<Class> classes = classService.getAllClasses();
+            List<Airline> airlines = airlineService.getAllAirlines();
+            List<FlightClass> flightClasses = flightClassService.getByFlightId(id);
 
-        Map<Long, Integer> seatMap = new HashMap<>();
-        for (FlightClass fc : flightClasses) {
-            seatMap.put(fc.getFlightClass().getId(), fc.getSeat());
+            Map<Long, Integer> seatMap = new HashMap<>();
+            for (FlightClass fc : flightClasses) {
+                seatMap.put(fc.getFlightClass().getId(), fc.getSeat());
+            }
+
+            model.addAttribute("flight", flight);
+            model.addAttribute("classes", classes);
+            model.addAttribute("airlines", airlines);
+            model.addAttribute("selectedAirlineId", flight.getAirline().getId());
+            model.addAttribute("seatMap", seatMap);
+
+            // Send back encoded ID for form submission
+            model.addAttribute("encodedId", encodedId);
+
+            return "admin/editFlight";
+        } catch (Exception e) {
+            return "redirect:/admin/flights/view";
         }
-
-        model.addAttribute("flight", flight);
-        model.addAttribute("classes", classes);
-        model.addAttribute("airlines", airlines);
-        model.addAttribute("selectedAirlineId", flight.getAirline().getId());
-        model.addAttribute("seatMap", seatMap);
-
-        return "admin/editFlight";
     }
+
     
     
 
     @PostMapping("/flights/update")
     public String updateFlight(@RequestParam Map<String, String> params,
-                               @RequestParam(name = "classIds", required = false) List<Long> classIds) {
-        Long flightId = Long.parseLong(params.get("id"));
-        Long airlineId = Long.parseLong(params.get("airlineId"));
-        String fnumber = params.get("fnumber");
-        int totalSeat = Integer.parseInt(params.get("totalSeat"));
+                               @RequestParam(name = "classIds", required = false) List<Long> classIds,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            // Decode the ID
+            String encodedId = params.get("encodedId");
+            Long flightId = Long.parseLong(new String(Base64.getDecoder().decode(encodedId)));
 
-        // ✅ Find and update the AirFlight
-        AirFlight flight = airFlightService.findById(flightId);
-        Airline airline = airlineService.findById(airlineId);  // Use proper method, not constructor
-        flight.setAirline(airline);
-        flight.setFnumber(fnumber);
-        flight.setTotalSeat(totalSeat);
-        airFlightService.save(flight);
+            Long airlineId = Long.parseLong(params.get("airlineId"));
+            String fnumber = params.get("fnumber");
+            int totalSeat = Integer.parseInt(params.get("totalSeat"));
 
-        // ✅ Get existing FlightClass entries
-        List<FlightClass> existingFlightClasses = flightClassService.getByFlightId(flightId);
+            AirFlight flight = airFlightService.findById(flightId);
+            Airline airline = airlineService.findById(airlineId);
+            flight.setAirline(airline);
+            flight.setFnumber(fnumber);
+            flight.setTotalSeat(totalSeat);
+            airFlightService.save(flight);
 
-        // Create map: classId → FlightClass
-        Map<Long, FlightClass> existingMap = new HashMap<>();
-        for (FlightClass fc : existingFlightClasses) {
-            existingMap.put(fc.getFlightClass().getId(), fc);
-        }
+            List<FlightClass> existingFlightClasses = flightClassService.getByFlightId(flightId);
+            Map<Long, FlightClass> existingMap = new HashMap<>();
+            for (FlightClass fc : existingFlightClasses) {
+                existingMap.put(fc.getFlightClass().getId(), fc);
+            }
 
-        // ✅ Update or insert class seat info
-        if (classIds != null) {
-            for (Long classId : classIds) {
-                int seat = Integer.parseInt(params.get("seat_" + classId));
-
-                if (existingMap.containsKey(classId)) {
-                    // UPDATE existing class seat
-                    FlightClass fc = existingMap.get(classId);
-                    fc.setSeat(seat);
-                    flightClassService.save(fc);
-                } else {
-                    // INSERT new class entry
-                    FlightClass newFc = new FlightClass();
-                    newFc.setFlight(flight);
-                    newFc.setFlightClass(classService.findById(classId)); // Use method, not constructor
-                    newFc.setSeat(seat);
-                    flightClassService.save(newFc);
+            if (classIds != null) {
+                for (Long classId : classIds) {
+                    int seat = Integer.parseInt(params.get("seat_" + classId));
+                    if (existingMap.containsKey(classId)) {
+                        FlightClass fc = existingMap.get(classId);
+                        fc.setSeat(seat);
+                        flightClassService.save(fc);
+                    } else {
+                        FlightClass newFc = new FlightClass();
+                        newFc.setFlight(flight);
+                        newFc.setFlightClass(classService.findById(classId));
+                        newFc.setSeat(seat);
+                        flightClassService.save(newFc);
+                    }
                 }
             }
-        }
 
-        return "redirect:/admin/flights/view";
+            return "redirect:/admin/flights/view";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Update failed: " + e.getMessage());
+            return "redirect:/admin/flights/edit/" + params.get("encodedId");
+        }
     }
+
 
     
     

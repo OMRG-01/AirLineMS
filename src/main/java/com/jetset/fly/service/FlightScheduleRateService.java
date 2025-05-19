@@ -2,6 +2,8 @@ package com.jetset.fly.service;
 
 import com.jetset.fly.model.FlightClass;
 import com.jetset.fly.model.FlightSchedule;
+
+import com.jetset.fly.model.Class;
 import com.jetset.fly.model.FlightScheduleRate;
 import com.jetset.fly.repository.FlightClassRepository;
 import com.jetset.fly.repository.FlightScheduleRateRepository;
@@ -37,27 +39,44 @@ public class FlightScheduleRateService {
         return rateRepository.findByScheduleId(scheduleId);
     }
     
-    public void updateOrCreateRate(Long scheduleId, Long classId, Double cost) {
+    public void updateOrCreateRate(Long scheduleId, Long flightClassId, Double cost) {
         FlightSchedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new EntityNotFoundException("Schedule not found"));
 
-        FlightClass flightClass = classRepository.findById(classId)
+        FlightClass flightClassEntity = classRepository.findById(flightClassId)
                 .orElseThrow(() -> new EntityNotFoundException("Flight class not found"));
 
-        // Try to find existing rate
-        Optional<FlightScheduleRate> optionalRate = rateRepository.findByScheduleAndFlightClass(schedule, flightClass);
+        Class seatClass = flightClassEntity.getFlightClass();
+
+        Optional<FlightScheduleRate> optionalRate = rateRepository.findByScheduleAndFlightClass(schedule, seatClass);
 
         FlightScheduleRate rate;
         if (optionalRate.isPresent()) {
             rate = optionalRate.get();
             rate.setRate(cost);
         } else {
-        	 rate = new FlightScheduleRate();
-             rate.setSchedule(schedule);
-             rate.setFlight(schedule.getFlight());  // Important: set flight here!
-             rate.setRate(cost);
+            rate = new FlightScheduleRate();
+            rate.setSchedule(schedule);
+            rate.setFlight(schedule.getFlight());
+            rate.setFlightClass(seatClass);
+            rate.setRate(cost);
         }
 
         rateRepository.save(rate);
     }
+    
+    public List<FlightScheduleRate> findByScheduleId(Long scheduleId) {
+        return rateRepository.findByScheduleId(scheduleId);
+    }
+
+    public void deleteByScheduleId(Long scheduleId) {
+    	rateRepository.deleteByScheduleId(scheduleId);
+    }
+    
+    public List<FlightScheduleRate> getRatesByScheduleId(Long scheduleId) {
+        return rateRepository.findByScheduleId(scheduleId);
+    }
+
+
+
 }

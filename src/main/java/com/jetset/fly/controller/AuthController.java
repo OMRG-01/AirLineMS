@@ -1,12 +1,15 @@
 package com.jetset.fly.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +20,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jetset.fly.model.AirFlight;
 import com.jetset.fly.model.Airline;
+import com.jetset.fly.model.City;
+import com.jetset.fly.model.FlightClass;
 import com.jetset.fly.model.FlightSchedule;
+import com.jetset.fly.model.FlightScheduleRate;
 import com.jetset.fly.model.Role;
 import com.jetset.fly.model.User;
 import com.jetset.fly.repository.FlightScheduleRepository;
@@ -26,6 +32,11 @@ import com.jetset.fly.repository.UserRepository;
 import com.jetset.fly.service.AdminService;
 import com.jetset.fly.service.AirFlightService;
 import com.jetset.fly.service.AirlineService;
+import com.jetset.fly.service.CityService;
+import com.jetset.fly.service.FlightClassService;
+import com.jetset.fly.service.FlightScheduleRateService;
+import com.jetset.fly.service.FlightScheduleService;
+import com.jetset.fly.service.PassengerService;
 import com.jetset.fly.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
@@ -50,13 +61,137 @@ public class AuthController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
+    @Autowired
+    private FlightScheduleService flightScheduleService;
+    
+    @Autowired
+    private FlightScheduleRateService flightScheduleRateService;
 	 @GetMapping("/")
-	    public String home() {
+	    public String home(Model model) {
+		 List<City> cities = cityService.getAllActiveCities();
+		 model.addAttribute("cities", cities);
 	        return "index"; // Redirects to index.html in 'static'
 	    }
-	
+	 
+	 @Autowired
+	 private FlightClassService flightClassService;
+	 
+	 @Autowired
+	 private PassengerService passengerService;
+	 
+	 @GetMapping("/fair-flight")
+	 public String searchFlights(@RequestParam("from") Long fromCityId,
+	                             @RequestParam("to") Long toCityId,
+	                             @RequestParam("d_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                             @RequestParam("nop") int passengers,
+	                             Model model) {
+
+	     List<FlightSchedule> flights = flightScheduleService.findFlightsForRouteAndDate(fromCityId, toCityId, date);
+
+	     // Map<scheduleId, List<FlightScheduleRate>>
+	     Map<Long, List<FlightScheduleRate>> scheduleRatesMap = new HashMap<>();
+
+	     // Map<scheduleId-classId, availableSeatCount>
+	     Map<String, Integer> availableSeatsMap = new HashMap<>();
+
+	     for (FlightSchedule flight : flights) {
+	    	    List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
+	    	    scheduleRatesMap.put(flight.getId(), rates);
+
+	    	    for (FlightScheduleRate rate : rates) {
+	    	        Long flightId = rate.getFlight().getId();
+	    	        Long classId = rate.getFlightClass().getId();
+
+	    	        // Fetch seat capacity from FlightClass using flight + class
+	    	        FlightClass flightClass = flightClassService.findByFlightIdAndClassId(flightId, classId);
+	    	        int totalCapacity = flightClass.getSeat();
+
+	    	        int bookedSeats = passengerService.countPassengersByScheduleAndClass(flight.getId(), classId);
+
+	    	        int availableSeats = totalCapacity - bookedSeats;
+	    	        String key = flight.getId() + "-" + classId;
+
+	    	        availableSeatsMap.put(key, availableSeats);
+	    	    }
+	    	}
+
+
+	     City fromCity = cityService.getCityById(fromCityId);
+	     City toCity = cityService.getCityById(toCityId);
+
+	     model.addAttribute("flights", flights);
+	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
+	     model.addAttribute("availableSeatsMap", availableSeatsMap); // 🆕
+	     model.addAttribute("from", fromCity.getCityname());
+	     model.addAttribute("to", toCity.getCityname());
+	     model.addAttribute("date", date);
+	     model.addAttribute("passengers", passengers);
+	     return "user/fairFlight";
+	 }
+
+	 
+	 @GetMapping("/flightstatus")
+	 public String searchFlightsStatus(@RequestParam("from") Long fromCityId,
+	                             @RequestParam("to") Long toCityId,
+	                             @RequestParam("d_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                            
+	                             Model model) {
+
+	     List<FlightSchedule> flights = flightScheduleService.findFlightsStatus(fromCityId, toCityId, date);
+	     
+	     
+	     // Prepare a map of FlightSchedule ID -> List of FlightScheduleRate
+	     Map<Long, List<FlightScheduleRate>> scheduleRatesMap = new HashMap<>();
+	     for (FlightSchedule flight : flights) {
+	         List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
+	         scheduleRatesMap.put(flight.getId(), rates);
+	     }
+	     
+	     City fromCity = cityService.getCityById(fromCityId); // Replace with your actual method
+	     City toCity = cityService.getCityById(toCityId);
+
+	     model.addAttribute("flights", flights);
+	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
+	     model.addAttribute("from", fromCity.getCityname());
+	     model.addAttribute("to", toCity.getCityname());
+	     model.addAttribute("date", date);
+	     model.addAttribute("now", LocalDateTime.now());
+
+	     return "user/fairStatus";
+	 }
+
+
+	 
+	 @GetMapping("/loading")
+	 public String showLoadingPage(@RequestParam Long from,
+	                               @RequestParam Long to,
+	                               @RequestParam String d_date,
+	                               @RequestParam int nop,
+	                               Model model) {
+
+	     // Fetch city names using city service
+	     City fromCity = cityService.getCityById(from);
+	     City toCity = cityService.getCityById(to);
+
+	     model.addAttribute("from", from);
+	     model.addAttribute("to", to);
+	     model.addAttribute("fromCity", fromCity.getCityname());
+	     model.addAttribute("toCity", toCity.getCityname());
+	     model.addAttribute("d_date", d_date);
+	     model.addAttribute("nop", nop);
+
+	     return "user/loading";  // maps to loading.html Thymeleaf template
+	 }
+
+
+	 
+
+	 @Autowired
+	    private CityService cityService;
+	 
 	 @GetMapping("/login1")
 	    public String showLoginPage() {
+		 
 	        return "login"; // Shows login.html
 	    }
 	 @GetMapping("/admin/login")
@@ -87,6 +222,9 @@ public class AuthController {
 	        if (session.getAttribute("admin") == null) {
 	            return "redirect:/admin/login"; // Not logged in
 	        }
+	        
+	        
+	       
 	        
 	        List<Airline> airlines = airlineService.getActiveAirlines(); // Only ACTIVE airlines
 	        List<Map<String, Object>> airlineFlightData = new ArrayList<>();
@@ -132,12 +270,20 @@ public class AuthController {
 	        long flightCount = airFlightService.countByStatus("ACTIVE");
 	        AirFlight latestFlight = airFlightService.findLatestByStatus("ACTIVE");
 
+	        
+	        List<String> selectedClocks = (List<String>) session.getAttribute("selectedClocks");
+	        if (selectedClocks == null) {
+	            selectedClocks = Arrays.asList("UK", "USA", "India", "Dubai");
+	        }
+	        model.addAttribute("selectedClocks", selectedClocks);
+	        
 	        model.addAttribute("airlineCount", airlineCount);
 	        model.addAttribute("latestAirlineName", latestAirline != null ? latestAirline.getAname() : "N/A");
 	        model.addAttribute("admin", admin);
 	        model.addAttribute("flightCount", flightCount);
 	        model.addAttribute("latestFlightNumber", latestFlight != null ? latestFlight.getFnumber() : "N/A");
-
+	        model.addAttribute("visibleClocks", selectedClocks);
+	        
 	        return "admin/adminDash";
 	    }
 
@@ -245,7 +391,7 @@ public class AuthController {
 	            if (roleId == 1) {
 	                return "redirect:/admin/dashAdmin";
 	            } else if (roleId == 2) {
-	                return "redirect:/user/dashUser";
+	                return "redirect:/user/userDash";
 	            } else {
 	                return "redirect:/login1?error=unauthorized";
 	            }
@@ -253,6 +399,24 @@ public class AuthController {
 
 	        return "redirect:/login1?error=true";
 	    }
+	    
+	    @GetMapping("/user/userDash")
+	    public String userDash(Model model, HttpSession session) {
+	        List<City> cities = cityService.getAllActiveCities();
+	        model.addAttribute("cities", cities);
+
+	        // Use the same key: "loggedInUser"
+	        User user = (User) session.getAttribute("loggedInUser");
+
+	        if (user == null) {
+	            return "redirect:/login1"; // User not logged in
+	        }
+
+	        model.addAttribute("currentUser", user);
+	        return "user/dashUser";
+	    }
+
+
 
 	    @PostMapping("/register/submit")
 	    public String registerUser(
@@ -308,6 +472,30 @@ public class AuthController {
 	     session.invalidate(); // Clear session data
 	     return "redirect:/admin/login?logout"; // Redirect to login with a message
 	 }
+	 
+	 @GetMapping("/admin/clock-settings")
+	 public String settingsPage(HttpSession session, Model model) {
+	        List<String> selectedClocks = (List<String>) session.getAttribute("selectedClocks");
+	        if (selectedClocks == null) {
+	            selectedClocks = Arrays.asList("UK", "USA", "India", "Dubai"); // Default
+	        }
+	        model.addAttribute("selectedClocks", selectedClocks);
+	     return "admin/settings";
+	 }
+	 
+	 @PostMapping("/admin/save-clock-settings")
+	 public String saveClockSettings(@RequestParam(value = "clocks", required = false) List<String> clocks,
+             HttpSession session,
+             RedirectAttributes redirectAttributes) {
+			if (clocks == null) {
+			clocks = new ArrayList<>();
+			}
+			session.setAttribute("selectedClocks", clocks);
+			redirectAttributes.addFlashAttribute("success", "Clock settings updated!");
+	     return "redirect:/admin/clock-settings";
+	 }
+
+
 
 	
 }

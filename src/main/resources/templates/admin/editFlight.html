@@ -386,7 +386,7 @@
               </div>
 
               <form th:action="@{/admin/flights/update}" method="post" class="mt-4">
-                <input type="hidden" name="id" th:value="${flight.id}" />
+                <input type="hidden" name="encodedId" th:value="${encodedId}" />
 
                 <div class="row">
                   <div class="col-md-6">
