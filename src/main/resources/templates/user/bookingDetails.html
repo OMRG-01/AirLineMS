@@ -1,188 +1,750 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Passenger Details</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-    <style>
-        .passenger-form, .review-card {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
+  <title>Personal Information</title>
+	<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
 
-        label {
-            font-weight: bold;
-        }
+    :root {
+      --primary-color: #8E2157;
+      --primary-color-dark: #6b0f3d;
+      --text-dark: #0b0f18;
+      --text-light: #503744;
+      --extra-light: #f1f5f9;
+      --white: #ffffff;
+      --max-width: 1400px;
+    }
 
-        input, select {
-            margin-bottom: 15px;
-            width: 100%;
-            padding: 8px;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-        .hidden {
-            display: none;
-        }
+    body {
+      background-color: var(--extra-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .review-section h3 {
-            margin-top: 0;
-            color: #333;
-        }
+    /* Header Styles */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.6s;
+      padding: 10px 20px 0 30px;
+      z-index: 10;
+      background-color: var(--white);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .summary-row {
-            margin-bottom: 10px;
-        }
-    </style>
+    header .logo {
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: 0.6s;
+    }
+
+    header ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    header ul li {
+      margin-right: 15px;
+      list-style: none;
+    }
+
+    header ul li:last-child {
+      margin-right: 0;
+    }
+
+    header ul li a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: var(--primary-color);
+      letter-spacing: 2px;
+      font-weight: 700;
+      transition: 0.6s;
+    }
+
+    .nav__logo img {
+      height: 50px;
+      width: 150px;
+      margin-right: 10px;
+    }
+
+    .nav__links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav__links li {
+      list-style: none;
+      display: inline-block;
+      padding: 8px 12px;
+      position: relative;
+    }
+
+    .nav__links li a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .nav__links li::after {
+      content: '';
+      width: 0%;
+      height: 3px;
+      background: var(--primary-color);
+      display: block;
+      margin: auto;
+      transition: 0.5s;
+    }
+
+    .nav__links li:hover::after {
+      width: 80%;
+    }
+
+    .login {
+      display: flex;
+      align-items: center;
+    }
+
+    .login i {
+      position: relative;
+      right: 40px;
+      top: 0px;
+    }
+
+    .login div {
+      position: relative;
+      right: 35px;
+    }
+
+    .user-log {
+      position: relative;
+      margin-top: -12px;
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .user-log::after,
+    .user-log:hover {
+      text-decoration: none;
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .btn {
+      padding: 0.75rem 2rem;
+      outline: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--white);
+      background-color: var(--primary-color);
+      border-radius: 2rem;
+      cursor: pointer;
+      margin-top: -10px;
+      transition: 0.3s;
+    }
+
+    .btn a {
+      color: var(--extra-light);
+      text-decoration: none;
+    }
+
+    .btn i {
+      color: var(--extra-light);
+      display: contents;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-color-dark);
+    }
+
+    /* Content Wrapper */
+    .content-wrapper {
+      flex: 1;
+      padding: 100px 0 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Card Styles */
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .card-header {
+      background: var(--white);
+      padding: 15px 20px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      color: var(--text-dark);
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 30px;
+    }
+
+    /* Form Styles */
+    .passenger-form {
+      margin-bottom: 20px;
+    }
+
+    .passenger-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--text-dark);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .form-group label {
+      position: absolute;
+      top: 15px;
+      left: 10px;
+      font-size: 16px;
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 10px 10px;
+      font-size: 17px;
+      border: none;
+      border-bottom: 2px solid #ccc;
+      background: transparent;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+    }
+
+    .form-control:focus + label,
+    .form-control:valid + label {
+      top: -5px;
+      font-size: 12px;
+      color: var(--primary-color);
+    }
+
+    select.form-control {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238E2157' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 15px;
+    }
+
+    /* Button Container */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .btn-action {
+      min-width: 150px;
+      padding: 12px 30px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      background-color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-action:hover {
+      background-color: var(--white);
+      color: var(--primary-color);
+    }
+
+    /* Preview Styles */
+    .flight-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 50px;
+      position: relative;
+    }
+
+    .flight-route {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin: 20px 0;
+      padding: 0 50px;
+    }
+
+    .route-info {
+      text-align: center;
+    }
+
+    .route-city {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .route-label {
+      font-size: 16px;
+      color: var(--text-light);
+      margin-bottom: 5px;
+    }
+
+    .route-time {
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .route-date {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .airline-info {
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .airline-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 0;
+    }
+
+    .flight-number {
+      font-size: 14px;
+      color: var(--text-light);
+    }
+
+    .flight-path {
+      position: relative;
+      height: 50px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 50px;
+    }
+
+    .flight-path-line {
+      height: 2px;
+      background: var(--primary-color);
+      width: 70%;
+      position: relative;
+    }
+
+    .flight-icon {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 24px;
+    }
+
+    .departure-point {
+      position: absolute;
+      left: 15%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: var(--primary-color);
+      border-radius: 50%;
+    }
+
+    .booking-details {
+      padding: 20px 50px;
+    }
+
+    .booking-summary {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .total-cost {
+      font-size: 22px;
+      font-weight: 700;
+      padding: 15px 0;
+      border-top: 1px solid #eee;
+      margin-top: 10px;
+    }
+
+    /* Footer Styles */
+    .footer {
+      width: 100%;
+      background-color: var(--primary-color);
+      padding: 20px 10px;
+      color: var(--white);
+      margin-top: auto;
+    }
+
+    .footer__container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer__bar1 {
+      font-size: 1rem;
+    }
+
+    .social {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .social a {
+      color: var(--extra-light);
+      text-decoration: none;
+      font-size: 1.4rem;
+    }
+
+    .n_logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .n_logo img {
+      height: 40px;
+      width: 120px;
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <h2>Passenger Information</h2>
-	
-    <!-- Passenger Form Section -->
-    <form id="passengerForm" onsubmit="showReview(event)">
-        <div th:each="i : ${#numbers.sequence(1, nos_passanger)}" class="passenger-form">
-            <h3>Passenger <span th:text="${i}">1</span></h3>
+  <!-- Header Section -->
+  <header>
+    <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo"></div>
+    <ul class="nav__links">
+      <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
+      <li class="link"><a th:href="@{/user/Booking History}">MY FLIGHTS</a></li>
+      <li class="link"><a th:href="@{/aboutus}">ABOUT</a></li>
+      <li class="link"><a th:href="@{/login1}">FEEDBACK</a></li>
+    </ul>
+    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
+  </header>
 
-            <label>Title</label>
-            <select name="title" required>
-                <option value="">--Select--</option>
-                <option>Mr</option>
-                <option>Mrs</option>
-                <option>Miss</option>
-            </select>
+  <!-- Main Content Section -->
+  <section class="content-wrapper">
+    <!-- Personal Information Form Section -->
+    <form id="passengerForm">
+      <!-- Personal Information Header Card -->
+      <div class="card card-header">
+        <h2>Personal Information</h2>
+      </div>
 
-            <label>First Name</label>
-            <input type="text" name="firstName" required />
-
-            <label>Last Name</label>
-            <input type="text" name="lastName" required />
-
-            <label>Mobile Number</label>
-            <input type="tel" name="mobileNumber" required maxlength="10" pattern="[0-9]{10}" />
-
-            <label>Date of Birth</label>
-            <input type="date" name="dob" required />
-
-            <label>Gender</label>
-            <select name="gender" required>
-                <option value="">--Select--</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-            </select>
+      <!-- Passenger Information Card -->
+      <div th:each="i : ${#numbers.sequence(1, nos_passanger)}" class="passenger-form">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="passenger-title">Passenger <span th:text="${i}">1</span></h3>
+            
+            <div class="form-grid">
+              <!-- Title -->
+              <div class="form-group">
+                <select class="form-control" id="title" name="title" required>
+                  <option value="" disabled selected></option>
+                  <option value="Mr">Mr</option>
+                  <option value="Miss">Miss</option>
+                  <option value="Mrs">Mrs</option>
+                </select>
+                <label for="title">Title</label>
+              </div>
+              
+              <!-- First Name -->
+              <div class="form-group">
+                <input type="text" class="form-control" name="firstName" id="fname" required />
+                <label for="fname">First Name</label>
+              </div>
+              
+              <!-- Last Name -->
+              <div class="form-group">
+                <input type="text" class="form-control" name="lastName" id="lname" required />
+                <label for="lname">Last Name</label>
+              </div>
+              
+              <!-- Mobile Number -->
+              <div class="form-group">
+                <input type="tel" class="form-control" name="mobileNumber" id="mnumber" required maxlength="10" pattern="[0-9]{10}" />
+                <label for="mnumber">Mobile Number</label>
+              </div>
+              
+              <!-- Date of Birth -->
+              <div class="form-group">
+                <input type="date" class="form-control" name="dob" id="dob" required />
+                <label for="dob">Date of Birth</label>
+              </div>
+              
+              <!-- Gender -->
+              <div class="form-group">
+                <select class="form-control" id="gender" name="gender" required>
+                  <option value="" disabled selected></option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Others">Others</option>
+                </select>
+                <label for="gender">Gender</label>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      
+      <!-- Action Buttons Card -->
+      <div class="card">
+        <div class="card-body">
+          <div class="button-container">
+            <button type="button" class="btn-action" onclick="goBack()">Back</button>
+            <button type="submit" class="btn-action">Continue</button>
+          </div>
+        </div>
+      </div>
 
-        <button type="submit">Continue</button>
-		<input type="hidden" name="airlineId" th:value="${airline.id}" />
-		<input type="hidden" name="flightId" th:value="${flight.id}" />
-		<input type="hidden" name="scheduleId" th:value="${schedule.id}" />
-		<input type="hidden" name="flightClassId" th:value="${flightClass.id}" />
-		<input type="hidden" name="rate" th:value="${rate}" />
-		<input type="hidden" name="noOfPassengers" th:value="${nos_passanger}" />
-		<input type="show" name="userId" th:value="${user.id}" />
-
+      <!-- Hidden Fields -->
+      <input type="hidden" name="airlineId" th:value="${airline.id}" />
+      <input type="hidden" name="flightId" th:value="${flight.id}" />
+      <input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+      <input type="hidden" name="flightClassId" th:value="${flightClass.id}" />
+      <input type="hidden" name="rate" th:value="${rate}" />
+      <input type="hidden" name="noOfPassengers" th:value="${nos_passanger}" />
+      <input type="hidden" name="userId" th:value="${user.id}" />
     </form>
 
-    <!-- Review Section (Hidden Initially) -->
-	<div id="reviewCard" class="review-card hidden">
-	        <h2>Review Your Booking</h2>
+    <!-- Preview Section (Hidden Initially) -->
+    <div id="reviewCard" style="display: none;">
+      <!-- Preview Header Card -->
+      <div class="card card-header">
+        <h2>Preview</h2>
+      </div>
 
-	        <div class="review-section">
-	            <div class="summary-row">
-	                <strong>Airline:</strong> <span th:text="${airline.aname}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>Flight:</strong> <span th:text="${flight.fnumber}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>From:</strong> <span th:text="${schedule.source.cityname}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>Departure:</strong> <span th:text="${#temporals.format(schedule.departAt, 'dd MMM yyyy, HH:mm')}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>To:</strong> <span th:text="${schedule.destination.cityname}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>Arrival:</strong> <span th:text="${#temporals.format(schedule.arriveAt, 'dd MMM yyyy, HH:mm')}"></span>
-	            </div>
-	        </div>
+      <!-- Flight Information Card -->
+      <div class="card">
+        <div class="card-body">
+          <!-- Flight Source & Destination -->
+          <div class="flight-route">
+            <div class="route-info">
+              <h2 class="route-city"><span th:text="${schedule.source.cityname}">Nashik (NSK)</span></h2>
+              <div class="route-label">Departed</div>
+              <div class="route-time"><span th:text="${#temporals.format(schedule.departAt, 'HH:mm')}">15:23</span></div>
+              <div class="route-date"><span th:text="${#temporals.format(schedule.departAt, 'EEE, dd MMM')}">Sat, 11 Oct</span></div>
+            </div>
 
-	        <div class="review-section" style="margin-top: 20px;">
-	            <div class="summary-row">
-	                <strong>Total Passengers:</strong> <span th:text="${nos_passanger}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>Rate per Seat:</strong> INR <span th:text="${rate}"></span>
-	            </div>
-	            <div class="summary-row">
-	                <strong>Total Cost:</strong> INR <span th:text="${rate * nos_passanger}"></span>
-	            </div>
-	        </div>
+            <div class="airline-info">
+              <div class="airline-name"><span th:text="${airline.aname}">Vistara</span></div>
+              <div class="flight-number"><span th:text="${flight.fnumber}">VS 901</span></div>
+            </div>
 
-	        <button onclick="confirmBooking()">Confirm Booking</button>
-	    </div>
-</div>
+            <div class="route-info">
+              <h2 class="route-city"><span th:text="${schedule.destination.cityname}">Mumbai (BOM)</span></h2>
+              <div class="route-label">Arrived</div>
+              <div class="route-time"><span th:text="${#temporals.format(schedule.arriveAt, 'HH:mm')}">12:20</span></div>
+              <div class="route-date"><span th:text="${#temporals.format(schedule.arriveAt, 'EEE, dd MMM')}">Sat, 18 Oct</span></div>
+            </div>
+          </div>
+          
+          <!-- Flight Path Visualization -->
+          <div class="flight-path">
+            <div class="departure-point"></div>
+            <div class="flight-path-line">
+              <div class="flight-icon">
+                <i class="fa fa-plane"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <!-- Booking Summary Card -->
+      <div class="card">
+        <div class="card-body booking-details">
+          <div class="booking-summary">
+            <div>Total Passenger(s): <span th:text="${nos_passanger}">1</span></div>
+            <div>Cost Per Seat: INR <span th:text="${rate}">1003</span></div>
+          </div>
+          
+          <div class="total-cost">
+            Total Cost: INR <span th:text="${rate * nos_passanger}">1003</span>
+          </div>
 
-<script>
-    function showReview(event) {
-        event.preventDefault();
-        document.getElementById("passengerForm").classList.add("hidden");
-        document.getElementById("reviewCard").classList.remove("hidden");
+          <div class="button-container">
+            <button type="button" class="btn-action" onclick="goBackToForm()">Back</button>
+            <button type="button" class="btn-action" onclick="confirmBooking()">Confirm Booking</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__bar1">
+        <p>Copyright © 2024 Team GMADS. All rights reserved.</p>
+      </div>
+      <div class="social">
+        <a href="#" class="text-muted" target="_blank"><i class="ri-facebook-fill"></i></a>
+        <a href="#" class="text-muted" target="_blank"><i class="ri-twitter-fill"></i></a>
+        <a href="#" class="text-muted" target="_blank"><i class="ri-instagram-line"></i></a>
+        <a href="#" class="text-muted" target="_blank"><i class="ri-youtube-fill"></i></a>
+        <div class="n_logo">
+          <img src="assets/w.png" alt="Logo">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Add event listener to the form
+    document.getElementById("passengerForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      showReview();
+    });
+    
+    function showReview() {
+      // Hide passenger form
+      document.getElementById("passengerForm").style.display = "none";
+      
+      // Show review card
+      document.getElementById("reviewCard").style.display = "block";
     }
-
+    
+    function goBackToForm() {
+      // Hide review card
+      document.getElementById("reviewCard").style.display = "none";
+      
+      // Show passenger form
+      document.getElementById("passengerForm").style.display = "block";
+    }
+    
+    function goBack() {
+      // Go back to previous page
+      window.history.back();
+    }
+    
     function confirmBooking() {
-        const form = document.getElementById("passengerForm");
-        const formData = new FormData(form);
-
-        const passengers = [];
-        const titles = formData.getAll("title");
-        const firstNames = formData.getAll("firstName");
-        const lastNames = formData.getAll("lastName");
-        const mobileNumbers = formData.getAll("mobileNumber");
-        const dobs = formData.getAll("dob");
-        const genders = formData.getAll("gender");
-
-        for (let i = 0; i < titles.length; i++) {
-            passengers.push({
-                pname: `${titles[i]} ${firstNames[i]} ${lastNames[i]}`,
-                mobileNo: mobileNumbers[i],
-                dob: dobs[i],
-                gender: genders[i]
-            });
-        }
-		
-
-        const bookingData = {
-            airlineId: formData.get("airlineId"),
-            flightId: formData.get("flightId"),
-            scheduleId: formData.get("scheduleId"),
-            flightClassId: formData.get("flightClassId"),
-            rate: formData.get("rate"),
-            noOfPassengers: formData.get("noOfPassengers"),
-            passengers: passengers,
-			userId: formData.get("userId")
-        };
-
-        fetch('/booking/temp-save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = '/booking/gateway';
-            } else {
-                alert("Failed to process booking temporarily.");
-            }
+      const form = document.getElementById("passengerForm");
+      const formData = new FormData(form);
+      
+      const passengers = [];
+      const titles = formData.getAll("title");
+      const firstNames = formData.getAll("firstName");
+      const lastNames = formData.getAll("lastName");
+      const mobileNumbers = formData.getAll("mobileNumber");
+      const dobs = formData.getAll("dob");
+      const genders = formData.getAll("gender");
+      
+      for (let i = 0; i < titles.length; i++) {
+        passengers.push({
+          pname: `${titles[i]} ${firstNames[i]} ${lastNames[i]}`,
+          mobileNo: mobileNumbers[i],
+          dob: dobs[i],
+          gender: genders[i]
         });
+      }
+      
+      const bookingData = {
+        airlineId: formData.get("airlineId"),
+        flightId: formData.get("flightId"),
+        scheduleId: formData.get("scheduleId"),
+        flightClassId: formData.get("flightClassId"),
+        rate: formData.get("rate"),
+        noOfPassengers: formData.get("noOfPassengers"),
+        passengers: passengers,
+        userId: formData.get("userId")
+      };
+      
+      fetch('/booking/temp-save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookingData)
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = '/booking/gateway';
+        } else {
+          alert("Failed to process booking temporarily.");
+        }
+      });
     }
-</script>
 
+    // Auto adjust labels when page loads (for form with prefilled values)
+    window.onload = function() {
+      const inputs = document.querySelectorAll('.form-control');
+      inputs.forEach(input => {
+        if (input.value !== '') {
+          const label = input.nextElementSibling;
+          if (label) {
+            label.style.top = '-5px';
+            label.style.fontSize = '12px';
+            label.style.color = '#8E2157';
+          }
+        }
+      });
+    };
+  </script>
 </body>
 </html>

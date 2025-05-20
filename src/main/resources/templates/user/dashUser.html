@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/png" th:href="@{/assets/tablogo.png}">
+	<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
   <link rel="stylesheet" th:href="@{/css/home.css}">
   <link rel="stylesheet" th:href="@{/css/autosearch.css}">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
@@ -254,8 +254,7 @@
       <li class="link"><a th:href="@{/aboutus}">ABOUT</a></li>
       <li class="link"><a th:href="@{/login1}">FEEDBACK</a></li>
     </ul>
-    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in"
-          style="font-size:15px"></i></button></a>
+    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
   </header>
   <section class="banner">
     <h2 class="section__header"></h2>
@@ -267,7 +266,7 @@
     </div>
     <div class="bookingForm">
       
-      <form id="searchForm" th:action="@{/loading}" method="get">
+      <form id="searchForm" th:action="@{/user/loading}" method="get">
         <div class="form__group">
           <span><i class="ri-flight-takeoff-line"></i></span>
           <div class="input__content">
@@ -330,7 +329,7 @@
 	
     </div>
     <div id="flightStatusForm" class="hidden">
-		<form id="statusForm" th:action="@{/flightstatus}" method="get">
+		<form id="statusForm" th:action="@{/user/flightstatus}" method="get">
 		        <div class="form__group">
 		          <span><i class="ri-flight-takeoff-line"></i></span>
 		          <div class="input__content">
@@ -723,7 +722,7 @@
       }
       
       // Redirect to loading page
-      window.location.href = `/loading?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}&nop=${encodeURIComponent(nop)}`;
+      window.location.href = `/user/loading?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}&nop=${encodeURIComponent(nop)}`;
     });
     
     // Flight status form submission handling
@@ -740,7 +739,7 @@
       }
       
       // Redirect to flight status page
-      window.location.href = `/flightstatus?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}`;
+      window.location.href = `/user/flightstatus?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}`;
     });
   </script>
 </body>

@@ -127,16 +127,23 @@ public class BookingController {
     public String showGatewayPage(HttpSession session, Model model) {
         BookingDTO bookingDTO = (BookingDTO) session.getAttribute("bookingDTO");
         if (bookingDTO == null) {
-            // No booking data in session, redirect back to booking page
             return "redirect:/bookingDetails"; 
         }
-        model.addAttribute("bookingDTO", bookingDTO);
-        // You can also add passengers, rate etc. as needed
+
         List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("passengers");
+        Double rate = (Double) session.getAttribute("rate"); // ensure this is Double or BigDecimal
+
+        int passengerCount = (passengers != null) ? passengers.size() : 0;
+        double totalFare = rate * passengerCount;
+
+        model.addAttribute("bookingDTO", bookingDTO);
         model.addAttribute("passengers", passengers);
-        model.addAttribute("rate", session.getAttribute("rate"));
-        return "user/gateway"; // Thymeleaf or JSP page named gateway.html
+        model.addAttribute("rate", rate);
+        model.addAttribute("totalFare", totalFare); // 👈 Add this
+
+        return "user/gateway";
     }
+
 
     
     @PostMapping("/booking/confirm")

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/assets/tablogo.png">
+		<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://kit.fontawesome.com/44f557ccce.js"></script>
     <style>
@@ -373,22 +373,15 @@
     <header>
         <div class="nav__logo"><img src="/assets/jetsetflylogo.png"></div>
         
-		<ul th:if="${currentUser != null}" class="nav__links">
+		<ul class="nav__links">
             <li class="link1"><a th:href="@{/user/userDash}">HOME</a></li>
            
             <li class="link1"><a th:href="@{/user/bookings}">My Bookings</a></li>
         </ul>
 		
-		<ul th:if="${currentUser == null}" class="nav__links">
-		            <li class="link1"><a href="/">HOME</a></li>
-		            <li class="link1"><a href="/about">ABOUT</a></li>
-		            
-		            <li class="link1"><a href="/feedback">FEEDBACK</a></li>
-		        </ul>
-        <div th:if="${currentUser == null}" class="login">
-            <button class="btn"><a th:href="/user/login">Login</a></button>
-        </div>
-		<div th:if="${currentUser != null}" class="login">
+		
+        
+		<div  class="login">
 		            <button class="btn"><a th:href="@{/user/Profile}">Profile</a></button>
 		</div>
     </header>
@@ -480,7 +473,7 @@
 
 					    <div>
 					        <!-- IF user is logged in and seats available: Show booking form -->
-					        <form th:if="${currentUser != null}"
+					        <form th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] > 0}"
 					              th:action="@{/booking/initiate}"
 					              method="post"
 					              th:unless="${availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}">
@@ -499,8 +492,7 @@
 					                class="select-btn disabled"
 					                disabled>No Seats Available</button>
 
-					        <!-- IF user is NOT logged in: redirect to login -->
-					        <a th:if="${currentUser == null}" th:href="@{/login1}" class="select-btn disabled">Select</a>
+					        
 					    </div>
 					</div>
 

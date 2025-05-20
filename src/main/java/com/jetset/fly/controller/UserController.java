@@ -134,8 +134,40 @@ public class UserController {
 	 }
 
 	 
+	
+
+
+	 
+	 @GetMapping("/user/loading")
+	 public String showLoadingUser(@RequestParam Long from,
+	                               @RequestParam Long to,
+	                               @RequestParam String d_date,
+	                               @RequestParam int nop,
+	                               HttpSession  session,
+	                               Model model) {
+		 
+		 session.setAttribute("from", from);
+		    session.setAttribute("to", to);
+		    session.setAttribute("d_date", d_date);
+		    session.setAttribute("nop", nop);
+
+		    
+	     // Fetch city names using city service
+	     City fromCity = cityService.getCityById(from);
+	     City toCity = cityService.getCityById(to);
+
+	     model.addAttribute("from", from);
+	     model.addAttribute("to", to);
+	     model.addAttribute("fromCity", fromCity.getCityname());
+	     model.addAttribute("toCity", toCity.getCityname());
+	     model.addAttribute("d_date", d_date);
+	     model.addAttribute("nop", nop);
+
+	     return "user/bookingloading";  // maps to loading.html Thymeleaf template
+	 }
+	 
 	 @GetMapping("/user/flightstatus")
-	 public String searchFlightsStatusUser(@RequestParam("from") Long fromCityId,
+	 public String searchFlightsUserStatus(@RequestParam("from") Long fromCityId,
 	                             @RequestParam("to") Long toCityId,
 	                             @RequestParam("d_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 	                            
@@ -161,39 +193,6 @@ public class UserController {
 	     model.addAttribute("date", date);
 	     model.addAttribute("now", LocalDateTime.now());
 
-	     return "user/fairStatus";
+	     return "user/userFairStatus";
 	 }
-
-
-	 
-	 @GetMapping("/user/loading")
-	 public String showLoadingPageUser(@RequestParam Long from,
-	                               @RequestParam Long to,
-	                               @RequestParam String d_date,
-	                               @RequestParam int nop,
-	                               HttpSession  session,
-	                               Model model) {
-		 
-		 session.setAttribute("from", from);
-		    session.setAttribute("to", to);
-		    session.setAttribute("d_date", d_date);
-		    session.setAttribute("nop", nop);
-
-		    
-	     // Fetch city names using city service
-	     City fromCity = cityService.getCityById(from);
-	     City toCity = cityService.getCityById(to);
-
-	     model.addAttribute("from", from);
-	     model.addAttribute("to", to);
-	     model.addAttribute("fromCity", fromCity.getCityname());
-	     model.addAttribute("toCity", toCity.getCityname());
-	     model.addAttribute("d_date", d_date);
-	     model.addAttribute("nop", nop);
-
-	     return "user/loading";  // maps to loading.html Thymeleaf template
-	 }
-
-
-
 }
