@@ -231,7 +231,7 @@
 
         /* Improved Flight Card CSS */
         .flight-container {
-            width: 90%;
+            width: 70%;
             margin: 20px auto 0;
         }
 
@@ -252,7 +252,7 @@
 
         .class-options {
             display: flex;
-            width: 45%;
+            width: 25%;
         }
 
         .class-card {
@@ -260,7 +260,6 @@
             border-radius: 20px;
             box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
             padding: 20px 15px;
-			margin-right: 10px;
             width: 70%;
             display: flex;
             flex-direction: column;
@@ -372,19 +371,15 @@
 <body>
     <header>
         <div class="nav__logo"><img src="/assets/jetsetflylogo.png"></div>
-        
-		
-		
-		<ul  class="nav__links">
-		            <li class="link1"><a href="/">HOME</a></li>
-		            <li class="link1"><a href="/about">ABOUT</a></li>
-		            
-		            <li class="link1"><a href="/feedback">FEEDBACK</a></li>
-		        </ul>
+        <ul class="nav__links">
+            <li class="link1"><a href="/">HOME</a></li>
+            <li class="link1"><a href="/about">ABOUT</a></li>
+           
+            <li class="link1"><a href="/feedback">FEEDBACK</a></li>
+        </ul>
         <div class="login">
-            <button class="btn"><a th:href="/user/login">Login</a></button>
+            <button class="btn"><a href="/login">Login</a></button>
         </div>
-		
     </header>
 
     <div class="page-title">
@@ -461,27 +456,20 @@
                     </div>
 
                     <!-- Price Check -->
-					<div th:if="${rate.rate > 0}">
-					    <h5 th:text="'INR ' + ${rate.rate}"></h5>
-
-					    <p style="font-size:15px;color:gray;margin-top:15px;">
-					        Available seats:
-					        <span th:text="${availableSeatsMap[flight.id + '-' + rate.flightClass.id]}">0</span>
-					    </p>
-
-					    <div>
-					        <!-- IF user is logged in and seats available: Show booking form -->
-					        
-
-					        <!-- Show disabled button if no seats -->
-					        <button th:if="${availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}"
-					                class="select-btn disabled"
-					                disabled>No Seats Available</button>
-
-					        <!-- IF user is NOT logged in: redirect to login -->
-					        <a  th:href="@{/login1}" class="select-btn disabled">Select</a>
-					    </div>
-					</div>
+                    <div th:if="${rate.rate > 0}">
+                        <h5 th:text="'INR ' + ${rate.rate}"></h5>
+                        
+						<p style="font-size:15px;color:gray;margin-top:15px;">
+						    Available seats:
+						    <span th:text="${availableSeatsMap[flight.id + '-' + rate.flightClass.id]}">0</span>
+						</p>
+                        
+                        <div>
+							<div>
+							    <a th:href="@{/login1}" class="select-btn disabled">Select</a>
+							</div>
+                        </div>
+                    </div>
 
                     <!-- Price Not Set = Class Not Available -->
                     <div th:if="${rate.rate == 0}" class="unavailable-class">
