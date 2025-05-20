@@ -38,5 +38,9 @@ public class UserService {
         return userRepository.findByEmail(email.toLowerCase()).isPresent();
     }
 
+    public User getById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
 
 }

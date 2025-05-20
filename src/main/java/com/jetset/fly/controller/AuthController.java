@@ -80,12 +80,19 @@ public class AuthController {
 	 private PassengerService passengerService;
 	 
 	 @GetMapping("/fair-flight")
-	 public String searchFlights(@RequestParam("from") Long fromCityId,
-	                             @RequestParam("to") Long toCityId,
-	                             @RequestParam("d_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-	                             @RequestParam("nop") int passengers,
+	 public String searchFlights(@RequestParam(required = false) Long fromCityId,
+	                             @RequestParam(required = false) Long toCityId,
+	                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                             @RequestParam(required = false) Integer  passengers,
 	                             Model model) {
-
+		 
+//		 session.setAttribute("search_from", fromCityId);
+//		    session.setAttribute("search_to", toCityId);
+//		    session.setAttribute("search_date", date);
+//		    session.setAttribute("search_nop", passengers);
+		 
+		
+		    
 	     List<FlightSchedule> flights = flightScheduleService.findFlightsForRouteAndDate(fromCityId, toCityId, date);
 
 	     // Map<scheduleId, List<FlightScheduleRate>>
@@ -118,6 +125,8 @@ public class AuthController {
 
 	     City fromCity = cityService.getCityById(fromCityId);
 	     City toCity = cityService.getCityById(toCityId);
+	     
+	    
 
 	     model.addAttribute("flights", flights);
 	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
@@ -167,8 +176,15 @@ public class AuthController {
 	                               @RequestParam Long to,
 	                               @RequestParam String d_date,
 	                               @RequestParam int nop,
+	                               HttpSession  session,
 	                               Model model) {
+		 
+		 session.setAttribute("from", from);
+		    session.setAttribute("to", to);
+		    session.setAttribute("d_date", d_date);
+		    session.setAttribute("nop", nop);
 
+		    
 	     // Fetch city names using city service
 	     City fromCity = cityService.getCityById(from);
 	     City toCity = cityService.getCityById(to);
@@ -495,7 +511,15 @@ public class AuthController {
 	     return "redirect:/admin/clock-settings";
 	 }
 
-
+	 @GetMapping("/user/logout")
+	    public String logoutUser(HttpSession session) {
+	        // Invalidate the current session
+		 session.removeAttribute("currentUser");
+		 
+	        session.invalidate();
+	        // Redirect to login or home page
+	        return "redirect:/login1";
+	    }
 
 	
 }

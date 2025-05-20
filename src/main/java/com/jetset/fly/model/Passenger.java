@@ -25,8 +25,8 @@ public class Passenger {
     private FlightSchedule schedule;
     
     @ManyToOne
-    @JoinColumn(name = "flight_class_id", nullable = false)
-    private FlightClass flightClass;
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class flightClass;
 
     private String pname;
 
@@ -49,7 +49,7 @@ public class Passenger {
     }
 
     // Parameterized Constructor
-    public Passenger(Booking booking, User user, FlightClass flightClass, String pname, String mobileNo, LocalDate dob, String gender, String prn, LocalDateTime bookingAt, String status) {
+    public Passenger(Booking booking, User user, Class flightClass, String pname, String mobileNo, LocalDate dob, String gender, String prn, LocalDateTime bookingAt, String status) {
         this.booking = booking;
         this.user = user;
         this.flightClass = flightClass;
@@ -101,12 +101,12 @@ public class Passenger {
     }
 
     // Getter for flightClass
-    public FlightClass getFlightClass() {
+    public Class getFlightClass() {
         return flightClass;
     }
 
     // Setter for flightClass
-    public void setFlightClass(FlightClass flightClass) {
+    public void setFlightClass(Class flightClass) {
         this.flightClass = flightClass;
     }
 

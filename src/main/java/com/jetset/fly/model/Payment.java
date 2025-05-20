@@ -30,7 +30,7 @@ public class Payment {
     private FlightSchedule schedule;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id") 
     private User user;
 
     // Default Constructor

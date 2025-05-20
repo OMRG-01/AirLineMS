@@ -1,0 +1,199 @@
+package com.jetset.fly.controller;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.jetset.fly.dto.BookingDTO;
+import com.jetset.fly.dto.BookingTempRequest;
+import com.jetset.fly.dto.PassengerDTO;
+import com.jetset.fly.model.*;
+
+import com.jetset.fly.model.Class;
+import com.jetset.fly.service.*;
+import com.jetset.fly.repository.*;
+
+import jakarta.servlet.http.HttpSession;
+
+
+@Controller
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private FlightScheduleService flightScheduleService;
+    
+    @Autowired
+    private FlightScheduleRateService flightScheduleRateService;
+
+    @Autowired
+    private AirFlightService airFlightService;
+
+    @Autowired
+    private AirlineService airlineService;
+
+    @Autowired
+    private ClassService classService;
+	
+	@Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+    
+    @Autowired
+    private FlightScheduleRepository flightScheduleRepository;
+    
+    @Autowired
+	 private FlightClassService flightClassService;
+	 
+	 @Autowired
+	 private PassengerService passengerService;
+	 
+	 @Autowired
+	 private CityService cityService;
+    
+    @GetMapping("/user/fair-flight")
+	 public String searchFlightsUser(@RequestParam(required = false) Long fromCityId,
+	                             @RequestParam(required = false) Long toCityId,
+	                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                             @RequestParam(required = false) Integer  passengers,
+	                             Model model, HttpSession session) {
+		 
+//  		session.setAttribute("search_from", fromCityId);
+//		    session.setAttribute("search_to", toCityId);
+//		    session.setAttribute("search_date", date);
+//		    session.setAttribute("search_nop", passengers);
+		 
+		 if (fromCityId == null) fromCityId = (Long) session.getAttribute("from");
+		    if (toCityId == null) toCityId = (Long) session.getAttribute("to");
+		    if (date == null) date = LocalDate.parse((String) session.getAttribute("d_date"));
+		    if (passengers == null) passengers = (Integer) session.getAttribute("nop");
+		    
+	     List<FlightSchedule> flights = flightScheduleService.findFlightsForRouteAndDate(fromCityId, toCityId, date);
+
+	     // Map<scheduleId, List<FlightScheduleRate>>
+	     Map<Long, List<FlightScheduleRate>> scheduleRatesMap = new HashMap<>();
+
+	     // Map<scheduleId-classId, availableSeatCount>
+	     Map<String, Integer> availableSeatsMap = new HashMap<>();
+
+	     for (FlightSchedule flight : flights) {
+	    	    List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
+	    	    scheduleRatesMap.put(flight.getId(), rates);
+
+	    	    for (FlightScheduleRate rate : rates) {
+	    	        Long flightId = rate.getFlight().getId();
+	    	        Long classId = rate.getFlightClass().getId();
+
+	    	        // Fetch seat capacity from FlightClass using flight + class
+	    	        FlightClass flightClass = flightClassService.findByFlightIdAndClassId(flightId, classId);
+	    	        int totalCapacity = flightClass.getSeat();
+
+	    	        int bookedSeats = passengerService.countPassengersByScheduleAndClass(flight.getId(), classId);
+
+	    	        int availableSeats = totalCapacity - bookedSeats;
+	    	        String key = flight.getId() + "-" + classId;
+
+	    	        availableSeatsMap.put(key, availableSeats);
+	    	    }
+	    	}
+
+
+	     City fromCity = cityService.getCityById(fromCityId);
+	     City toCity = cityService.getCityById(toCityId);
+	     User user = (User) session.getAttribute("loggedInUser");
+	     if (user != null) {
+	         model.addAttribute("currentUser", user);
+	         model.addAttribute("userId", user.getId()); // if needed on frontend
+	     }else if (user==null) {
+	    	 return "redirect:/login1";
+	     }
+
+	     model.addAttribute("flights", flights);
+	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
+	     model.addAttribute("availableSeatsMap", availableSeatsMap); // 🆕
+	     model.addAttribute("from", fromCity.getCityname());
+	     model.addAttribute("to", toCity.getCityname());
+	     model.addAttribute("date", date);
+	     model.addAttribute("passengers", passengers);
+	     return "user/userFlightBooking";
+	 }
+
+	 
+	 @GetMapping("/user/flightstatus")
+	 public String searchFlightsStatusUser(@RequestParam("from") Long fromCityId,
+	                             @RequestParam("to") Long toCityId,
+	                             @RequestParam("d_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                            
+	                             Model model) {
+
+	     List<FlightSchedule> flights = flightScheduleService.findFlightsStatus(fromCityId, toCityId, date);
+	     
+	     
+	     // Prepare a map of FlightSchedule ID -> List of FlightScheduleRate
+	     Map<Long, List<FlightScheduleRate>> scheduleRatesMap = new HashMap<>();
+	     for (FlightSchedule flight : flights) {
+	         List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
+	         scheduleRatesMap.put(flight.getId(), rates);
+	     }
+	     
+	     City fromCity = cityService.getCityById(fromCityId); // Replace with your actual method
+	     City toCity = cityService.getCityById(toCityId);
+
+	     model.addAttribute("flights", flights);
+	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
+	     model.addAttribute("from", fromCity.getCityname());
+	     model.addAttribute("to", toCity.getCityname());
+	     model.addAttribute("date", date);
+	     model.addAttribute("now", LocalDateTime.now());
+
+	     return "user/fairStatus";
+	 }
+
+
+	 
+	 @GetMapping("/user/loading")
+	 public String showLoadingPageUser(@RequestParam Long from,
+	                               @RequestParam Long to,
+	                               @RequestParam String d_date,
+	                               @RequestParam int nop,
+	                               HttpSession  session,
+	                               Model model) {
+		 
+		 session.setAttribute("from", from);
+		    session.setAttribute("to", to);
+		    session.setAttribute("d_date", d_date);
+		    session.setAttribute("nop", nop);
+
+		    
+	     // Fetch city names using city service
+	     City fromCity = cityService.getCityById(from);
+	     City toCity = cityService.getCityById(to);
+
+	     model.addAttribute("from", from);
+	     model.addAttribute("to", to);
+	     model.addAttribute("fromCity", fromCity.getCityname());
+	     model.addAttribute("toCity", toCity.getCityname());
+	     model.addAttribute("d_date", d_date);
+	     model.addAttribute("nop", nop);
+
+	     return "user/loading";  // maps to loading.html Thymeleaf template
+	 }
+
+
+
+}

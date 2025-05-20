@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Gateway</title>
+</head>
+<body>
+    <h2>Payment Page</h2>
+    <p>Total amount: <span th:text="${rate}"></span></p>
+    
+    <!-- Simulate payment success with a form -->
+    <form th:action="@{/booking/confirm}" method="post">
+        <input type="hidden" name="transactionId" value="TXN123456789" />
+        <button type="submit">Pay Now</button>
+    </form>
+</body>
+</html>

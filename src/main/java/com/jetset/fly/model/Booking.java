@@ -12,24 +12,24 @@ public class Booking {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // Optional, but good for clarity
+    @JoinColumn(name = "user_id") 
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "airline_id") // Optional, but good for clarity
+    @JoinColumn(name = "airline_id") 
     private Airline airline;
 
     @ManyToOne
-    @JoinColumn(name = "flight_id") // Optional, but good for clarity
+    @JoinColumn(name = "flight_id")
     private AirFlight flight;
 
     @ManyToOne
-    @JoinColumn(name = "schedule_id") // Optional, but good for clarity
+    @JoinColumn(name = "schedule_id") 
     private FlightSchedule schedule;
 
     @ManyToOne
-    @JoinColumn(name = "flight_class_id") // Optional, but good for clarity
-    private FlightClass flightClass;
+    @JoinColumn(name = "class_id") 
+    private Class flightClass;
 
     private LocalDateTime bookingAt;
 
@@ -40,7 +40,7 @@ public class Booking {
     }
 
     // Parameterized Constructor
-    public Booking(User user, Airline airline, AirFlight flight, FlightSchedule schedule, FlightClass flightClass, LocalDateTime bookingAt, String status) {
+    public Booking(User user, Airline airline, AirFlight flight, FlightSchedule schedule, Class flightClass, LocalDateTime bookingAt, String status) {
         this.user = user;
         this.airline = airline;
         this.flight = flight;
@@ -101,12 +101,12 @@ public class Booking {
     }
 
     // Getter for flightClass
-    public FlightClass getFlightClass() {
+    public Class getFlightClass() {
         return flightClass;
     }
 
     // Setter for flightClass
-    public void setFlightClass(FlightClass flightClass) {
+    public void setFlightClass(Class flightClass) {
         this.flightClass = flightClass;
     }
 

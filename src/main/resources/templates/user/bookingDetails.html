@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Passenger Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        .passenger-form, .review-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .review-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .summary-row {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Passenger Information</h2>
+	
+    <!-- Passenger Form Section -->
+    <form id="passengerForm" onsubmit="showReview(event)">
+        <div th:each="i : ${#numbers.sequence(1, nos_passanger)}" class="passenger-form">
+            <h3>Passenger <span th:text="${i}">1</span></h3>
+
+            <label>Title</label>
+            <select name="title" required>
+                <option value="">--Select--</option>
+                <option>Mr</option>
+                <option>Mrs</option>
+                <option>Miss</option>
+            </select>
+
+            <label>First Name</label>
+            <input type="text" name="firstName" required />
+
+            <label>Last Name</label>
+            <input type="text" name="lastName" required />
+
+            <label>Mobile Number</label>
+            <input type="tel" name="mobileNumber" required maxlength="10" pattern="[0-9]{10}" />
+
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required />
+
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="">--Select--</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <button type="submit">Continue</button>
+		<input type="hidden" name="airlineId" th:value="${airline.id}" />
+		<input type="hidden" name="flightId" th:value="${flight.id}" />
+		<input type="hidden" name="scheduleId" th:value="${schedule.id}" />
+		<input type="hidden" name="flightClassId" th:value="${flightClass.id}" />
+		<input type="hidden" name="rate" th:value="${rate}" />
+		<input type="hidden" name="noOfPassengers" th:value="${nos_passanger}" />
+		<input type="show" name="userId" th:value="${user.id}" />
+
+    </form>
+
+    <!-- Review Section (Hidden Initially) -->
+	<div id="reviewCard" class="review-card hidden">
+	        <h2>Review Your Booking</h2>
+
+	        <div class="review-section">
+	            <div class="summary-row">
+	                <strong>Airline:</strong> <span th:text="${airline.aname}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>Flight:</strong> <span th:text="${flight.fnumber}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>From:</strong> <span th:text="${schedule.source.cityname}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>Departure:</strong> <span th:text="${#temporals.format(schedule.departAt, 'dd MMM yyyy, HH:mm')}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>To:</strong> <span th:text="${schedule.destination.cityname}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>Arrival:</strong> <span th:text="${#temporals.format(schedule.arriveAt, 'dd MMM yyyy, HH:mm')}"></span>
+	            </div>
+	        </div>
+
+	        <div class="review-section" style="margin-top: 20px;">
+	            <div class="summary-row">
+	                <strong>Total Passengers:</strong> <span th:text="${nos_passanger}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>Rate per Seat:</strong> INR <span th:text="${rate}"></span>
+	            </div>
+	            <div class="summary-row">
+	                <strong>Total Cost:</strong> INR <span th:text="${rate * nos_passanger}"></span>
+	            </div>
+	        </div>
+
+	        <button onclick="confirmBooking()">Confirm Booking</button>
+	    </div>
+</div>
+
+
+<script>
+    function showReview(event) {
+        event.preventDefault();
+        document.getElementById("passengerForm").classList.add("hidden");
+        document.getElementById("reviewCard").classList.remove("hidden");
+    }
+
+    function confirmBooking() {
+        const form = document.getElementById("passengerForm");
+        const formData = new FormData(form);
+
+        const passengers = [];
+        const titles = formData.getAll("title");
+        const firstNames = formData.getAll("firstName");
+        const lastNames = formData.getAll("lastName");
+        const mobileNumbers = formData.getAll("mobileNumber");
+        const dobs = formData.getAll("dob");
+        const genders = formData.getAll("gender");
+
+        for (let i = 0; i < titles.length; i++) {
+            passengers.push({
+                pname: `${titles[i]} ${firstNames[i]} ${lastNames[i]}`,
+                mobileNo: mobileNumbers[i],
+                dob: dobs[i],
+                gender: genders[i]
+            });
+        }
+		
+
+        const bookingData = {
+            airlineId: formData.get("airlineId"),
+            flightId: formData.get("flightId"),
+            scheduleId: formData.get("scheduleId"),
+            flightClassId: formData.get("flightClassId"),
+            rate: formData.get("rate"),
+            noOfPassengers: formData.get("noOfPassengers"),
+            passengers: passengers,
+			userId: formData.get("userId")
+        };
+
+        fetch('/booking/temp-save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/booking/gateway';
+            } else {
+                alert("Failed to process booking temporarily.");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

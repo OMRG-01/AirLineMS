@@ -92,6 +92,155 @@
     .hidden {
       display: none;
     }
+	/* Add this CSS to your existing CSS files or create a new one */
+
+	.welcome-popup {
+	  display: none;
+	  position: fixed;
+	  z-index: 1000;
+	  left: 0;
+	  top: 0;
+	  width: 100%;
+	  height: 100%;
+	  background-color: rgba(0, 0, 0, 0.7);
+	  align-items: center;
+	  justify-content: center;
+	  animation: fadeIn 0.5s ease;
+	}
+
+	.welcome-popup-content {
+	  background-color: white;
+	  margin: auto;
+	  width: 80%;
+	  max-width: 800px;
+	  border-radius: 12px;
+	  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+	  overflow: hidden;
+	  animation: slideIn 0.5s ease;
+	}
+
+	.welcome-header {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: center;
+	  padding: 20px;
+	  background-color: var(--primary-color, #a75a82);
+	  color: white;
+	}
+
+	.welcome-logo {
+	  height: 40px;
+	}
+
+	.close-popup {
+	  font-size: 28px;
+	  font-weight: bold;
+	  color: white;
+	  cursor: pointer;
+	  transition: 0.3s;
+	}
+
+	.close-popup:hover {
+	  color: #f1f1f1;
+	}
+
+	.welcome-body {
+	  padding: 30px;
+	  text-align: center;
+	}
+
+	.welcome-body h2 {
+	  color: var(--primary-color, #a75a82);
+	  margin-bottom: 10px;
+	  font-size: 2rem;
+	}
+
+	.welcome-body p {
+	  color: #666;
+	  margin-bottom: 30px;
+	  font-size: 1.1rem;
+	}
+
+	.welcome-features {
+	  display: flex;
+	  justify-content: space-around;
+	  margin: 30px 0;
+	  flex-wrap: wrap;
+	}
+
+	.feature {
+	  flex: 1;
+	  min-width: 200px;
+	  padding: 15px;
+	  margin: 10px;
+	  border-radius: 10px;
+	  background-color: #f8f8f8;
+	  transition: 0.3s;
+	}
+
+	.feature:hover {
+	  transform: translateY(-5px);
+	  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	}
+
+	.feature i {
+	  font-size: 2.5rem;
+	  color: var(--primary-color, #a75a82);
+	  margin-bottom: 15px;
+	}
+
+	.feature h3 {
+	  color: #333;
+	  margin-bottom: 10px;
+	}
+
+	.feature p {
+	  color: #666;
+	  margin-bottom: 0;
+	  font-size: 0.9rem;
+	}
+
+	.popup-btn {
+	  background-color: var(--primary-color, #a75a82);
+	  color: white;
+	  border: none;
+	  padding: 12px 30px;
+	  margin-top: 20px;
+	  border-radius: 25px;
+	  font-size: 1.1rem;
+	  cursor: pointer;
+	  transition: 0.3s;
+	}
+
+	.popup-btn:hover {
+	  background-color: #721b47;
+	  transform: scale(1.05);
+	}
+
+	@keyframes fadeIn {
+	  from {opacity: 0;}
+	  to {opacity: 1;}
+	}
+
+	@keyframes slideIn {
+	  from {transform: translateY(-50px); opacity: 0;}
+	  to {transform: translateY(0); opacity: 1;}
+	}
+
+	/* Responsive design for smaller screens */
+	@media (max-width: 768px) {
+	  .welcome-popup-content {
+	    width: 95%;
+	  }
+	  
+	  .welcome-features {
+	    flex-direction: column;
+	  }
+	  
+	  .feature {
+	    margin: 10px 0;
+	  }
+	}
   </style>
 </head>
 
@@ -346,7 +495,65 @@
       </div>
     </div>
   </footer>
-
+  <!-- Add this HTML code right before the closing </body> tag -->
+  <div id="welcomePopup" class="welcome-popup">
+    <div class="welcome-popup-content">
+      <div class="welcome-header">
+        <img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo" class="welcome-logo">
+        <span class="close-popup">&times;</span>
+      </div>
+      <div class="welcome-body">
+        <h2>Welcome to JetSetFly, <span th:text="${currentUser.name}"></span>!</h2>
+        <p>We're excited to have you on board with us.</p>
+        <div class="welcome-features">
+          <div class="feature">
+            <i class="fa fa-plane-departure"></i>
+            <h3>Book Flights</h3>
+            <p>Find and book your next adventure with ease</p>
+          </div>
+          <div class="feature">
+            <i class="fa fa-history"></i>
+            <h3>Track History</h3>
+            <p>View and manage your flight history</p>
+          </div>
+          <div class="feature">
+            <i class="fa fa-bell"></i>
+            <h3>Status Updates</h3>
+            <p>Get real-time updates on your flights</p>
+          </div>
+        </div>
+        <button class="popup-btn">Start Exploring</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if this is the first visit to the dashboard in this session
+      if (sessionStorage.getItem('dashboardVisited') !== 'true') {
+        // Show the welcome popup
+        document.getElementById('welcomePopup').style.display = 'flex';
+        // Mark that the dashboard has been visited
+        sessionStorage.setItem('dashboardVisited', 'true');
+      }
+      
+      // Close the popup when the close button is clicked
+      document.querySelector('.close-popup').addEventListener('click', function() {
+        document.getElementById('welcomePopup').style.display = 'none';
+      });
+      
+      // Close the popup when the start exploring button is clicked
+      document.querySelector('.popup-btn').addEventListener('click', function() {
+        document.getElementById('welcomePopup').style.display = 'none';
+      });
+      
+      // Close the popup when clicking outside the popup content
+      window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('welcomePopup')) {
+          document.getElementById('welcomePopup').style.display = 'none';
+        }
+      });
+    });
+  </script>
   <script>
     // Toggle sticky header on scroll
     window.addEventListener("scroll", function () {

@@ -26,6 +26,11 @@ public class FlightClassService {
         flightClassRepository.save(flightClass);
     }
     
+    public FlightClass getById(Long id) {
+        return flightClassRepository.findById(id).orElse(null);
+    }
+
+    
     public List<FlightClass> findByFlightAndFlightStatus(Long flightId, String status) {
         return flightClassRepository.findByFlight_IdAndFlight_Status(flightId, status);
     }
