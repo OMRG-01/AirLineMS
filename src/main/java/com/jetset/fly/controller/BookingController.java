@@ -147,7 +147,7 @@ public class BookingController {
 
     
     @PostMapping("/booking/confirm")
-    public String confirmBookingAfterPayment(HttpSession session, @RequestParam String transactionId) {
+    public String confirmBookingAfterPayment(HttpSession session) {
 
         BookingDTO bookingDTO = (BookingDTO) session.getAttribute("bookingDTO");
         List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("passengers");
@@ -205,7 +205,6 @@ public class BookingController {
         Payment payment = new Payment();
         payment.setBooking(booking);
         payment.setNoSeat(noOfPassengers);
-        payment.setTransactionId(transactionId);
         payment.setFlight(booking.getFlight());
         payment.setSchedule(booking.getSchedule());
         payment.setUser(booking.getUser());

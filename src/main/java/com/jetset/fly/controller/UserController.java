@@ -31,31 +31,14 @@ import jakarta.servlet.http.HttpSession;
 public class UserController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private FlightScheduleService flightScheduleService;
     
     @Autowired
     private FlightScheduleRateService flightScheduleRateService;
 
-    @Autowired
-    private AirFlightService airFlightService;
-
-    @Autowired
-    private AirlineService airlineService;
-
-    @Autowired
-    private ClassService classService;
-	
-	@Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
     
     @Autowired
-    private FlightScheduleRepository flightScheduleRepository;
+    private BookingRepository bookingRepository;
     
     @Autowired
 	 private FlightClassService flightClassService;
@@ -195,4 +178,35 @@ public class UserController {
 
 	     return "user/userFairStatus";
 	 }
+	 
+	 @GetMapping("/user/bookings")
+	 public String getUserBookings(HttpSession session, Model model) {
+	     User loggedInUser = (User) session.getAttribute("loggedInUser");
+	    
+	     if (loggedInUser == null) {
+	         return "redirect:/login1"; // Or your login page route
+	     }
+	     
+	     List<Booking> bookings = bookingRepository.findByUserId(loggedInUser.getId());
+	     model.addAttribute("bookings", bookings);
+	     model.addAttribute("now", LocalDateTime.now());
+
+	     return "user/myBooking"; // your myBooking.html
+	 }
+	 
+	 @Autowired
+	 private BookingService bookingService;
+	 
+	 
+	 @GetMapping("/booking/passengerView")
+	 public String viewPassengers(@RequestParam("bookingId") Long bookingId, Model model) {
+	     Booking booking = bookingService.findById(bookingId);
+	     List<Passenger> passengers = passengerService.findByBookingId(bookingId);
+
+	     model.addAttribute("booking", booking);
+	     model.addAttribute("passengers", passengers);
+
+	     return "user/passengerView";
+	 }
+
 }

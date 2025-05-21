@@ -1,5 +1,8 @@
 package com.jetset.fly.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -33,6 +36,15 @@ public class Payment {
     @JoinColumn(name = "user_id") 
     private User user;
 
+    @PrePersist
+    private void generateTransactionId() {
+        if (this.transactionId == null || this.transactionId.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+            String timestamp = LocalDateTime.now().format(formatter);
+            this.transactionId = "TXN_" + timestamp;
+        }
+    }
+    
     // Default Constructor
     public Payment() {
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jetset.fly.model.Passenger;
 import com.jetset.fly.repository.FlightClassRepository;
 import com.jetset.fly.repository.PassengerRepository;
 
@@ -23,5 +24,7 @@ public class PassengerService {
         return passengerRepository.countByScheduleIdAndFlightClassId(scheduleId, classId);
     }
 
-
+    public List<Passenger> findByBookingId(Long bookingId) {
+        return passengerRepository.findByBookingId(bookingId);
+    }
 }

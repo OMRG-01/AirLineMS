@@ -392,9 +392,7 @@ public class AuthController {
 	            session.setAttribute("loggedInUser", user);
 	            Long roleId = user.getRole().getId();
 
-	            if (roleId == 1) {
-	                return "redirect:/admin/dashAdmin";
-	            } else if (roleId == 2) {
+	            if (roleId == 2) {
 	                return "redirect:/user/userDash";
 	            } else {
 	                return "redirect:/login1?error=unauthorized";
