@@ -3,10 +3,12 @@ package com.jetset.fly.service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jetset.fly.dto.ViewPassengerDTO;
 import com.jetset.fly.model.Passenger;
 import com.jetset.fly.repository.FlightClassRepository;
 import com.jetset.fly.repository.PassengerRepository;
@@ -29,6 +31,13 @@ public class PassengerService {
     }
     public List<Passenger> getPassengersByBookingId(Long bookingId) {
         return passengerRepository.findByBookingId(bookingId);
+    }
+    
+    public List<ViewPassengerDTO> getAllPassengerDetails() {
+        List<Passenger> passengers = passengerRepository.findAll(); // or use filter if needed
+        return passengers.stream()
+                .map(ViewPassengerDTO::new)
+                .collect(Collectors.toList());
     }
 
 }

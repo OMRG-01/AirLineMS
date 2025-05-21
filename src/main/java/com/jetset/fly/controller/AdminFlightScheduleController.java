@@ -1,6 +1,7 @@
 package com.jetset.fly.controller;
 
 import com.jetset.fly.dto.ScheduleViewDTO;
+import com.jetset.fly.dto.ViewPassengerDTO;
 import com.jetset.fly.model.*;
 import com.jetset.fly.model.Class;
 import com.jetset.fly.repository.*;
@@ -333,30 +334,6 @@ public class AdminFlightScheduleController {
 
         return "admin/editSchedule";
     }
-//    @GetMapping("/edit-schedule/{encodedId}")
-//    public String showEditSchedule(@PathVariable("encodedId") String encodedId, Model model) {
-//        Long scheduleId = IdUtil.decodeId(encodedId);
-//
-//        FlightSchedule schedule = flightScheduleService.findById(scheduleId);
-//        List<FlightScheduleRate> rates = flightScheduleRateService.findByScheduleId(scheduleId);
-//        List<City> cities = cityService.getAllActiveCities();
-//        List<FlightClass> classSeats = flightClassService.findByFlightId(schedule.getFlight().getId());
-//
-//        // Map classId -> rate for easier access in view
-//        Map<Long, Double> rateMap = new HashMap<>();
-//        for (FlightScheduleRate rate : rates) {
-//            rateMap.put(rate.getFlightClass().getId(), rate.getRate());
-//        }
-//
-//        model.addAttribute("schedule", schedule);
-//        model.addAttribute("encodedScheduleId", encodedId);
-//        model.addAttribute("rates", rates);
-//        model.addAttribute("rateMap", rateMap); // ✅ add this
-//        model.addAttribute("cities", cities);
-//        model.addAttribute("classSeats", classSeats);
-//
-//        return "admin/editSchedule";
-//    }
 
 
     @PostMapping("/schedule/update")
@@ -428,8 +405,67 @@ public class AdminFlightScheduleController {
 //            return "redirect:/admin/flights/edit-schedule/" + encodedScheduleId;
 //        }
 //    }
+    @Autowired
+    private PassengerRepository passengerRepository;
+    
+    @Autowired
+    private FlightClassRepository flightClassRepository;
+    
+    @Autowired
+    private PassengerService passengerService;
+    
+    @GetMapping("/view-passengers/{scheduleId}")
+    public String viewPassengersBySchedule(@PathVariable Long scheduleId, Model model) {
+        // 1. Get schedule
+        FlightSchedule schedule = flightScheduleService.findById(scheduleId);
+        if (schedule == null) {
+            throw new IllegalArgumentException("Invalid Schedule ID");
+        }
+
+        // 2. Get all passengers for the schedule
+        List<Passenger> passengers = passengerRepository.findByScheduleId(scheduleId);
+
+        // 3. Get flight classes assigned to this flight
+        List<FlightClass> flightClasses = flightClassRepository.findByFlightId(schedule.getFlight().getId());
+
+        // 4. For each class, count passengers and fetch capacity
+        Map<String, String> classStats = new LinkedHashMap<>();
+        for (FlightClass flightClass : flightClasses) {
+            int booked = (int) passengers.stream()
+                    .filter(p -> p.getFlightClass().getId().equals(flightClass.getFlightClass().getId()))
+                    .count();
+            classStats.put(flightClass.getFlightClass().getName(), booked + "/" + flightClass.getSeat());
+        }
+        
+     // 3. Get flight classes assigned to this flight
+        List<FlightClass> flightClass = flightClassRepository.findByFlightId(schedule.getFlight().getId());
+
+        // 4. Calculate total seat capacity of the flight
+        int totalSeats = flightClass.stream()
+                .mapToInt(FlightClass::getSeat)
+                .sum();
 
 
+        // 5. Total booked passengers
+        int totalBooked = passengers.size();
+
+        // 6. Add attributes to model
+        model.addAttribute("totalSeats", totalSeats);
+
+        model.addAttribute("schedule", schedule);
+        model.addAttribute("passengers", passengers);
+        model.addAttribute("classStats", classStats);
+        model.addAttribute("totalBooked", totalBooked);
+
+        return "admin/viewPassengerBySchedule";
+    }
+
+    @GetMapping("/passengers")
+    public String viewAllPassengers(Model model) {
+        List<ViewPassengerDTO> passengerList = passengerService.getAllPassengerDetails();
+        model.addAttribute("passengerList", passengerList);
+        return "admin/viewPassengers";
+    }
 
 
 }

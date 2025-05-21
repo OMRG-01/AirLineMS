@@ -890,9 +890,9 @@
                       <!-- Improved Actions Column -->
                       <td class="action-cell text-center">
                         <!-- Always visible -->
-                        <a th:href="@{/admin/passenger/passengerByFlight(scheduleId=${row.scheduleId})}" class="btn btn-sm btn-info mb-1">
-                          <i class="fa fa-users"></i> View
-                        </a>
+						<a th:href="@{/admin/flights/view-passengers/{scheduleId}(scheduleId=${row.scheduleId})}" class="btn btn-sm btn-info mb-1">
+						  <i class="fa fa-users"></i> View
+						</a>
 
                         <!-- Status-based buttons -->
                         <span th:with="now=${T(java.time.LocalDateTime).now()}">

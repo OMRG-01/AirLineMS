@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Passenger List</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" type="image/png" th:href="@{/img/fg.png}">
+  <!--this for show your LOGO on tab HA AAPLA TAKU-->
+
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" /> <!--FONT-->
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- Material Icons INCOME HE TE -->
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link id="pagestyle" th:href="@{/assetsp/css/my.css?v=3.1.0}" rel="stylesheet" />
+  <style>
+    .aaa {
+      height: 50px;
+      width: 165px;
+      margin-right: 10px;
+    }
+
+	.container2 {
+		      display: flex;
+		      justify-content: space-between;
+		      flex-wrap: wrap;
+		    }
+
+		    @media (max-width: 768px) {
+		      .container2 {
+		        flex-direction: column;
+		      }
+		      
+		      .nav-links {
+		        margin-bottom: 10px;
+		        width: 100%;
+		      }
+		    }
+
+		    .nav-links {
+		      flex: 1;
+		      text-align: left;
+		      max-height: none;
+		    }
+
+		    .nav-links ul {
+		      padding-left: 0;
+		      margin-bottom: 0;
+		    }
+
+		    .nav-links ul li {
+		      list-style: none;
+		      display: inline-block;
+		      padding: 8px 12px;
+		      width: auto;
+		      position: relative;
+		      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+		    }
+
+		    @media (max-width: 576px) {
+		      .nav-links ul li {
+		        display: block;
+		        width: 100%;
+		        text-align: center;
+		      }
+		    }
+
+		    .nav-links ul li a {
+		      color: black;
+		      text-decoration: none;
+		      font-size: 15px;
+		      white-space: nowrap;
+		    }
+
+		    .nav-links ul li::after {
+		      content: "";
+		      width: 0%;
+		      height: 3px;
+		      background: #8E2157;
+		      display: block;
+		      margin: auto;
+		      transition: 1s;
+		    }
+
+		    .nav-links ul li:hover::after {
+		      width: 100%;
+		    }
+			/* Passenger Flight Details Styles */
+			    .flight-info-card {
+			      border-radius: 12px;
+			      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+			      overflow: hidden;
+			      margin-bottom: 30px;
+			      border: none;
+				  margin-top: 0%;
+			    }
+			    
+			    .flight-header {
+			      background: #8E2155;
+			      color: white;
+			      padding: 20px;
+			      position: relative;
+			    }
+			    
+			    .flight-number {
+			      position: absolute;
+			      top: 20px;
+			      right: 25px;
+			      font-size: 24px;
+			      font-weight: 700;
+			      background: rgba(255,255,255,0.2);
+			      padding: 10px 20px;
+			      border-radius: 8px;
+			      backdrop-filter: blur(5px);
+			    }
+			    
+			    .flight-stats {
+			      display: flex;
+			      flex-wrap: wrap;
+			      gap: 12px;
+			      margin-top: 15px;
+			    }
+			    
+			    .flight-stat-badge {
+			      padding: 8px 15px;
+			      border-radius: 6px;
+			      font-weight: 500;
+			      font-size: 14px;
+			      display: inline-flex;
+			      align-items: center;
+			    }
+			    
+			    .flight-route {
+			      display: flex;
+			      align-items: center;
+			      margin: 20px 0 10px;
+			      gap: 15px;
+			    }
+				
+				.flight-route span{
+					color:white;
+				}
+			    
+			    .route-icon {
+			      margin-right: 10px;
+			      font-size: 24px;
+			    }
+			    
+			    .passenger-table {
+			      width: 100%;
+			      border-collapse: separate;
+			      border-spacing: 0;
+			      margin-top: 15px;
+			    }
+			    
+			    .passenger-table th {
+			      background-color: #8E2157;
+			      color: white;
+			      padding: 12px;
+			      font-weight: 500;
+			      text-transform: uppercase;
+			      text-align: center;
+			      font-size: 14px;
+			    }
+			    
+			    .passenger-table td {
+			      padding: 14px 12px;
+			      text-align: center;
+			      border-bottom: 1px solid #eee;
+			      vertical-align: middle;
+			    }
+			    
+			    .passenger-table tr:hover {
+			      background-color: #f9f9f9;
+			    }
+			    
+			    .action-buttons {
+			      display: flex;
+			      justify-content: flex-end;
+			      gap: 10px;
+			      margin-bottom: 15px;
+			    }
+			    
+			    .action-button {
+			      display: inline-flex;
+			      align-items: center;
+			      gap: 8px;
+			      padding: 10px 20px;
+			      border-radius: 6px;
+			      font-weight: 600;
+			      cursor: pointer;
+			      transition: all 0.3s ease;
+			      border: none;
+			    }
+			    
+			    .export-btn {
+			      background-color: #f5b041;
+			      color: white;
+			    }
+			    
+			    .export-btn:hover {
+			      background-color: #e67e22;
+			    }
+			    
+			    .print-btn {
+			      background-color: #3498db;
+			      color: white;
+			    }
+			    
+			    .print-btn:hover {
+			      background-color: #2980b9;
+			    }
+			    
+			    .passenger-count {
+			      display: flex;
+			      align-items: center;
+			      gap: 5px;
+			    }
+			    
+			    .count-primary {
+			      color: #f0ad4e;
+			      font-weight: 700;
+			    }
+			    
+			    .prn-badge {
+			      background-color: #343a40;
+			      color: white;
+			      padding: 6px 12px;
+			      border-radius: 6px;
+			      font-weight: 500;
+			      display: inline-block;
+			    }
+			    
+			    .flight-info-meta {
+			      display: flex;
+			      justify-content: space-between;
+			      align-items: center;
+			      margin-top: 30px;
+			      flex-wrap: wrap;
+			      gap: 15px;
+			    }
+			    
+			    .time-badge {
+			      padding: 8px 15px;
+			      border-radius: 6px;
+			      display: inline-flex;
+			      align-items: center;
+			      color: white;
+			      gap: 8px;
+			      font-weight: 500;
+			    }
+			    
+			    .depart-badge {
+			      background-color: #2ecc71;
+			    }
+			    
+			    .arrive-badge {
+			      background-color: #3498db;
+			    }
+			    
+			    @media print {
+			      body * {
+			        visibility: hidden;
+			      }
+			      #passenger-list-section, #passenger-list-section * {
+			        visibility: visible;
+			      }
+			      #passenger-list-section {
+			        position: absolute;
+			        left: 0;
+			        top: 0;
+			        width: 100%;
+			      }
+			      .action-buttons {
+			        display: none;
+			      }
+			      .print-header {
+			        display: block !important;
+			      }
+			    }
+			    
+			    .print-header {
+			      display: none;
+			      text-align: center;
+			      margin-bottom: 30px;
+			    }
+			    
+			    @media (max-width: 992px) {
+			      .flight-number {
+			        position: relative;
+			        top: 0;
+			        right: 0;
+			        margin-top: 15px;
+			        display: inline-block;
+			      }
+			      
+			      .flight-info-meta {
+			        flex-direction: column;
+			        align-items: flex-start;
+			      }
+			    }
+			    
+			    .empty-message {
+			      text-align: center;
+			      padding: 40px 0;
+			      color: #777;
+			      font-style: italic;
+			    }
+  </style>
+
+</head>
+
+
+<body class="g-sidenav-show  bg-gray-200">
+  <aside
+      class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+      id="sidenav-main">
+      <div class="sidenav-header">
+        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+          aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand m-0" href="">
+          <img th:src="@{/img/PH.jpg}" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
+          <span class="ms-1 font-weight-bold text-white"></span>
+        </a>
+      </div>
+      <hr class="horizontal light mt-0 mb-2">
+      <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link text-white a" th:href="@{/admin/dashboard}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">dashboard</i>
+              </div>
+              <span class="nav-link-text ms-1">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/airline-management}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">table_view</i>
+              </div>
+              <span class="nav-link-text ms-1">Airline Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/flights/view}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">view_in_ar</i>
+              </div>
+              <span class="nav-link-text ms-1">Flights Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/flights/view-schedules}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">receipt_long</i>
+              </div>
+              <span class="nav-link-text ms-1">Schedule Flight</span>
+            </a>
+          </li>
+		  <li class="nav-item">
+		  			          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+		  			            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		  			              <i class="material-icons opacity-10">connecting_airports</i>
+		  			            </div>
+		  			            <span class="nav-link-text ms-1">City Management</span>
+		  			          </a>
+		  			        </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/passenger-lists}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
+              </div>
+              <span class="nav-link-text ms-1">Passenger Lists</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/feedback}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">notifications</i>
+              </div>
+              <span class="nav-link-text ms-1">Feedback</span>
+            </a>
+          </li>
+          <li class="nav-item mt-3">
+            <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/editProfile}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">person</i>
+              </div>
+              <span class="nav-link-text ms-1">Profile</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/logout}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">login</i>
+              </div>
+              <span class="nav-link-text ms-1">Logout</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white " th:href="@{/admin/add}">
+              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="material-icons opacity-10">assignment</i>
+              </div>
+              <span class="nav-link-text ms-1">Add New Member</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+	      data-scroll="true">
+	      <div class="container-fluid py-1 px-3">
+	        <button id="sidenav-toggler" class="navbar-toggler" type="button">
+	          <i class="material-icons navbar-toggler-icon">menu</i>
+	        </button>
+	        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
+	        <div class="container2">
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD NEW FLIGHT
+	                </a></li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+	              </li>
+	            </ul>
+	          </div>
+	          <div class="nav-links">
+	            <ul>
+	              <li><a th:href="@{/admin/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+	                    style="font-size:18px"></i><span class="ms-1 font-weight-bold">LOGOUT</span></a></li>
+	            </ul>
+	          </div>
+	        </div>
+	      </div>
+	    </nav>
+    <!-- End Navbar -->
+    
+
+	<!-- Passanger Flight Details -->
+	<div class="container-fluid py-4">
+	    <div class="container">
+	      <div class="row">
+	        <div class="col-md-12 ">
+	          <div class="card flight-info-card">
+	            <div class="flight-header">
+	              <div class="flight-number">
+	                <i class="material-icons">flight</i>Flight No: 
+	                <span th:text="${schedule.flight.fnumber}">FL123</span>
+	              </div>
+	              
+	              <h3 class="passenger-count">
+	                <span>Total Bookings: </span>
+	                <span class="count-primary" th:text="${totalBooked}">120</span>
+	                <span>/</span>
+	                <span th:text="${totalSeats}">180</span>
+	              </h3>
+	              
+	              <div class="flight-info-meta">
+	                <div class="flight-stats">
+	                  <span class="flight-stat-badge" th:each="entry : ${classStats}" th:text="${entry.key} + ': ' + ${entry.value}">Economy: 80</span>
+	                </div>
+	                
+	                <div>
+	                  <span class="time-badge depart-badge">
+	                    <i class="material-icons">flight_takeoff</i>
+	                    <span th:text="${#temporals.format(schedule.departAt, 'yyyy-MM-dd HH:mm')}">2025-05-22 09:30</span>
+	                  </span>
+	                  <span class="time-badge arrive-badge">
+	                    <i class="material-icons">flight_land</i>
+	                    <span th:text="${#temporals.format(schedule.arriveAt, 'yyyy-MM-dd HH:mm')}">2025-05-22 12:30</span>
+	                  </span>
+	                </div>
+	              </div>
+	              
+	              <div class="flight-route">
+	                <i class="material-icons route-icon">flight</i>
+	                <h4 class="mb-0">
+	                  <span th:text="${schedule.source.cityname}">Mumbai</span> 
+	                  <i class="material-icons" style="font-size:18px; color: white;">arrow_forward</i> 
+	                  <span th:text="${schedule.destination.cityname}">Delhi</span>
+	                </h4>
+	              </div>
+	            </div>
+	            
+	            <div class="card-body">
+	              <div class="d-flex justify-content-between align-items-center mb-4">
+	                <h4 class="mb-0 fw-bold">
+	                  <i class="material-icons opacity-10 me-2">people</i>
+	                  Passenger Lists
+	                </h4>
+	                
+	                <div class="action-buttons">
+	                  <button id="exportButton" class="action-button export-btn">
+	                    <i class="fa fa-file-excel-o"></i> EXPORT
+	                  </button>
+	                  <button id="printButton" class="action-button print-btn">
+	                    <i class="fa fa-print"></i> PRINT
+	                  </button>
+	                </div>
+	              </div>
+	              
+	              <div id="passenger-list-section">
+	                <div class="print-header">
+	                  <h2>Passenger List - Flight <span th:text="${schedule.flight.fnumber}">FL123</span></h2>
+	                  <p>
+	                    <span th:text="${schedule.source.cityname}">Mumbai</span> to 
+	                    <span th:text="${schedule.destination.cityname}">Delhi</span> | 
+	                    Departure: <span th:text="${#temporals.format(schedule.departAt, 'yyyy-MM-dd HH:mm')}">2025-05-22 09:30</span>
+	                  </p>
+	                </div>
+	                
+	                <div class="table-responsive">
+	                  <table class="passenger-table">
+	                    <thead>
+	                      <tr>
+	                        <th>Sr.No.</th>
+	                        <th>NAME</th>
+	                        <th>MOBILE NO</th>
+	                        <th>DOB</th>
+	                        <th>GENDER</th>
+	                        <th>PRN</th>
+	                      </tr>
+	                    </thead>
+	                    <tbody>
+	                      <tr th:each="passenger, stat : ${passengers}">
+	                        <td th:text="${stat.count}">1</td>
+	                        <td th:text="${passenger.pname}">John Doe</td>
+	                        <td th:text="${passenger.mobileNo}">9876543210</td>
+	                        <td th:text="${passenger.dob}">1990-01-01</td>
+	                        <td th:text="${passenger.gender}">Male</td>
+	                        <td>
+	                          <span class="prn-badge" th:text="${passenger.prn}">PNR12345</span>
+	                        </td>
+	                      </tr>
+	                      <tr th:if="${passengers.empty}">
+	                        <td colspan="6" class="empty-message">No passengers found for this flight.</td>
+	                      </tr>
+	                    </tbody>
+	                  </table>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <!-- END Passanger Flight Details -->
+      <div class="container-fluid py-4">
+        <footer class="footer py-4  ">
+          <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+              <div class="col-lg-6 mb-lg-0 mb-4">
+                <div class="copyright text-center text-sm text-muted text-lg-start">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear())
+                  </script>,
+                  Copyright All rights reserved. Team :
+                  <a href="" class="font-weight-bold" target="_blank">GMADS <i class="fa fa-heart"></i></a>
+                  for a better web.
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-facebook-f"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-twitter"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-instagram"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="nav-link text-muted"
+                      target="_blank"><i class="fa fa-youtube-play"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+  </main>
+  <script>
+	// Export function - Using client-side Excel generation with SheetJS
+	document.getElementById('exportButton').addEventListener('click', function() {
+	  // Get passenger data from the table
+	  const table = document.querySelector('.passenger-table');
+	  const rows = table.querySelectorAll('tbody tr');
+	  
+	  // Skip if no passengers found
+	  if (rows.length === 1 && rows[0].querySelector('.empty-message')) {
+	    alert('No passengers to export');
+	    return;
+	  }
+	  
+	  // Create workbook and worksheet
+	  const wb = XLSX.utils.book_new();
+	  const wsData = [];
+	  
+	  // Add header row
+	  const headers = [];
+	  table.querySelectorAll('thead th').forEach(th => {
+	    headers.push(th.textContent.trim());
+	  });
+	  wsData.push(headers);
+	  
+	  // Add data rows
+	  rows.forEach(row => {
+	    if (!row.querySelector('.empty-message')) {
+	      const rowData = [];
+	      row.querySelectorAll('td').forEach(td => {
+	        // For PRN cell, get the text inside the span
+	        if (td.querySelector('.prn-badge')) {
+	          rowData.push(td.querySelector('.prn-badge').textContent.trim());
+	        } else {
+	          rowData.push(td.textContent.trim());
+	        }
+	      });
+	      wsData.push(rowData);
+	    }
+	  });
+	  
+	  // Create worksheet and add to workbook
+	  const ws = XLSX.utils.aoa_to_sheet(wsData);
+	  
+	  // Get flight information for filename
+	  const flightNumber = document.querySelector('.flight-number span').textContent.trim();
+	  const source = document.querySelector('.flight-route h4 span:first-child').textContent.trim();
+	  const destination = document.querySelector('.flight-route h4 span:last-child').textContent.trim();
+	  
+	  XLSX.utils.book_append_sheet(wb, ws, "Passengers");
+	  
+	  // Generate Excel file and trigger download
+	  const filename = `Passenger_List_${flightNumber}_${source}_to_${destination}.xlsx`;
+	  XLSX.writeFile(wb, filename);
+	});
+
+	// Print function - Improved to maintain styling and layout
+	document.getElementById('printButton').addEventListener('click', function() {
+	  const printWindow = window.open('', '_blank');
+	  
+	  // Get flight information
+	  const flightNumber = document.querySelector('.flight-number span').textContent.trim();
+	  const source = document.querySelector('.flight-route h4 span:first-child').textContent.trim();
+	  const destination = document.querySelector('.flight-route h4 span:last-child').textContent.trim();
+	  const departureTime = document.querySelector('.depart-badge span').textContent.trim();
+	  
+	  // Get passenger table HTML
+	  const passengerTable = document.querySelector('.passenger-table').outerHTML;
+	  
+	  // Create print document
+	  printWindow.document.write(`
+	    <!DOCTYPE html>
+	    <html lang="en">
+	    <head>
+	      <meta charset="UTF-8">
+	      <title>Passenger List - Flight ${flightNumber}</title>
+	      <style>
+	        body { 
+	          font-family: Arial, sans-serif; 
+	          padding: 20px;
+	          color: #333;
+	        }
+	        .print-header { 
+	          text-align: center; 
+	          margin-bottom: 30px; 
+	        }
+	        .print-header h2 {
+	          color: #8E2157;
+	          margin-bottom: 10px;
+	        }
+	        .print-header p {
+	          color: #555;
+	          font-size: 16px;
+	        }
+	        table { 
+	          width: 100%; 
+	          border-collapse: collapse; 
+	          margin-top: 20px;
+	        }
+	        th, td { 
+	          border: 1px solid #ddd; 
+	          padding: 12px; 
+	          text-align: center; 
+	        }
+	        th { 
+	          background-color: #8E2157; 
+	          color: white;
+	          text-transform: uppercase;
+	        }
+	        tr:nth-child(even) {
+	          background-color: #f9f9f9;
+	        }
+	        .prn-badge {
+	          background-color: #343a40;
+	          color: white;
+	          padding: 4px 8px;
+	          border-radius: 4px;
+	          display: inline-block;
+	        }
+	        .flight-info {
+	          display: flex;
+	          justify-content: space-between;
+	          border-bottom: 2px solid #8E2157;
+	          padding-bottom: 10px;
+	          margin-bottom: 20px;
+	        }
+	        .report-date {
+	          text-align: right;
+	          margin-top: 10px;
+	          font-style: italic;
+	          color: #666;
+	        }
+	        @media print {
+	          @page {
+	            size: portrait;
+	            margin: 0.5cm;
+	          }
+	        }
+	      </style>
+	    </head>
+	    <body>
+	      <div class="print-header">
+	        <h2>Passenger List - Flight ${flightNumber}</h2>
+	        <p>${source} to ${destination} | Departure: ${departureTime}</p>
+	      </div>
+	      
+	      <div class="flight-info">
+	        <div>
+	          <strong>Flight:</strong> ${flightNumber}<br>
+	          <strong>Route:</strong> ${source} to ${destination}
+	        </div>
+	        <div>
+	          <strong>Departure:</strong> ${departureTime}<br>
+	          <strong>Status:</strong> Scheduled
+	        </div>
+	      </div>
+	      
+	      ${passengerTable}
+	      
+	      <div class="report-date">
+	        <p>Generated on: ${new Date().toLocaleString()}</p>
+	      </div>
+	    </body>
+	    </html>
+	  `);
+	  
+	  printWindow.document.close();
+	  
+	  // Wait for content to load before printing
+	  printWindow.onload = function() {
+	    printWindow.print();
+	    // Don't close the window automatically so user can see print dialog
+	  };
+	});
+
+	// Add required SheetJS library to the page
+	function loadSheetJSLibrary() {
+	  const script = document.createElement('script');
+	  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+	  script.integrity = 'sha512-r22gChDnGvBylk90+2e/ycr3RVrDi8DIOkIGNhJlKfuyQM4tIRAI062MaV8sfjQKYVGjOBaZBOA87z+IhZE9DA==';
+	  script.crossOrigin = 'anonymous';
+	  script.referrerPolicy = 'no-referrer';
+	  document.head.appendChild(script);
+	}
+
+	// Load the SheetJS library when the page loads
+	window.addEventListener('DOMContentLoaded', loadSheetJSLibrary);
+   </script>
+</body>
+</html>

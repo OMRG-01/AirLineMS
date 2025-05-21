@@ -23,4 +23,5 @@ public interface FlightClassRepository extends JpaRepository<FlightClass, Long> 
         @Query("SELECT fc FROM FlightClass fc WHERE fc.flight.id = :flightId AND fc.flightClass.id = :classId")
         FlightClass findByFlightIdAndClassId(@Param("flightId") Long flightId, @Param("classId") Long classId);
 
+
 }

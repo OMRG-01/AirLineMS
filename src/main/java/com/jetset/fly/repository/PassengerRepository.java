@@ -15,4 +15,7 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
 	int countByScheduleIdAndFlightClassId(@Param("scheduleId") Long scheduleId, @Param("classId") Long classId);
 	
 	List<Passenger> findByBookingId(Long bookingId);
+	
+	List<Passenger> findByScheduleId(Long scheduleId);
+
 }

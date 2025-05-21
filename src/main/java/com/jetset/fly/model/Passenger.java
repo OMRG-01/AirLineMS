@@ -37,7 +37,7 @@ public class Passenger {
     private String gender;
 
     @Column(unique = true, nullable = false)
-    private String prn; // e.g., auto-generated like "PRN123456"
+    private String prn; 
 
     @Column(nullable = false)
     private LocalDateTime bookingAt;
