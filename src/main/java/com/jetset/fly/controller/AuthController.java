@@ -33,11 +33,14 @@ import com.jetset.fly.service.AdminService;
 import com.jetset.fly.service.AirFlightService;
 import com.jetset.fly.service.AirlineService;
 import com.jetset.fly.service.CityService;
+import com.jetset.fly.service.EmailService;
 import com.jetset.fly.service.FlightClassService;
 import com.jetset.fly.service.FlightScheduleRateService;
 import com.jetset.fly.service.FlightScheduleService;
 import com.jetset.fly.service.PassengerService;
 import com.jetset.fly.service.UserService;
+
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -381,7 +384,8 @@ public class AuthController {
 	        return "redirect:/admin/add";
 	    }
 
-	    
+	    @Autowired 
+	    private EmailService emailService;
 	    @PostMapping("/login/submit")
 	    public String processLogin(@RequestParam String email,
 	                               @RequestParam String password,
@@ -393,6 +397,7 @@ public class AuthController {
 	            Long roleId = user.getRole().getId();
 
 	            if (roleId == 2) {
+	               
 	                return "redirect:/user/userDash";
 	            } else {
 	                return "redirect:/login1?error=unauthorized";
@@ -401,6 +406,7 @@ public class AuthController {
 
 	        return "redirect:/login1?error=true";
 	    }
+
 	    
 	    @GetMapping("/user/userDash")
 	    public String userDash(Model model, HttpSession session) {

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>JetSetFly Boarding Pass</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+        
+        :root {
+            --primary-color: #8E2157;
+            --primary-color-dark: #6b0f3d;
+            --text-dark: #0b0f18;
+            --text-light: #503744;
+            --extra-light: #f1f5f9;
+            --white: #ffffff;
+            --max-width: 1400px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .boarding-pass-container {
+            max-width: 800px;
+            margin: 40px auto;
+            perspective: 1500px;
+        }
+
+        .boarding-pass {
+            background-color: #ffffff;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            width: 100%;
+        }
+
+        .boarding-pass-main {
+            flex: 1;
+            padding: 25px;
+            position: relative;
+            border-right: 2px dashed #8E2157;
+        }
+
+        .boarding-pass-side {
+            width: 270px;
+            background: linear-gradient(135deg, #8E2157, #6b0f3d);
+            padding: 25px 20px;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .boarding-pass-side::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=');
+            opacity: 0.1;
+        }
+
+        .airline-logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .boarding-pass-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .flight-class {
+            font-size: 28px;
+            font-weight: 600;
+            color: #8E2157;
+            text-transform: uppercase;
+        }
+
+        .boarding-pass hr {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+        }
+
+        .boarding-info-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .boarding-info-item {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0b0f18;
+            text-transform: uppercase;
+        }
+
+        .passenger-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .boarding-time-section {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .time-item {
+            margin-right: 30px;
+        }
+
+        .time-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        .time-value {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .date-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .flight-number-section {
+            margin-top: 10px;
+        }
+
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .ticket-illustration {
+            max-width: 180px;
+            height: auto;
+            margin: 25px 0;
+        }
+
+        .side-message {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
+
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            margin: 15px 0;
+            background-color: white;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        .boarding-pass-wrapper {
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .boarding-pass-wrapper::before,
+        .boarding-pass-wrapper::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .boarding-pass-wrapper::before {
+            top: -15px;
+            left: calc(100% - 160px - 15px);
+        }
+
+        .boarding-pass-wrapper::after {
+            bottom: -15px;
+            left: calc(100% - 160px - 15px);
+        }
+        
+        .email-header {
+            text-align: center;
+            margin: 20px 0;
+            color: #8E2157;
+        }
+        
+        .email-message {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+            color: #503744;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-header">
+        <h1>Your JetSetFly Boarding Pass</h1>
+    </div>
+    
+    <div class="email-message">
+        <p>Thank you for choosing JetSetFly! Your booking has been confirmed.</p>
+        <p>Please find your boarding pass attached below.</p>
+    </div>
+
+    <div class="boarding-pass-container">
+        <div th:each="passenger : ${passengers}" class="boarding-pass-wrapper">
+            <div class="boarding-pass">
+                <div class="boarding-pass-main">
+                    <div class="boarding-pass-header">
+                        <div class="airline-logo">
+							<img th:src="@{/assets/gg.png.png}" alt="Airline Logo" class="img-fluid" data-print-src="/assets/gg.png.png">
+						</div>
+                        <div class="flight-class" th:text="${booking.flightClass.name}">First Class</div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="boarding-info-row">
+                        <div class="boarding-info-item">
+                            <p class="info-label">Airline</p>
+                            <p class="info-value" th:text="${booking.airline.aname}">JetSetFly Airways</p>
+                        </div>
+                        <div class="boarding-info-item">
+                            <p class="info-label">From</p>
+                            <p class="info-value" th:text="${booking.schedule.source.cityname}">New York</p>
+                        </div>
+                        <div class="boarding-info-item">
+                            <p class="info-label">To</p>
+                            <p class="info-value" th:text="${booking.schedule.destination.cityname}">London</p>
+                        </div>
+                    </div>
+                    
+                    <div class="boarding-info-row">
+                        <div class="boarding-info-item" style="flex: 2;">
+                            <p class="info-label">Passenger</p>
+                            <p class="passenger-name" th:text="${passenger.pname}">John Doe</p>
+                        </div>
+                        <div class="boarding-info-item">
+                            <p class="info-label">Board Time</p>
+                            <p class="info-value" th:text="${#temporals.format(booking.schedule.departAt.minusMinutes(30), 'HH:mm')}">12:30</p>
+                            <p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                        </div>
+                    </div>
+                    
+                    <div class="boarding-time-section">
+                        <div class="time-item">
+                            <p class="time-label">Departure</p>
+                            <p class="time-value" th:text="${#temporals.format(booking.schedule.departAt, 'HH:mm')}">13:00</p>
+                            <p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                        </div>
+                        <div class="time-item">
+                            <p class="time-label">Arrival</p>
+                            <p class="time-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'HH:mm')}">19:45</p>
+                            <p class="date-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                        </div>
+                        <div class="flight-number-section" style="margin-left: 70px;">
+                            <p class="time-label">Flight No</p>
+                            <p class="info-value" th:text="${booking.flight.fnumber}">JSF123</p>
+                        </div>
+                        <div class="flight-number-section" style="margin-left: 25%;">
+                            <p class="time-label">PRN No</p>
+                            <p class="info-value" th:text="${passenger.prn}">ABC123</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="boarding-pass-side">
+                    <div class="brand-logo">JetSetFly</div>
+                    <img th:src="@{/assets/airtic.png}" alt="Ticket Illustration" class="ticket-illustration">
+					<div class="qr-code" th:attr="data-qr=${passenger.prn}">
+						                                <!-- QR code will be generated here via script -->
+						                            </div>
+                    <p class="side-message">Thank you for choosing us.<br>Please be at the gate at boarding time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+		    <script>
+		        // Generate QR codes
+		        document.addEventListener('DOMContentLoaded', function() {
+		            const qrContainers = document.querySelectorAll('.qr-code');
+		            qrContainers.forEach(container => {
+		                const prnData = container.getAttribute('data-qr');
+		                if (prnData) {
+		                    const qr = qrcode(3, 'L');
+		                    qr.addData(prnData);
+		                    qr.make();
+		                    container.innerHTML = qr.createImgTag(3, 0);
+		                }
+		            });
+		        });
+				</script>
+</body>
+</html>

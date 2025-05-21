@@ -245,17 +245,16 @@
 </head>
 
 <body>
-  <header>
-    <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}"></div>
-    <ul class="nav__links">
-		<li class="user-log"> <i class="fa fa-user" style="font-size:20px"><span th:text="${currentUser.name}"></span></i></li>
-      <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
-      <li class="link"><a th:href="@{/user/bookings}">MY FLIGHTS</a></li>
-      <li class="link"><a th:href="@{/aboutus}">ABOUT</a></li>
-      <li class="link"><a th:href="@{/login1}">FEEDBACK</a></li>
-    </ul>
-    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
-  </header>
+	<header>
+	       <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo"></div>
+	       <ul class="nav__links">
+	           <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
+	           <li class="link"><a th:href="@{/user/bookings}">MY FLIGHTS</a></li>
+	           <li class="link"><a th:href="@{/user/review}">REVIEW</a></li>
+			<li class="link"><a th:href="@{/user/profileEdit}">Profile</a></li>
+	       </ul>
+	       <a th:href="@{/user/logout}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
+	   </header>
   <section class="banner">
     <h2 class="section__header"></h2>
   </section>

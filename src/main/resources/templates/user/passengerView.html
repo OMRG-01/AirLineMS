@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Passanger</title>
+    <title>Passenger</title>
     <link rel="icon" type="image/png" th:href="@{/img/fg.png}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://kit.fontawesome.com/44f557ccce.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/44f557ccce.js"></script>
     <style>
         @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
         :root {
@@ -174,473 +174,613 @@
             background-color: var(--primary-color-dark);
         }
 
-        /*-------------------------FOOTER CSS---------------------------*/
-		.boarding-pass-container {
-		            max-width: 1000px;
-		            margin: 0 auto 40px;
-		            perspective: 1500px;
-		        }
+        /* Class-specific styling */
+        .boarding-pass-economy {
+            background-color: var(--white);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            width: 110%;
+        }
+        
+        .boarding-pass-business {
+            background: linear-gradient(145deg, #f6da6a, #e6c347);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(246, 218, 106, 0.3);
+            display: flex;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            width: 110%;
+        }
+        
+        .boarding-pass-first {
+            background: linear-gradient(145deg, #e8e9ed, #c5c7d0);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(192, 192, 192, 0.4);
+            display: flex;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            width: 110%;
+        }
+        
+        .boarding-pass-economy:hover,
+        .boarding-pass-business:hover,
+        .boarding-pass-first:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
 
-		        .boarding-pass {
-		            background-color: var(--white);
-		            border-radius: 30px;
-		            overflow: hidden;
-		            box-shadow: var(--box-shadow);
-		            display: flex;
-		            transition: all 0.3s ease;
-		            transform-style: preserve-3d;
-					width: 110%;
-		        }
-		        
-		        .boarding-pass:hover {
-		            transform: translateY(-5px);
-		            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-		        }
+        /* Business Class Side */
+        .boarding-pass-side-business {
+            width: 270px;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            padding: 25px 20px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-		        .boarding-pass-main {
-		            flex: 1;
-		            padding: 25px;
-		            position: relative;
-		            border-right: 2px dashed var(--primary-color-dark);
-		        }
+        /* First Class Side */
+        .boarding-pass-side-first {
+            width: 270px;
+            background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
+            padding: 25px 20px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-		        .boarding-pass-side {
-		            width: 270px;
-		            background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
-		            padding: 25px 20px;
-		            color: var(--white);
-		            display: flex;
-		            flex-direction: column;
-		            align-items: center;
-		            position: relative;
-		            overflow: hidden;
-		        }
+        /* Economy Class Side (Default) */
+        .boarding-pass-side-economy {
+            width: 270px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-color-dark));
+            padding: 25px 20px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-		        .boarding-pass-side::before {
-		            content: '';
-		            position: absolute;
-		            top: 0;
-		            left: 0;
-		            width: 100%;
-		            height: 100%;
-		            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=');
-		            opacity: 0.1;
-		        }
+        .boarding-pass-side-economy::before,
+        .boarding-pass-side-business::before,
+        .boarding-pass-side-first::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=');
+            opacity: 0.1;
+        }
 
-		        .airline-logo {
-		            max-width: 180px;
-		            height: auto;
-		            margin-bottom: 5px;
-		        }
+        /* Business class text styling */
+        .boarding-pass-business .info-value,
+        .boarding-pass-business .passenger-name,
+        .boarding-pass-business .time-value {
+            color: #8B4513;
+        }
 
-		        .boarding-pass-header {
-		            display: flex;
-		            justify-content: space-between;
-		            align-items: center;
-		            margin-bottom: 20px;
-		        }
+        .boarding-pass-business .flight-class {
+            color: #8E2157;
+            font-weight: 700;
+        }
 
-		        .flight-class {
-		            font-size: 28px;
-		            font-weight: 600;
-		            color: var(--primary-color);
-		            text-transform: uppercase;
-		        }
+        /* First class text styling */
+        .boarding-pass-first .info-value,
+        .boarding-pass-first .passenger-name,
+        .boarding-pass-first .time-value {
+            color: #2F4F4F;
+        }
 
-		        .boarding-pass hr {
-		            border-top: 1px solid rgba(0, 0, 0, 0.1);
-		            margin: 15px 0;
-		        }
+        .boarding-pass-first .flight-class {
+            color: #8E2157;
+            font-weight: 700;
+        }
 
-		        .boarding-info-row {
-		            display: flex;
-		            margin-bottom: 20px;
-		        }
+        /* Add metallic sheen effect */
+        .boarding-pass-business::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 38%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0) 48%);
+            background-size: 200% 100%;
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
 
-		        .boarding-info-item {
-		            flex: 1;
-		        }
+        .boarding-pass-first::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 38%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0) 48%);
+            background-size: 200% 100%;
+            animation: shine 3s infinite;
+            pointer-events: none;
+        }
 
-		        .info-label {
-		            font-size: 12px;
-		            color: #6c757d;
-		            text-transform: uppercase;
-		            letter-spacing: 1px;
-		            margin-bottom: 5px;
-		            font-weight: 500;
-		        }
+        @keyframes shine {
+            0% {background-position: 200% center;}
+            100% {background-position: -200% center;}
+        }
 
-		        .info-value {
-		            font-size: 20px;
-		            font-weight: 600;
-		            color: var(--text-dark);
-		            text-transform: uppercase;
-		        }
+        /* Remaining styles from original code */
+        .boarding-pass-container {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            perspective: 1500px;
+        }
 
-		        .passenger-name {
-		            font-size: 18px;
-		            font-weight: 600;
-		            text-transform: uppercase;
-		        }
+        .boarding-pass-main {
+            flex: 1;
+            padding: 25px;
+            position: relative;
+            border-right: 2px dashed var(--primary-color-dark);
+        }
 
-		        .boarding-time-section {
-		            display: flex;
-		            margin-top: 10px;
-		        }
+        .airline-logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 5px;
+        }
 
-		        .time-item {
-		            margin-right: 30px;
-		        }
+        .boarding-pass-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-		        .time-label {
-		            font-size: 12px;
-		            color: #6c757d;
-		            text-transform: uppercase;
-		            letter-spacing: 1px;
-		            margin-bottom: 0;
-		        }
+        .flight-class {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
 
-		        .time-value {
-		            font-size: 28px;
-		            font-weight: 600;
-		            margin-bottom: 5px;
-		        }
+        .boarding-pass hr {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+        }
 
-		        .date-value {
-		            font-size: 16px;
-		            font-weight: 500;
-		        }
+        .boarding-info-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
 
-		        .flight-number-section {
-		            margin-top: 10px;
-		        }
+        .boarding-info-item {
+            flex: 1;
+        }
 
-		        .brand-logo {
-		            font-size: 32px;
-		            font-weight: 700;
-		            margin-bottom: 20px;
-		            letter-spacing: 1px;
-		            text-align: center;
-		        }
+        .info-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
 
-		        .ticket-illustration {
-		            max-width: 180px;
-		            height: auto;
-		            margin: 25px 0;
-		        }
+        .info-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+        }
 
-		        .side-message {
-		            text-align: center;
-		            font-size: 14px;
-		            opacity: 0.9;
-		            margin-top: 20px;
-		            line-height: 1.6;
-		        }
+        .passenger-name {
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
 
-		        .qr-code {
-		            width: 100px;
-		            height: 100px;
-		            margin: 15px 0;
-		            background-color: white;
-		            padding: 5px;
-		            border-radius: 8px;
-		        }
+        .boarding-time-section {
+            display: flex;
+            margin-top: 10px;
+        }
 
-		        /* Print Button */
-		        .action-buttons {
-		            display: flex;
-		            justify-content: center;
-		            margin-top: 30px;
-		            gap: 20px;
-		        }
+        .time-item {
+            margin-right: 30px;
+        }
 
-		        .btn-print {
-		            background-color: #28a745;
-		            transition: all 0.3s ease;
-		        }
+        .time-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
 
-		        .btn-print:hover {
-		            background-color: #218838;
-		        }
+        .time-value {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
 
-		        .boarding-pass-wrapper {
-		            position: relative;
-		            margin-bottom: 50px;
-		        }
+        .date-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
 
-		        .boarding-pass-wrapper::before,
-		        .boarding-pass-wrapper::after {
-		            content: "";
-		            position: absolute;
-		            width: 30px;
-		            height: 30px;
-		            background-color: #f1f5f9;
-		            border-radius: 50%;
-		            z-index: 2;
-		        }
+        .flight-number-section {
+            margin-top: 10px;
+        }
 
-		        .boarding-pass-wrapper::before {
-		            top: -15px;
-		            left: calc(100% - 160px - 15px);
-		        }
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
 
-		        .boarding-pass-wrapper::after {
-		            bottom: -15px;
-		            left: calc(100% - 160px - 15px);
-		        }
+        .ticket-illustration {
+            max-width: 180px;
+            height: auto;
+            margin: 25px 0;
+        }
 
-		        /* Footer Styles */
-		        .footer {
-		            background-color: var(--primary-color);
-		            padding: 20px 0;
-		            margin-top: auto;
-		        }
+        .side-message {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 20px;
+            line-height: 1.6;
+        }
 
-		        .footer__bar1 {
-		            padding: 0 20px;
-		            display: flex;
-		            align-items: center;
-		            justify-content: space-between;
-		            gap: 1rem;
-		        }
+        .qr-code {
+            width: 100px;
+            height: 100px;
+            margin: 15px 0;
+            background-color: white;
+            padding: 5px;
+            border-radius: 8px;
+        }
 
-		        .footer__bar1 p {
-		            font-size: 0.9rem;
-		            color: white;
-		            padding: 0 20px;
-		            margin-bottom: 0;
-		        }
+        /* Print Button */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 20px;
+        }
 
-		        .social {
-		            display: flex;
-		            align-items: center;
-		            gap: 1rem;
-		        }
+        .btn-print {
+            background-color: #28a745;
+            transition: all 0.3s ease;
+        }
 
-		        .social span {
-		            font-size: 1.4rem;
-		            color: var(--extra-light);
-		            transition: all 0.3s ease;
-		        }
+        .btn-print:hover {
+            background-color: #218838;
+        }
 
-		        .social span a {
-		            text-decoration: none;
-		            color: var(--extra-light);
-		        }
+        .boarding-pass-wrapper {
+            position: relative;
+            margin-bottom: 50px;
+        }
 
-		        .social span:hover {
-		            transform: translateY(-3px);
-		        }
+        .boarding-pass-wrapper::before,
+        .boarding-pass-wrapper::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #f1f5f9;
+            border-radius: 50%;
+            z-index: 2;
+        }
 
-		        .footer-logo img {
-		            height: 40px;
-		            width: auto;
-		        }
+        .boarding-pass-wrapper::before {
+            top: -15px;
+            left: calc(100% - 160px - 15px);
+        }
 
-		        @media print {
-		            header, .action-buttons, .footer {
-		                display: none !important;
-		            }
+        .boarding-pass-wrapper::after {
+            bottom: -15px;
+            left: calc(100% - 160px - 15px);
+        }
 
-		            main {
-		                margin-top: 0;
-		                padding: 0;
-		            }
+        /* Footer Styles */
+        .footer {
+            background-color: var(--primary-color);
+            padding: 20px 0;
+            margin-top: auto;
+        }
 
-		            .boarding-pass-container {
-		                width: 40%;
-		                max-width: 50%;
-		                margin: 0;
-		                page-break-inside: avoid;
-		            }
+        .footer__bar1 {
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
 
-		            .boarding-pass {
-		                box-shadow: none;
-		                border: 1px solid #ddd;
-		            }
+        .footer__bar1 p {
+            font-size: 0.9rem;
+            color: white;
+            padding: 0 20px;
+            margin-bottom: 0;
+        }
 
-		            .boarding-pass-wrapper::before,
-		            .boarding-pass-wrapper::after {
-		                display: none;
-		            }
+        .social {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-		            body {
-		                background-color: white;
-		            }
-		        }
+        .social span {
+            font-size: 1.4rem;
+            color: var(--extra-light);
+            transition: all 0.3s ease;
+        }
 
-      
+        .social span a {
+            text-decoration: none;
+            color: var(--extra-light);
+        }
+
+        .social span:hover {
+            transform: translateY(-3px);
+        }
+
+        .footer-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        @media print {
+            header, .action-buttons, .footer {
+                display: none !important;
+            }
+
+            main {
+                margin-top: 0;
+                padding: 0;
+            }
+
+            .boarding-pass-container {
+                width: 40%;
+                max-width: 50%;
+                margin: 0;
+                page-break-inside: avoid;
+            }
+
+            .boarding-pass-economy,
+            .boarding-pass-business,
+            .boarding-pass-first {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            .boarding-pass-wrapper::before,
+            .boarding-pass-wrapper::after {
+                display: none;
+            }
+
+            body {
+                background-color: white;
+            }
+        }
     </style>
 </head>
 <body>
     
-    <header>
-    <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo"></div>
-    <ul class="nav__links">
-      <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
-      <li class="link"><a th:href="@{/user/bookings}">MY FLIGHTS</a></li>
-      <li class="link"><a th:href="@{/user/review}">Review</a></li>
-    </ul>
-    <a th:href="@{/login1}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
-  </header>
+	<header>
+	       <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo"></div>
+	       <ul class="nav__links">
+	           <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
+	           <li class="link"><a th:href="@{/user/bookings}">MY FLIGHTS</a></li>
+	           <li class="link"><a th:href="@{/user/review}">REVIEW</a></li>
+			<li class="link"><a th:href="@{/user/profileEdit}">Profile</a></li>
+	       </ul>
+	       <a th:href="@{/user/logout}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
+	   </header>
     <br><br><br>
     <h1 class="text-center text-secondary mt-4 mb-4">E-TICKETS</h1>
 	<section id="ticketSection">
-	            <div class="container">
-	                <div th:each="passenger : ${passengers}" class="boarding-pass-wrapper">
-	                    <div class="boarding-pass">
-	                        <div class="boarding-pass-main">
-	                            <div class="boarding-pass-header">
-	                                <div class="airline-logo">
-	                                    <img th:src="@{/assets/gg.png.png}" alt="Airline Logo" class="img-fluid" data-print-src="/assets/gg.png.png">
-	                                </div>
-	                                <div class="flight-class" th:text="${booking.flightClass.name}">First Class</div>
-	                            </div>
-	                            
-	                            <hr>
-	                            
-	                            <div class="boarding-info-row">
-	                                <div class="boarding-info-item">
-	                                    <p class="info-label">Airline</p>
-	                                    <p class="info-value" th:text="${booking.airline.aname}">JetSetFly Airways</p>
-	                                </div>
-	                                <div class="boarding-info-item">
-	                                    <p class="info-label">From</p>
-	                                    <p class="info-value" th:text="${booking.schedule.source.cityname}">New York</p>
-	                                </div>
-	                                <div class="boarding-info-item">
-	                                    <p class="info-label">To</p>
-	                                    <p class="info-value" th:text="${booking.schedule.destination.cityname}">London</p>
-	                                </div>
-	                            </div>
-	                            
-	                            <div class="boarding-info-row">
-	                                <div class="boarding-info-item" style="flex: 2;">
-	                                    <p class="info-label">Passenger</p>
-	                                    <p class="passenger-name" th:text="${passenger.pname}">John Doe</p>
-	                                </div>
-	                                <div class="boarding-info-item">
-	                                    <p class="info-label">Board Time</p>
-	                                    <p class="info-value" th:text="${#temporals.format(booking.schedule.departAt.minusMinutes(30), 'HH:mm')}">12:30</p>
-										<p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
-	                                </div>
-	                            </div>
-	                            
-	                            <div class="boarding-time-section">
-	                                <div class="time-item">
-	                                    <p class="time-label">Departure</p>
-	                                    <p class="time-value" th:text="${#temporals.format(booking.schedule.departAt, 'HH:mm')}">13:00</p>
-	                                    <p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
-	                                </div>
-	                                <div class="time-item">
-	                                    <p class="time-label">Arrival</p>
-	                                    <p class="time-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'HH:mm')}">19:45</p>
-	                                    <p class="date-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'EEE, dd MMM')}">Mon, 21 May</p>
-	                                </div>
-	                                <div class="flight-number-section" style="margin-left: 70px;">
-	                                    <p class="time-label">Flight No</p>
-	                                    <p class="info-value" th:text="${booking.flight.fnumber}">JSF123</p>
-	                                </div>
-	                                <div class="flight-number-section" style="margin-left: 25%;">
-	                                    <p class="time-label">PRN No</p>
-	                                    <p class="info-value" th:text="${passenger.prn}">ABC123</p>
-	                                </div>
-	                            </div>
-	                        </div>
-	                        
-	                        <div class="boarding-pass-side">
-	                            <div class="brand-logo">JetSetFly</div>
-	                            <img th:src="@{/assets/airtic.png}" alt="Ticket Illustration" class="ticket-illustration" data-print-src="/assets/airtic.png">
-	                            <div class="qr-code" th:attr="data-qr=${passenger.prn}">
-	                                <!-- QR code will be generated here via script -->
-	                            </div>
-	                            <p class="side-message">Thank you for choosing us.<br>Please be at the gate at boarding time.</p>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </section>
-	        
-	        <div class="action-buttons">
-	            <button class="btn btn-print" onclick="printTickets()"><i class="fa fa-print"></i> Print Boarding Pass</button>
-	        </div>
-	    </main>
+        <div class="container">
+            <div th:each="passenger : ${passengers}" class="boarding-pass-wrapper">
+                <!-- Dynamic class assignment based on flight class -->
+                <div th:class="${booking.flightClass.name == 'Economy Class' ? 'boarding-pass-economy' : (booking.flightClass.name == 'Business Class' ? 'boarding-pass-business' : 'boarding-pass-first')}">
+                    <div class="boarding-pass-main">
+                        <div class="boarding-pass-header">
+                            <div class="airline-logo">
+                                <img th:src="@{/assets/gg.png.png}" alt="Airline Logo" class="img-fluid" data-print-src="/assets/gg.png.png">
+                            </div>
+                            <div class="flight-class" th:text="${booking.flightClass.name}">First Class</div>
+                        </div>
+                        <input type="hidden" id="bookingId" th:value="${booking.id}" />
+                        <hr>
+                        
+                        <div class="boarding-info-row">
+                            <div class="boarding-info-item">
+                                <p class="info-label">Airline</p>
+                                <p class="info-value" th:text="${booking.airline.aname}">JetSetFly Airways</p>
+                            </div>
+                            <div class="boarding-info-item">
+                                <p class="info-label">From</p>
+                                <p class="info-value" th:text="${booking.schedule.source.cityname}">New York</p>
+                            </div>
+                            <div class="boarding-info-item">
+                                <p class="info-label">To</p>
+                                <p class="info-value" th:text="${booking.schedule.destination.cityname}">London</p>
+                            </div>
+                        </div>
+                        
+                        <div class="boarding-info-row">
+                            <div class="boarding-info-item" style="flex: 2;">
+                                <p class="info-label">Passenger</p>
+                                <p class="passenger-name" th:text="${passenger.pname}">John Doe</p>
+                            </div>
+                            <div class="boarding-info-item">
+                                <p class="info-label">Board Time</p>
+                                <p class="info-value" th:text="${#temporals.format(booking.schedule.departAt.minusMinutes(30), 'HH:mm')}">12:30</p>
+                                <p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                            </div>
+                        </div>
+                        
+                        <div class="boarding-time-section">
+                            <div class="time-item">
+                                <p class="time-label">Departure</p>
+                                <p class="time-value" th:text="${#temporals.format(booking.schedule.departAt, 'HH:mm')}">13:00</p>
+                                <p class="date-value" th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                            </div>
+                            <div class="time-item">
+                                <p class="time-label">Arrival</p>
+                                <p class="time-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'HH:mm')}">19:45</p>
+                                <p class="date-value" th:text="${#temporals.format(booking.schedule.arriveAt, 'EEE, dd MMM')}">Mon, 21 May</p>
+                            </div>
+                            <div class="flight-number-section" style="margin-left: 70px;">
+                                <p class="time-label">Flight No</p>
+                                <p class="info-value" th:text="${booking.flight.fnumber}">JSF123</p>
+                            </div>
+                            <div class="flight-number-section" style="margin-left: 25%;">
+                                <p class="time-label">PRN No</p>
+                                <p class="info-value" th:text="${passenger.prn}">ABC123</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic side panel styling based on flight class -->
+                    <div th:class="${booking.flightClass.name == 'Economy Class' ? 'boarding-pass-side-economy' : (booking.flightClass.name == 'Business Class' ? 'boarding-pass-side-business' : 'boarding-pass-side-first')}">
+                        <div class="brand-logo">JetSetFly</div>
+                        <img th:src="@{/assets/airtic.png}" alt="Ticket Illustration" class="ticket-illustration" data-print-src="/assets/airtic.png">
+                        <div class="qr-code" th:attr="data-qr=${passenger.prn}">
+                            <!-- QR code will be generated here via script -->
+                        </div>
+                        <p class="side-message">Thank you for choosing us.<br>Please be at the gate at boarding time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        
+    <div class="action-buttons">
+        <button class="btn btn-print" onclick="printTickets()"><i class="fa fa-print"></i> Print Boarding Pass</button>
+    </div>
 
-	    <!-- Footer -->
-	    <footer class="footer">
-	        <div class="footer__bar1">
-	            <p>Copyright © 2024 Team GMADS. All rights reserved.</p>
-	            <div class="social">
-	                <span><a href="#" target="_blank"><i class="ri-facebook-fill"></i></a></span>
-	                <span><a href="#" target="_blank"><i class="ri-twitter-fill"></i></a></span>
-	                <span><a href="#" target="_blank"><i class="ri-instagram-line"></i></a></span>
-	                <span><a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" target="_blank"><i class="ri-youtube-fill"></i></a></span>
-	                <div class="footer-logo"><img th:src="@{/assets/w.png}" alt="JetSetFly" data-print-src="/assets/w.png"></div>
-	            </div>
-	        </div>
-	    </footer>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__bar1">
+            <p>Copyright © 2024 Team GMADS. All rights reserved.</p>
+            <div class="social">
+                <span><a href="#" target="_blank"><i class="ri-facebook-fill"></i></a></span>
+                <span><a href="#" target="_blank"><i class="ri-twitter-fill"></i></a></span>
+                <span><a href="#" target="_blank"><i class="ri-instagram-line"></i></a></span>
+                <span><a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" target="_blank"><i class="ri-youtube-fill"></i></a></span>
+                <div class="footer-logo"><img th:src="@{/assets/w.png}" alt="JetSetFly" data-print-src="/assets/w.png"></div>
+            </div>
+        </div>
+    </footer>
 
-	    <!-- Scripts -->
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-	    <script>
-	        // Generate QR codes
-	        document.addEventListener('DOMContentLoaded', function() {
-	            const qrContainers = document.querySelectorAll('.qr-code');
-	            qrContainers.forEach(container => {
-	                const prnData = container.getAttribute('data-qr');
-	                if (prnData) {
-	                    const qr = qrcode(3, 'L');
-	                    qr.addData(prnData);
-	                    qr.make();
-	                    container.innerHTML = qr.createImgTag(3, 0);
-	                }
-	            });
-	        });
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        // Generate QR codes
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrContainers = document.querySelectorAll('.qr-code');
+            qrContainers.forEach(container => {
+                const prnData = container.getAttribute('data-qr');
+                if (prnData) {
+                    const qr = qrcode(3, 'L');
+                    qr.addData(prnData);
+                    qr.make();
+                    container.innerHTML = qr.createImgTag(3, 0);
+                }
+            });
+        });
 
-	        // Improved print function that handles images properly
-			    function printTickets() {
-			        const ticketSection = document.getElementById('ticketSection');
-			        const originalContent = document.body.innerHTML;
+        // Improved print function that handles images properly
+        function printTickets() {
+            const bookingId = document.getElementById('bookingId').value;
 
-			        // Create a new window
-			        const printWindow = window.open('', '_blank');
+            // Send email request
+            fetch('/user/send-boarding-pass', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    bookingId: bookingId
+                })
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log("Email status:", result);
+            })
+            .catch(error => console.error("Error sending email:", error));
+            
+            
+            const ticketSection = document.getElementById('ticketSection');
+            const originalContent = document.body.innerHTML;
 
-			        // Collect all stylesheets and inline styles
-			        const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
-			            .map(style => style.outerHTML)
-			            .join('\n');
+            // Create a new window
+            const printWindow = window.open('', '_blank');
 
-			        // Prepare full HTML for printing
-			        const printContent = `
-			            <html>
-			            <head>
-			                <title>JetSetFly Boarding Pass</title>
-			                ${styles}
-			                <style>
-			                    @media print {
-			                        body { margin: 0; padding: 0; }
-			                        .no-print { display: none !important; }
-			                    }
-			                </style>
-			            </head>
-			            <body>
-			                ${ticketSection.outerHTML}
-			            </body>
-			            </html>
-			        `;
+            // Collect all stylesheets and inline styles
+            const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"], style'))
+                .map(style => style.outerHTML)
+                .join('\n');
 
-			        // Write to the new window
-			        printWindow.document.write(printContent);
-			        printWindow.document.close();
+            // Prepare full HTML for printing
+            const printContent = `
+                <html>
+                <head>
+                    <title>JetSetFly Boarding Pass</title>
+                    ${styles}
+                    <style>
+                        @media print {
+                            body { margin: 0; padding: 0; }
+                            .no-print { display: none !important; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${ticketSection.outerHTML}
+                </body>
+                </html>
+            `;
 
-			        // Wait for DOM (including images like QR codes) to load before printing
-			        printWindow.onload = () => {
-			            printWindow.focus();
-			            printWindow.print();
-			            printWindow.close();
-			        };
-			    }
+            // Write to the new window
+            printWindow.document.write(printContent);
+            printWindow.document.close();
 
-	    </script>
-	</body>
-	</html>
+            // Wait for DOM (including images like QR codes) to load before printing
+            printWindow.onload = () => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
+	<script>
+	    // Detect if page is being loaded from back/forward navigation
+	    window.addEventListener("popstate", function () {
+	        window.location.href = "/user/bookings";
+	    });
+
+	    // Push a dummy state so popstate can be triggered
+	    window.history.pushState({}, "");
+	</script>
+
+</body>
+</html>

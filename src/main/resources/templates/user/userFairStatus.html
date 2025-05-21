@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Flight Booking</title>
+    <title>Flight Status</title>
     
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -50,6 +50,7 @@
 
         header .logo {
             font-weight: 700;
+            color: white;
             text-decoration: none;
             font-size: 1.5rem;
             text-transform: uppercase;
@@ -122,14 +123,6 @@
         .nav__links li:hover::after {
             width: 80%;
         }
-		.route-info hr {
-				    width: 90%;
-				    height: 2px;
-				    background-color: var(--primary-color);
-				    border: none;
-				    margin: 0 auto; /* Centers the <hr> horizontally */
-				}
-
 
         .login {
             display: flex;
@@ -231,7 +224,7 @@
 
         /* Improved Flight Card CSS */
         .flight-container {
-            width: 90%;
+            width: 70%;
             margin: 20px auto 0;
         }
 
@@ -252,7 +245,7 @@
 
         .class-options {
             display: flex;
-            width: 45%;
+            width: 25%;
         }
 
         .class-card {
@@ -260,7 +253,6 @@
             border-radius: 20px;
             box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
             padding: 20px 15px;
-			margin-right: 10px;
             width: 70%;
             display: flex;
             flex-direction: column;
@@ -349,8 +341,17 @@
 
         .route-info {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
+		.route-info hr {
+		    width: 90%;
+		    height: 2px;
+		    background-color: var(--primary-color);
+		    border: none;
+		    margin: 0 auto; /* Centers the <hr> horizontally */
+		}
+
+				
 
         .unavailable-class {
             color: #ff0000;
@@ -365,7 +366,69 @@
             justify-content: space-between;
             margin-top: 15px;
         }
-	
+		.class-options {
+		      display: flex;
+		      width: 25%;
+		  }
+		  
+		  #main-box2 {
+		      background-color: white;
+		      border-radius: 20px;
+		      box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.1);
+		      padding: 20px 15px;
+		      width: 100%;
+		      display: flex;
+		      flex-direction: column;
+		      position: relative;
+		  }
+		  
+		  .status-indicator {
+		      position: absolute;
+		      top: 15px;
+		      right: 15px;
+		  }
+		  
+		  .status {
+		      padding: 5px 10px;
+		      border-radius: 12px;
+		      font-size: 0.85rem;
+		      font-weight: bold;
+		  }
+		  
+		  .not-departed {
+		      background-color: #FFF3CD;
+		      color: #856404;
+		  }
+		  
+		  .departed {
+		      background-color: #D1ECF1;
+		      color: #0C5460;
+		  }
+		  
+		  .arrived {
+		      background-color: #D4EDDA;
+		      color: #155724;
+		  }
+		  
+		  .airline-info {
+		      display: flex;
+		      flex-direction: column;
+		      align-items: center;
+		      justify-content: center;
+		      height: 100%;
+		      text-align: center;
+		  }
+		  
+		  .airline-info h3 {
+		      font-size: 1.5rem;
+		      margin-bottom: 10px;
+		      color: var(--primary-color);
+		  }
+		  
+		  .flight-number {
+		      font-size: 1.1rem;
+		      color: var(--text-light);
+		  }
     </style>
 </head>
 
@@ -382,14 +445,14 @@
 	   </header>
 
     <div class="page-title">
-        <h1>Make a Booking</h1>
+        <h1>Flight Status</h1>
     </div>
     
     <div class="route-info">
         <h4 th:text="${from} + ' To ' + ${to}"></h4>
         <h5 th:text="${#temporals.format(date, 'dd MMMM yyyy')}"></h5>
-		<input type="hidden" name="userId" th:value="${userId}" />
-		<input type="hidden" name="passanger" th:value="${passengers}" />
+		
+		
 		<hr>
     </div>
     
@@ -398,7 +461,6 @@
         <div th:each="flight : ${flights}" th:if="${flight.status == 'ACTIVE'}" class="flight-row">
             <!-- Flight Details Card -->
             <div class="flight-details">
-				<input type="hidden" name="userId" th:value="${flight.id}" />
                 <!-- Source & Destination -->
                 <div class="text-row">
                     <div>
@@ -432,71 +494,55 @@
                 </div>
 
                 <!-- Visual Line with Plane -->
-                <div class="flight-path">
-                    <div class="origin-dot"></div>
+				<!-- Visual Line with Plane -->
+				<!-- BEFORE departure -->
+				<div class="flight-path" th:if="${flight.departAt.isAfter(now)}">
+				    <div class="origin-dot"></div>
+				    <i class="fa fa-fighter-jet fa-2x"></i>
+				    <hr>
+				    <hr>
+				</div>
+
+				<!-- IN FLIGHT -->
+				<div class="flight-path" 
+				     th:if="${!flight.departAt.isAfter(now)} and ${flight.arriveAt.isAfter(now)}">
+					 <div class="origin-dot"></div>
+					 
+				    <hr>
 					<i class="fa fa-fighter-jet fa-2x"></i>
-                    <hr>
-                   
-                    <hr>
-                </div>
+				    <hr>
+				</div>
+
+				<!-- AFTER Arrival -->
+				<div class="flight-path" 
+				     th:if="${!flight.arriveAt.isAfter(now)}">
+					 <div class="origin-dot"></div>
+				    
+				    <hr>
+				    <hr>
+					<i class="fa fa-fighter-jet fa-2x"></i>
+				</div>
 
                 <!-- Flight Number, Airline -->
-                <div class="flight-details-row">
-                    <div><strong>Flight No:</strong> <span th:text="${flight.flightNumber}"></span></div>
-                    <div><strong>Airline:</strong>
-                        <span th:text="${flight.flight.airline.aname}">Unknown Airline</span>
-                    </div>
-                </div>
+               
             </div>
-
-            <!-- Class Options -->
-            <div class="class-options">
-                <div th:each="rate : ${scheduleRatesMap[flight.id]}" class="class-card">
-                    <div>
-                        <!-- Class Name -->
-                        <h4 style="font-weight:bold;" th:text="${rate.flightClass.name}"></h4>
-                    </div>
-
-                    <!-- Price Check -->
-					<div th:if="${rate.rate > 0}">
-					    <h5 th:text="'INR ' + ${rate.rate}"></h5>
-
-					    <p style="font-size:15px;color:gray;margin-top:15px;">
-					        Available seats:
-					        <span th:text="${availableSeatsMap[flight.id + '-' + rate.flightClass.id]}">0</span>
-					    </p>
-
-					    <div>
-					        <!-- IF user is logged in and seats available: Show booking form -->
-					        <form th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] > 0}"
-					              th:action="@{/booking/initiate}"
-					              method="post"
-					              th:unless="${availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}">
-					            <input type="hidden" name="userId" th:value="${currentUser.id}" />
-					            <input type="hidden" name="flightId" th:value="${flight.flight.id}" />
-					            <input type="hidden" name="airlineId" th:value="${flight.flight.airline.id}" />
-					            <input type="hidden" name="scheduleId" th:value="${flight.id}" />
-					            <input type="hidden" name="flightClassId" th:value="${rate.flightClass.id}" />
-					            <input type="hidden" name="nos_passanger" th:value="${passengers}" />
-					            <input type="hidden" name="rate" th:value="${rate.rate}" />
-					            <button type="submit" class="select-btn">Book Now</button>
-					        </form>
-
-					        <!-- Show disabled button if no seats -->
-					        <button th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}"
-					                class="select-btn disabled"
-					                disabled>No Seats Available</button>
-
-					        
-					    </div>
-					</div>
-
-                    <!-- Price Not Set = Class Not Available -->
-                    <div th:if="${rate.rate == 0}" class="unavailable-class">
-                        Class Not<br>Available
-                    </div>
-                </div>
-            </div>
+			<div class="class-options">
+			    <div id="main-box2" class="class-card">
+			        <div class="status-indicator">
+			            <!-- Status will show as "Not Departed", "In Flight", or "Arrived" -->
+			            <span th:if="${flight.departAt.isAfter(now)}" class="status not-departed">Not Departed</span>
+			            <span th:if="${!flight.departAt.isAfter(now)} and ${flight.arriveAt.isAfter(now)}" class="status departed">In Flight</span>
+			            <span th:if="${!flight.arriveAt.isAfter(now)}" class="status arrived">Arrived</span>
+			        </div>
+			        <div class="airline-info">
+						<h7>Take off From</h7>
+			            <h3 th:text="${flight.flight.airline.aname}">Airline Name</h3>
+			            <p class="flight-number" th:text="'Flight: ' + ${flight.flightNumber}">Flight Number</p>
+			        </div>
+			    </div>
+			</div>
+           
+            
         </div>
     </div>
     
@@ -507,7 +553,7 @@
         </div>
     </div>
     
-    
+   
 </body>
 
 </html>

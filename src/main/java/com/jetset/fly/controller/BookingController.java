@@ -1,6 +1,8 @@
 package com.jetset.fly.controller;
 
+import java.io.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.jetset.fly.dto.BookingDTO;
 import com.jetset.fly.dto.BookingTempRequest;
@@ -18,6 +22,7 @@ import com.jetset.fly.model.*;
 
 import com.jetset.fly.model.Class;
 import com.jetset.fly.service.*;
+import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.jetset.fly.repository.*;
 
 import jakarta.servlet.http.HttpSession;
@@ -144,35 +149,28 @@ public class BookingController {
         return "user/gateway";
     }
 
+  
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
     
     @PostMapping("/booking/confirm")
-    public String confirmBookingAfterPayment(HttpSession session) {
+    public String confirmBookingAfterPayment(HttpSession session) throws Exception {
 
         BookingDTO bookingDTO = (BookingDTO) session.getAttribute("bookingDTO");
-        List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("passengers");
+        List<PassengerDTO> passengersDTO = (List<PassengerDTO>) session.getAttribute("passengers");
         Double rate = (Double) session.getAttribute("rate");
         Integer noOfPassengers = (Integer) session.getAttribute("noOfPassengers");
-        
-        System.out.println("BookingDTO: " + bookingDTO);
-        System.out.println("Passengers: " + passengers);
-        System.out.println("Rate: " + rate);
-        System.out.println("NoOfPassengers: " + noOfPassengers);
 
-        System.out.println("UserId: " + bookingDTO.getUserId());
-        System.out.println("AirlineId: " + bookingDTO.getAirlineId());
-        System.out.println("FlightId: " + bookingDTO.getFlightId());
-        System.out.println("ScheduleId: " + bookingDTO.getScheduleId());
-        System.out.println("FlightClassId: " + bookingDTO.getFlightClassId());
-
-        
         if (bookingDTO == null || bookingDTO.getUserId() == null || bookingDTO.getFlightId() == null ||
                 bookingDTO.getAirlineId() == null || bookingDTO.getScheduleId() == null ||
                 bookingDTO.getFlightClassId() == null) {
-                throw new IllegalArgumentException("Missing booking details. Please re-initiate the booking process.");
-            }
+            throw new IllegalArgumentException("Missing booking details. Please re-initiate the booking process.");
+        }
 
-        
         // 1. Save Booking
         Booking booking = new Booking();
         booking.setUser(userService.getById(bookingDTO.getUserId()));
@@ -182,10 +180,11 @@ public class BookingController {
         booking.setFlightClass(classService.findById(bookingDTO.getFlightClassId()));
         booking.setBookingAt(LocalDateTime.now());
         booking.setStatus("ACTIVE");
-        booking = bookingRepository.save(booking); // get saved instance with ID
+        booking = bookingRepository.save(booking);
 
         // 2. Save Passengers
-        for (PassengerDTO dto : passengers) {
+        List<Passenger> savedPassengers = new ArrayList<>();
+        for (PassengerDTO dto : passengersDTO) {
             Passenger p = new Passenger();
             p.setBooking(booking);
             p.setUser(userService.getById(dto.getUserId()));
@@ -198,7 +197,8 @@ public class BookingController {
             p.setBookingAt(LocalDateTime.now());
             p.setStatus("ACTIVE");
             p.setPrn("PRN" + UUID.randomUUID().toString().substring(0, 6).toUpperCase());
-            passengerRepository.save(p);
+            p = passengerRepository.save(p);
+            savedPassengers.add(p);
         }
 
         // 3. Save Payment
@@ -210,14 +210,15 @@ public class BookingController {
         payment.setUser(booking.getUser());
         paymentRepository.save(payment);
 
-        // 4. Clear session
+
+        emailService.sendBookingConfirmationEmail(booking, savedPassengers);// Use this to call passengerView
+
+        // 5. Clear session
         session.removeAttribute("bookingDTO");
         session.removeAttribute("passengers");
         session.removeAttribute("rate");
         session.removeAttribute("noOfPassengers");
 
-        return "redirect:/booking/success";
+        return "redirect:/user/bookings";
     }
-
-
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            border: 1px solid #eee;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .header {
+            background-color: #004aad;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #004aad;
+            margin-top: 30px;
+        }
+        .info-table {
+            width: 100%;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+        .info-table th, .info-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        .footer {
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h2>JetSetFly - Booking Confirmation</h2>
+    </div>
+
+    <p>Dear Customer,</p>
+
+    <p>Your flight booking is <strong>confirmed</strong>.</p>
+
+    <h3 class="section-title">Booking Summary</h3>
+    <table class="info-table">
+        <tr>
+            <th>Flight</th>
+            <td th:text="${booking.flight.fnumber}">JSF123</td>
+        </tr>
+        <tr>
+            <th>From</th>
+            <td th:text="${booking.schedule.source.cityname}">New York</td>
+        </tr>
+        <tr>
+            <th>To</th>
+            <td th:text="${booking.schedule.destination.cityname}">London</td>
+        </tr>
+        <tr>
+            <th>Departure</th>
+            <td th:text="${#temporals.format(booking.schedule.departAt, 'EEE, dd MMM yyyy HH:mm')}">Mon, 21 May 13:00</td>
+        </tr>
+        <tr>
+            <th>Arrival</th>
+            <td th:text="${#temporals.format(booking.schedule.arriveAt, 'EEE, dd MMM yyyy HH:mm')}">Mon, 21 May 19:45</td>
+        </tr>
+        <tr>
+            <th>Class</th>
+            <td th:text="${booking.flightClass.name}">First Class</td>
+        </tr>
+    </table>
+
+    <h3 class="section-title">Passenger Details</h3>
+    <table class="info-table">
+        <thead>
+        <tr>
+            <th>Passenger Name</th>
+            <th>PRN</th>
+            <th>Boarding Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="passenger : ${passengers}">
+            <td th:text="${passenger.pname}">John Doe</td>
+            <td th:text="${passenger.prn}">ABC123</td>
+            <td th:text="${#temporals.format(booking.schedule.departAt.minusMinutes(30), 'HH:mm')}">12:30</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p><strong>Important Instructions:</strong></p>
+        <ul>
+            <li>Please arrive at the airport at least 2 hours before departure.</li>
+            <li>Boarding gate closes 30 minutes before the flight time.</li>
+            <li>Carry a valid government ID for verification.</li>
+            <li>If your flight is canceled or rescheduled, we will notify you via email or SMS.</li>
+            <li>For any queries, please contact our support at support@jetsetfly.com.</li>
+        </ul>
+
+        <p>Thank you for choosing JetSetFly. We wish you a pleasant journey!</p>
+    </div>
+</div>
+</body>
+</html>

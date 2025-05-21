@@ -27,4 +27,8 @@ public class PassengerService {
     public List<Passenger> findByBookingId(Long bookingId) {
         return passengerRepository.findByBookingId(bookingId);
     }
+    public List<Passenger> getPassengersByBookingId(Long bookingId) {
+        return passengerRepository.findByBookingId(bookingId);
+    }
+
 }

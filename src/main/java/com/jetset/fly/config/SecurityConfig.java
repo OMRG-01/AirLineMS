@@ -21,17 +21,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()// This enables CSRF (no need to chain .and())
-          
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/register", "/forgetPass", "/login/**").permitAll()
                 .anyRequest().permitAll()
             )
-            .formLogin().disable()
-            .httpBasic().disable();
+            .formLogin(form -> form.disable())
+            .httpBasic(httpBasic -> httpBasic.disable())
+            .logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/")
+                .permitAll()
+            );
 
         return http.build();
     }
+
 
 
 
