@@ -172,6 +172,12 @@
 						      border-bottom: 1px solid #eee;
 						      vertical-align: middle;
 						    }
+							#pname							{
+													      padding: 14px 12px;
+													      text-align: left;
+													      border-bottom: 1px solid #eee;
+													      vertical-align: middle;
+													    }
 						    
 						    .passenger-table tr:hover {
 						      background-color: #f9f9f9;
@@ -608,6 +614,8 @@
 					  <!-- Header Top Section -->
 					  <div class="header-top">
 					    <h3 class="passenger-count">
+							<i class="material-icons opacity-10" style="font-size: 30px;">airline_seat_recline_normal</i>
+
 					      <span>Passengers List</span>
 					    </h3>
 					    
@@ -667,7 +675,7 @@
 		                    </thead>
 		                    <tbody>
 		                       <tr th:each="p : ${passengerList}">
-	                                <td th:text="${p.pname}"></td>
+	                                <td id="pname" th:text="${p.pname}"></td>
 	                                <td th:text="${p.prn}"></td>
 	                                <td th:text="${p.mobileNo}"></td>
 	                                <td th:text="${p.gender}"></td>

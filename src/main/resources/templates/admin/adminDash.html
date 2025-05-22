@@ -389,7 +389,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="feedback.php">
+          <a class="nav-link text-white " th:href="@{/admin/feedback}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">notifications</i>
             </div>
@@ -520,12 +520,12 @@
                 </div>
                 <div class="text-end pt-1">
                   <p class="text-sm mb-0 text-capitalize">Total Bookings</p>
-                  <h4 class="mb-0"></h4>
+                    <h4 class="mb-0" th:text="${totalBookings}">0</h4>
                 </div>
               </div>
               <hr class="dark horizontal my-0">
               <div class="card-footer p-3">
-                <p class="mb-0">From<span class="text-success text-sm font-weight-bolder"> <?php echo $count;?></span> Registrations </p>
+                <p class="mb-0">Recent Booking From User <span class="text-success text-sm font-weight-bolder" th:text="${recentBookedUser}"> </span></p>
               </div>
             </div>
           </a>
@@ -540,12 +540,14 @@
                 </div>
                 <div class="text-end pt-1">
                   <p class="text-sm mb-0 text-capitalize">Total Earnings</p>
-                  <h4 class="mb-0"></h4>
+				  <h4 class="mb-0" th:text="'INR ' + ${totalEarnings}">INR 0</h4>
                 </div>
               </div>
               <hr class="dark horizontal my-0">
               <div class="card-footer p-3">
                 <p class="mb-0">Today's Earnings<span class="text-success text-sm font-weight-bolder"> </span></p>
+				<span th:text="'₹' + ${#numbers.formatDecimal(totalEarnings, 1, 'COMMA', 2, 'POINT')}"></span>
+
               </div>
             </div>
           </a>

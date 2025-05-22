@@ -2,6 +2,7 @@ package com.jetset.fly.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import jakarta.persistence.*;
 
@@ -35,7 +36,31 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "user_id") 
     private User user;
+    
+    @Column(name = "total_amount")
+    private Double totalAmount;
+    
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 
+    // Setter for id
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+    
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+    
     @PrePersist
     private void generateTransactionId() {
         if (this.transactionId == null || this.transactionId.isEmpty()) {

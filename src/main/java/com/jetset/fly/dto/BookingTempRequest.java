@@ -11,13 +11,14 @@ public class BookingTempRequest {
     private Integer noOfPassengers;
     private Long userId;
     private List<PassengerDTO> passengers;
+    private Double totalAmount;
 
     // Default Constructor
     public BookingTempRequest() {
     }
 
     // Parameterized Constructor
-    public BookingTempRequest(Long airlineId, Long flightId, Long scheduleId, Long flightClassId, Double rate, Integer noOfPassengers,Long userId, List<PassengerDTO> passengers) {
+    public BookingTempRequest(Long airlineId, Long flightId, Long scheduleId, Long flightClassId, Double rate, Integer noOfPassengers,Long userId, List<PassengerDTO> passengers,Double totalAmount) {
         this.airlineId = airlineId;
         this.flightId = flightId;
         this.scheduleId = scheduleId;
@@ -26,8 +27,16 @@ public class BookingTempRequest {
         this.noOfPassengers = noOfPassengers;
         this.passengers = passengers;
         this.userId=userId;
+        this.totalAmount=totalAmount;
+    }
+    
+    public Double getTotalAmount() {
+        return totalAmount;
     }
 
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
     public Long getUserId() {
     	return userId;
     }

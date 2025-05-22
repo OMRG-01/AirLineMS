@@ -262,6 +262,7 @@
     <div class="booking__nav">
       <span onclick="selectSpan(this)" class="selected">Book A Flight</span>
       <span onclick="selectSpan(this)">Flight Status</span>
+	  <span onclick="selectSpan(this)">Fair Flight</span>
     </div>
     <div class="bookingForm">
       
@@ -379,6 +380,58 @@
 		        </div>
 	</form>
     </div>
+	<div id="flightFairForm" class="hidden">
+			<form id="statusForm" method="get" th:action="@{/search-flights}">
+			        <div class="form__group">
+			          <span><i class="ri-flight-takeoff-line"></i></span>
+			          <div class="input__content">
+			            <div class="input__group">
+			              <select name="source" id="status_from" required>
+			                <option value="">Select City</option>
+			                <th:block th:each="city : ${cities}">
+			                  <option th:value="${city.cityname}" th:text="${city.cityname}"></option>
+			                </th:block>
+			              </select>
+			              <label>From</label>
+			            </div>
+			            <p>Your Location</p>
+			          </div>
+			        </div>
+
+			        <div class="form__group">
+			          <span><i class="ri-flight-land-fill"></i></span>
+			          <div class="input__content">
+			            <div class="input__group">
+			              <select  name="destination"  id="status_to" required>
+			                <option value="">Select City</option>
+			                <th:block th:each="city : ${cities}">
+			                  <option th:value="${city.cityname}" th:text="${city.cityname}"></option>
+			                </th:block>
+			              </select>
+			              <label>To</label>
+			            </div>
+			            <p>Destination</p>
+			          </div>
+			        </div>
+					<div class="form__group">
+							          <span><i class="ri-calendar-event-fill"></i></span>
+							          <div class="input__content">
+							            <div class="input__group">
+							              <input type="date"    name="date" required placeholder="Select Date">
+							              <label>Travel Date</label>
+							            </div>
+							            <p>Add date</p>
+							          </div>
+							        </div>
+			       
+
+			       
+			        <br>
+			        <div class="button-container">
+			          <input type="submit" value="Check Status" id="second">
+			        </div>
+		</form>
+	    </div>
   </section>
 
   <section class="section__container lounge__container">
@@ -560,29 +613,34 @@
     });
 
     // Toggle between booking form and flight status form
-    function selectSpan(selectedSpan) {
-      // Deselect all spans
-      var spans = document.querySelectorAll('.booking__nav span');
-      spans.forEach(function (span) {
-        span.classList.remove('selected');
-      });
+	function selectSpan(selectedSpan) {
+	  // Remove selected class from all
+	  var spans = document.querySelectorAll('.booking__nav span');
+	  spans.forEach(span => span.classList.remove('selected'));
 
-      // Select the clicked span
-      selectedSpan.classList.add('selected');
+	  // Add selected class to clicked one
+	  selectedSpan.classList.add('selected');
 
-      // Toggle between booking form and flight status form
-      var bookingForm = document.querySelector('.bookingForm');
-      var flightStatusForm = document.getElementById('flightStatusForm');
-      
-      if (selectedSpan.textContent === "Flight Status") {
-        bookingForm.style.display = "none";
-        flightStatusForm.style.display = "block";
-      } else {
-        flightStatusForm.style.display = "none";
-        bookingForm.style.display = "block";
-      }
-    }
+	  // Get all forms
+	  var bookingForm = document.querySelector('.bookingForm');
+	  var flightStatusForm = document.getElementById('flightStatusForm');
+	  var flightFairForm = document.getElementById('flightFairForm');
 
+	  // Hide all
+	  bookingForm.style.display = "none";
+	  flightStatusForm.style.display = "none";
+	  flightFairForm.style.display = "none";
+
+	  // Show the selected one
+	  const tab = selectedSpan.textContent.trim();
+	  if (tab === "Book A Flight") {
+	    bookingForm.style.display = "block";
+	  } else if (tab === "Flight Status") {
+	    flightStatusForm.style.display = "block";
+	  } else if (tab === "Fair Flight") {
+	    flightFairForm.style.display = "block";
+	  }
+	}
     // Intersection Observer for video playback
     const video = document.getElementById("myVideo");
     const videoContainer = document.getElementById("video-container");

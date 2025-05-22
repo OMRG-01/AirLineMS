@@ -22,7 +22,11 @@ public class UserService {
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(null);
     }
-
+    
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
 
     public User login(String email, String rawPassword) {
         return userRepository.findByEmail(email.toLowerCase())

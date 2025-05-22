@@ -3,6 +3,7 @@ package com.jetset.fly.controller;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,6 +107,8 @@ public class BookingController {
         bookingDTO.setScheduleId(data.getScheduleId());
         bookingDTO.setFlightClassId(data.getFlightClassId());
         bookingDTO.setUserId(data.getUserId());
+        bookingDTO.setTotalAmount(data.getTotalAmount());
+        
  // fetch from session
 
         for (PassengerDTO dto : data.getPassengers()) {
@@ -116,6 +119,7 @@ public class BookingController {
         session.setAttribute("passengers", data.getPassengers());
         session.setAttribute("rate", data.getRate());
         session.setAttribute("noOfPassengers", data.getNoOfPassengers());
+        session.setAttribute("totalAmount", data.getTotalAmount());
 
         return ResponseEntity.ok("Saved");
     }
@@ -164,7 +168,9 @@ public class BookingController {
         List<PassengerDTO> passengersDTO = (List<PassengerDTO>) session.getAttribute("passengers");
         Double rate = (Double) session.getAttribute("rate");
         Integer noOfPassengers = (Integer) session.getAttribute("noOfPassengers");
+        Double totalAmount = (Double) session.getAttribute("totalAmount");
 
+        
         if (bookingDTO == null || bookingDTO.getUserId() == null || bookingDTO.getFlightId() == null ||
                 bookingDTO.getAirlineId() == null || bookingDTO.getScheduleId() == null ||
                 bookingDTO.getFlightClassId() == null) {
@@ -208,6 +214,8 @@ public class BookingController {
         payment.setFlight(booking.getFlight());
         payment.setSchedule(booking.getSchedule());
         payment.setUser(booking.getUser());
+        payment.setTotalAmount(totalAmount);
+        payment.setCreatedAt(new Date());
         paymentRepository.save(payment);
 
 
@@ -218,7 +226,9 @@ public class BookingController {
         session.removeAttribute("passengers");
         session.removeAttribute("rate");
         session.removeAttribute("noOfPassengers");
+        session.removeAttribute("totalAmount");
 
+        
         return "redirect:/user/bookings";
     }
 }

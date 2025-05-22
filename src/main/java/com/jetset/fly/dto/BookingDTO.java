@@ -6,18 +6,30 @@ public class BookingDTO {
     private Long flightId;
     private Long scheduleId;
     private Long flightClassId;
+    private Double totalAmount;
 
+  
     // Default Constructor
     public BookingDTO() {
     }
 
     // Parameterized Constructor
-    public BookingDTO(Long userId, Long airlineId, Long flightId, Long scheduleId, Long flightClassId) {
+    public BookingDTO(Long userId, Long airlineId, Long flightId, Long scheduleId, Long flightClassId,Double totalAmount) {
         this.userId = userId;
         this.airlineId = airlineId;
         this.flightId = flightId;
         this.scheduleId = scheduleId;
         this.flightClassId = flightClassId;
+        this.totalAmount=totalAmount;
+    }
+
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     // Getters

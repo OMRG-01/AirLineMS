@@ -18,4 +18,6 @@ public interface PassengerRepository extends JpaRepository<Passenger, Long> {
 	
 	List<Passenger> findByScheduleId(Long scheduleId);
 
+
+
 }

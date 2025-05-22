@@ -85,13 +85,74 @@ public class EmailService {
     
     ////////////////////
     public void sendOtpEmail(String to, String otp) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject("Password Reset OTP - JetSetFly");
-        message.setText("Your OTP for password reset is: " + otp + "\nIt is valid for 5 minutes.");
-        javaMailSender.send(message);
+        try {
+            Context context = new Context();
+            context.setVariable("otp", otp);
+
+            String htmlContent = templateEngine.process("email/resetPassOTP", context);
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(to);
+            helper.setSubject("Password Reset OTP - JetSetFly");
+            helper.setText(htmlContent, true); // true = HTML
+
+            // Load image from resources
+            ClassPathResource logo = new ClassPathResource("static/assets/gg.png.png");
+
+            // Embed image inline using the same CID as in the template
+            helper.addInline("logoImage", logo);
+
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send OTP email.");
+        }
     }
     
+    public void sendReviewEmail(String to) {
+        try {
+            Context context = new Context();
+
+            String htmlContent = templateEngine.process("email/reviewEmail", context);
+
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(to);
+            helper.setSubject("Review JetSetFly");
+            helper.setText(htmlContent, true); // true = HTML
+
+            // Load image from resources
+            ClassPathResource logo = new ClassPathResource("static/assets/gg.png.png");
+            ClassPathResource videogfi = new ClassPathResource("static/assets/video.gif");
+            ClassPathResource happy1 = new ClassPathResource("static/assets/happy1.png");
+            ClassPathResource person2 = new ClassPathResource("static/assets/person2.png");
+            ClassPathResource person3 = new ClassPathResource("static/assets/person3.png");
+
+            ClassPathResource side = new ClassPathResource("static/assets/side.png");
+            ClassPathResource side1 = new ClassPathResource("static/assets/side1.png");
+            ClassPathResource side2 = new ClassPathResource("static/assets/side2.png");
+            
+            // Embed image inline using the same CID as in the template
+            helper.addInline("logo", logo);
+            helper.addInline("videogfi", videogfi);
+            helper.addInline("happy1", happy1);
+            helper.addInline("person2", person2);
+            helper.addInline("person3", person3);
+            helper.addInline("side", side);
+            helper.addInline("side1", side1);
+            helper.addInline("side2", side2);
+
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send email.");
+        }
+    }
+
+
    
     
    

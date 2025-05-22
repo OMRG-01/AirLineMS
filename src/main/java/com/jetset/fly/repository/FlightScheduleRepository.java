@@ -44,5 +44,29 @@ public interface FlightScheduleRepository extends JpaRepository<FlightSchedule, 
 		    Long sourceId, Long destinationId, LocalDateTime start, LocalDateTime end, String status
 		);
 
+	List<FlightSchedule> findBySourceAndDestinationAndStatus(City source, City destination, String status);
+	
+	@Query("SELECT fs FROM FlightSchedule fs WHERE fs.source = :source AND fs.destination = :destination AND fs.status = :status AND FUNCTION('DATE', fs.departAt) = :date")
+	List<FlightSchedule> findDirectFlightsByDate(
+	    @Param("source") City source,
+	    @Param("destination") City destination,
+	    @Param("status") String status,
+	    @Param("date") LocalDate date
+	);
+
+	List<FlightSchedule> findBySourceAndDestinationAndStatusAndDepartAtBetween(
+		    City source, City destination, String status,
+		    LocalDateTime start, LocalDateTime end
+		);
+
+	@Query("SELECT fs FROM FlightSchedule fs " +
+		       "WHERE fs.source.cityname = :source " +
+		       "AND fs.destination.cityname = :destination " +
+		       "AND DATE(fs.departAt) = :travelDate " +
+		       "AND fs.status = 'ACTIVE'")
+		List<FlightSchedule> findDirectFlights(@Param("source") String source,
+		                                       @Param("destination") String destination,
+		                                       @Param("travelDate") LocalDate travelDate);
+
 
 }

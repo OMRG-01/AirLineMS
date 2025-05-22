@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Your Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 20px;
+        }
+        
+        .logo {
+            height: 185px;
+			
+        }
+        
+        .hero-section {
+            background: #721b47;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .hero-images {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+        
+        .content-section {
+            padding: 30px 20px;
+            background-color: #1a1a1a;
+            color: white;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .review-details {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .review-title {
+            color: #721b47;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a3a3a;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .review-label {
+            font-weight: bold;
+            color: #cccccc;
+        }
+        
+        .review-value {
+            color: #ffffff;
+        }
+        
+        .benefits-section {
+            margin-top: 40px;
+        }
+        
+        .benefits-title {
+            color: #721b47;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .benefit-content {
+            flex: 1;
+        }
+        
+        .benefit-title {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .benefit-description {
+            color: #cccccc;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .rewards-section {
+            background-color: #2a2a2a;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .rewards-title {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .rewards-subtitle {
+            color: #cccccc;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #721b47;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #b91c3c;
+        }
+        
+        .accelerate-section {
+            padding: 30px 20px;
+            background-color: #1a1a1a;
+        }
+        
+        .accelerate-title {
+            color: #721b47;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .action-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+        }
+        
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #721b47;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .action-content {
+            flex: 1;
+            color: white;
+        }
+        
+        .action-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .action-description {
+            color: #cccccc;
+            font-size: 14px;
+        }
+        
+        .footer {
+            background-color: #2a2a2a;
+            padding: 30px 20px;
+            text-align: center;
+            color: #cccccc;
+        }
+        
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .footer-logo {
+            margin-top: 20px;
+        }
+        
+        .social-icons {
+            margin: 20px 0;
+        }
+        
+        .social-icon {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #721b47;
+            border-radius: 50%;
+            margin: 0 5px;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .hero-images {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .benefit-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .benefit-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .action-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .action-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+		
+        <!-- Header -->
+        <div class="header">
+            <img src="cid:videogfi" alt="Logo" class="logo">
+        </div>
+        
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Thank You for Your Review!</h1>
+            <p class="hero-subtitle">Your feedback helps us improve our services</p>
+            <div class="hero-images">
+                <img src="cid:happy1"  alt="Happy customer 1" class="hero-image">
+                <img src="cid:person2"  alt="Happy customer 2" class="hero-image">
+                <img src="cid:person3"  alt="Happy customer 3" class="hero-image">
+            </div>
+        </div>
+        
+        <!-- Content Section -->
+        <div class="content-section">
+            
+            
+            <!-- Benefits Section -->
+            <div class="benefits-section">
+                <h2 class="benefits-title">JetSetFly</h2>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon" style="background-image: url('cid:side');"></div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Review Processing</h3>
+                        <p class="benefit-description">Your review will be processed within 24-48 hours and will appear on our website to help other customers make informed decisions.</p>
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon" style="background-image: url('cid:side1');"></div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Quality Improvement</h3>
+                        <p class="benefit-description">We carefully analyze all feedback to identify areas for improvement and ensure we're delivering the best possible experience.</p>
+                    </div>
+                </div>
+                
+                <div class="benefit-item">
+                    <div class="benefit-icon" style="background-image: url('cid:side2');"></div>
+                    <div class="benefit-content">
+                        <h3 class="benefit-title">Community Impact</h3>
+                        <p class="benefit-description">Your honest feedback helps build a trustworthy community where customers can rely on authentic experiences and recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rewards Section -->
+        <div class="rewards-section">
+            <h2 class="rewards-title">Exclusive Benefits</h2>
+            <p class="rewards-subtitle">As a valued reviewer, you may be eligible for special offers and early access to new features.</p>
+            <a href="#" class="cta-button" th:href="${websiteUrl}">Visit Our Website</a>
+            <a href="#" class="cta-button" th:href="${profileUrl}">Manage Your Account</a>
+        </div>
+        
+        <!-- Accelerate Section -->
+        <div class="accelerate-section">
+            <h2 class="accelerate-title">Stay Connected</h2>
+            
+            <div class="action-item">
+                <div class="action-icon">📧</div>
+                <div class="action-content">
+                    <div class="action-title">Email Notifications</div>
+                    <div class="action-description">Stay updated with our latest features and get notified when we respond to your review</div>
+                </div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-icon">🔔</div>
+                <div class="action-content">
+                    <div class="action-title">Follow Up Reviews</div>
+                    <div class="action-description">We may reach out for additional feedback to help us improve our services further</div>
+                </div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-icon">🎁</div>
+                <div class="action-content">
+                    <div class="action-title">Reward Programs</div>
+                    <div class="action-description">Earn points and unlock exclusive benefits by participating in our review program</div>
+                </div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-icon">📱</div>
+                <div class="action-content">
+                    <div class="action-title">Share Your Experience</div>
+                    <div class="action-description">Help others by sharing your review on social media and with friends</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#" class="footer-link" th:href="${unsubscribeUrl}">Unsubscribe</a>
+                <a href="#" class="footer-link" th:href="${contactUrl}">Contact Us</a>
+                <a href="#" class="footer-link" th:href="${privacyUrl}">Privacy Policy</a>
+                <a href="#" class="footer-link" th:href="${termsUrl}">Terms</a>
+            </div>
+            
+            <div class="social-icons">
+                <a href="#" class="social-icon" th:href="${facebookUrl}">f</a>
+                <a href="#" class="social-icon" th:href="${twitterUrl}">t</a>
+                <a href="#" class="social-icon" th:href="${instagramUrl}">i</a>
+                <a href="#" class="social-icon" th:href="${linkedinUrl}">in</a>
+            </div>
+            
+            <p class="footer-text">
+                This email has been sent to you by <span >JetSetFly</span>, in connection with your recent review submission. We value your feedback and use it to enhance our services.
+            </p>
+            
+            <p class="footer-text">
+                If you have any questions about your review or need assistance, please don't hesitate to contact our support team.
+            </p>
+            
+            <p class="footer-text">
+                <span >2025</span> <span >JetSetFly</span>. All rights reserved.
+            </p>
+            
+            <div class="footer-logo">
+                <img src="cid:logo" alt="Company Logo" style="height: 30px; opacity: 0.7;">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,11 @@ import com.jetset.fly.model.City;
 import com.jetset.fly.model.FlightClass;
 import com.jetset.fly.model.FlightSchedule;
 import com.jetset.fly.model.FlightScheduleRate;
+import com.jetset.fly.model.Payment;
 import com.jetset.fly.model.Role;
 import com.jetset.fly.model.User;
 import com.jetset.fly.repository.FlightScheduleRepository;
+import com.jetset.fly.repository.PaymentRepository;
 import com.jetset.fly.repository.RoleRepository;
 import com.jetset.fly.repository.UserRepository;
 import com.jetset.fly.service.AdminService;
@@ -209,6 +212,9 @@ public class AuthController {
 	 @Autowired
 	    private UserService adminService;
 
+	 @Autowired
+	    private PaymentRepository paymentRepository;
+
 	 @PostMapping("/admin/doLogin")
 	 public String login(@RequestParam String email,
 	                     @RequestParam String password,
@@ -229,12 +235,10 @@ public class AuthController {
 	        if (session.getAttribute("admin") == null) {
 	            return "redirect:/admin/login"; // Not logged in
 	        }
-	        
-	        
-	       
-	        
 	        List<Airline> airlines = airlineService.getActiveAirlines(); // Only ACTIVE airlines
 	        List<Map<String, Object>> airlineFlightData = new ArrayList<>();
+	        Double totalEarnings = paymentRepository.getTotalEarnings();
+	        Double todaysEarnings = paymentRepository.getTodaysEarnings();
 	        
 	        for (Airline airline : airlines) {
 	            int flightCount = airFlightService.countByAirlineAndStatus(airline, "ACTIVE");
@@ -265,8 +269,6 @@ public class AuthController {
 	        model.addAttribute("notDeparted", notDeparted);
 	        model.addAttribute("inFlight", inFlight);
 	        model.addAttribute("arrived", arrived);
-	        
-	        
 	        model.addAttribute("airlineFlightData", airlineFlightData);
 	        
 	        // Airline data
@@ -277,6 +279,10 @@ public class AuthController {
 	        long flightCount = airFlightService.countByStatus("ACTIVE");
 	        AirFlight latestFlight = airFlightService.findLatestByStatus("ACTIVE");
 
+	        Double totalBookings = paymentRepository.getTotalBookings();
+	       
+	        
+	        
 	        
 	        List<String> selectedClocks = (List<String>) session.getAttribute("selectedClocks");
 	        if (selectedClocks == null) {
@@ -290,7 +296,21 @@ public class AuthController {
 	        model.addAttribute("flightCount", flightCount);
 	        model.addAttribute("latestFlightNumber", latestFlight != null ? latestFlight.getFnumber() : "N/A");
 	        model.addAttribute("visibleClocks", selectedClocks);
-	        
+	        model.addAttribute("totalEarnings", totalEarnings);
+	        model.addAttribute("todaysEarnings", todaysEarnings);
+	        model.addAttribute("totalBookings", totalBookings);
+	        List<Payment> latestPaymentList = paymentRepository.findLatestPayment(PageRequest.of(0, 1));
+	        if (!latestPaymentList.isEmpty()) {
+	            Payment latestPayment = latestPaymentList.get(0);
+	            if (latestPayment.getUser() != null) {
+	                model.addAttribute("recentBookedUser", latestPayment.getUser().getName());
+	            } else {
+	                model.addAttribute("recentBookedUser", "Unknown User");
+	            }
+	        } else {
+	            model.addAttribute("recentBookedUser", "No Bookings Yet");
+	        }
+
 	        return "admin/adminDash";
 	    }
 
@@ -306,6 +326,8 @@ public class AuthController {
 	        }
 
 	        model.addAttribute("admin", admin);
+	        model.addAttribute("name", admin.getName()); // just name
+	        model.addAttribute("mobile", admin.getMobile()); // just mobile number
 	        return "admin/editProfile"; // maps to templates/admin/editProfile.html
 	    }
 	    

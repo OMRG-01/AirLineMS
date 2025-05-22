@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Feedback</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="icon" type="image/png" th:href="@{/img/fg.png}">
+  
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link id="pagestyle" th:href="@{/assetsp/css/my.css?v=3.1.0}" rel="stylesheet" />
+  <style>
+    .aaa {
+      height: 50px;
+      width: 165px;
+      margin-right: 10px;
+    }
+
+   .container2 {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-links {
+      flex: 1;
+      text-align: left;
+      max-height: 20px;
+    }
+
+    .nav-links ul li {
+      list-style: none;
+      display: inline-block;
+      padding: 8px 12px;
+      width: 170px;
+      position: relative;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+    .nav-links ul li a {
+      color: black;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .nav-links ul li::after {
+      content: "";
+      width: 0%;
+      height: 3px;
+      background: #8E2157;
+      display: block;
+      margin: auto;
+      transition: 1s;
+    }
+
+    .nav-links ul li:hover::after {
+      width: 100%;
+    }
+
+    select {
+      height: 30px;
+    }
+
+    .contain1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    /* Enhanced sentiment styling */
+    .sentiment-positive {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+      display: inline-block;
+    }
+
+    .sentiment-negative {
+      background: linear-gradient(135deg, #dc3545, #fd7e14);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+      display: inline-block;
+    }
+
+    .sentiment-neutral {
+      background: linear-gradient(135deg, #6c757d, #adb5bd);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+      display: inline-block;
+    }
+
+    /* Enhanced table styling */
+    .modern-table {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .modern-table thead {
+      background: #8E2157;
+      color: white;
+    }
+
+    .modern-table thead th {
+      border: none;
+      padding: 20px 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 12px;
+    }
+
+    .modern-table tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modern-table tbody tr:hover {
+      background: #f8f9ff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .modern-table tbody td {
+      padding: 18px 15px;
+      border: none;
+      vertical-align: middle;
+    }
+
+    /* View Details Button */
+    .view-details-btn {
+      background: linear-gradient(135deg, #8E2157, #764ba2);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .view-details-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Rating Stars */
+    .rating-stars {
+      color: #ffc107;
+      font-size: 18px;
+    }
+
+    /* Enhanced Rating Card */
+    .rating-card {
+      background: linear-gradient(135deg, #8E2157 0%, #764ba2 100%);
+      border-radius: 20px;
+      color: white;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+      border: none;
+      transform: translateY(-10px);
+    }
+
+    .rating-card .card-header {
+      border: none;
+      background: transparent;
+      padding: 25px;
+    }
+
+    .rating-icon {
+      background: rgba(255,255,255,0.2);
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 15px;
+    }
+
+    .rating-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+
+    .rating-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .rating-status {
+      background: rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Modal Enhancements */
+    .modal-content {
+      border-radius: 20px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #8E2157, #8E2157);
+      color: white;
+      border: none;
+      border-radius: 20px 20px 0 0;
+      padding: 25px;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .detail-section {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: #f8f9ff;
+      border-radius: 15px;
+      border-left: 4px solid #667eea;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+    }
+
+    .detail-content {
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Chart Container */
+    .chart-container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+
+    .chart-title {
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+	
+	
+
+	        /* Your existing sidebar styles would go here - keeping them unchanged */
+	        
+	        
+	        .border-radius-xl {
+	            border-radius: 0.75rem;
+	        }
+	        
+	        .border-radius-lg {
+	            border-radius: 0.5rem;
+	        }
+	        
+	        /* Mobile toggle button styles */
+	        .mobile-toggle-btn {
+	            position: fixed;
+	            top: 15px;
+	            left: 15px;
+	            z-index: 1060;
+	            background: linear-gradient(310deg, #141727 0%, #3A416F 100%);
+	            border: none;
+	            border-radius: 8px;
+	            padding: 10px 12px;
+	            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	            display: none;
+	        }
+	        
+	        .mobile-toggle-btn i {
+	            color: white;
+	            font-size: 20px;
+	        }
+	        
+	        /* Show toggle button on mobile */
+	        @media (max-width: 1199.98px) {
+	            .mobile-toggle-btn {
+	                display: block;
+	            }
+	        }
+	        
+	        /* Overlay for mobile sidebar */
+	        .sidebar-overlay {
+	            position: fixed;
+	            top: 0;
+	            left: 0;
+	            width: 100%;
+	            height: 100%;
+	            background-color: rgba(0, 0, 0, 0.5);
+	            z-index: 1040;
+	            display: none;
+	        }
+	        
+	        /* Sidebar animations */
+	        .sidenav {
+	            transition: transform 0.3s ease-in-out;
+	        }
+	        
+	        @media (max-width: 1199.98px) {
+	            .sidenav {
+	                transform: translateX(-100%);
+	            }
+	            
+	            .sidenav.show {
+	                transform: translateX(0);
+	            }
+	        }
+  </style>
+</head>
+
+<body class="g-sidenav-show  bg-gray-200">
+	<button class="mobile-toggle-btn" id="mobileToggleBtn" type="button">
+	      <i class="material-icons">menu</i>
+	  </button>
+	  
+	  <!-- Sidebar Overlay -->
+	  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+ <aside
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
+    id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href="">
+        <img th:src="@{/img/PH.jpg}" class="navbar-brand-img h-100 border-radius-lg" alt="main_logo">
+        <span class="ms-1 font-weight-bold text-white"></span>
+      </a>
+    </div>
+    <hr class="horizontal light mt-0 mb-2">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white " th:href="@{/admin/dashboard}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">dashboard</i>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/airline-management}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Airline Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/flights/view}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">view_in_ar</i>
+            </div>
+            <span class="nav-link-text ms-1">Flights Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " th:href="@{/admin/flights/schedule}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">Schedule Flight</span>
+          </a>
+        </li>
+		<li class="nav-item">
+					          <a class="nav-link text-white " th:href="@{/admin/cities/view}">
+					            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+					              <i class="material-icons opacity-10">connecting_airports</i>
+					            </div>
+					            <span class="nav-link-text ms-1">City Management</span>
+					          </a>
+					        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/admin/passengers}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
+            </div>
+            <span class="nav-link-text ms-1">Passenger Lists</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white active bg-gradient-primary" th:href="@{/admin/feedback}">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">notifications</i>
+            </div>
+            <span class="nav-link-text ms-1">Feedback</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+        </li>
+		<li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/editProfile}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">person</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Profile</span>
+		          </a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/logout}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">login</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Logout</span>
+		          </a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link text-white " th:href="@{/admin/add}">
+		            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+		              <i class="material-icons opacity-10">assignment</i>
+		            </div>
+		            <span class="nav-link-text ms-1">Add New Member</span>
+		          </a>
+		        </li>
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+      data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <img class="aaa" th:src="@{/assets/GG-removebg-preview.png}">
+        <div class="container2">
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/admin/flights/add}"> <i class="fa fa-space-shuttle" style="font-size:20px;"></i> ADD NEW FLIGHT
+                </a></li>
+            </ul>
+          </div>
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/admin/add-airline}"><i class="fa fa-plane" style="font-size:20px"></i> ADD NEW AIRLINE </a>
+              </li>
+            </ul>
+          </div>
+          <div class="nav-links">
+            <ul>
+              <li><a th:href="@{/logout}" style="color:chocolate;"> <i class="fa fa-sign-out"
+                    style="font-size:18px"></i></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-md-12 ">
+            <div class="card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h1 class="mb-0">Customer Feedback Dashboard</h1>
+                
+                <!-- Enhanced Rating Card -->
+                <div class="col-xl-3 col-sm-6">
+                  <div class="card rating-card">
+                    <div class="card-header text-center">
+                      
+                      <div class="rating-value" th:text="${averageRating}">0.0</div>
+                      <div class="rating-label">Average Rating</div>
+                      <div class="rating-status">
+                        <span th:if="${averageRating > 3}">Excellent Service</span>
+                        <span th:if="${averageRating <= 3}">Needs Improvement</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <!-- Enhanced Table -->
+                <table class="table modern-table">
+                  <thead>
+                    <tr>
+                        <th>Sr.No</th>
+						<th>User Name</th>
+                        <th>User Email</th>
+                        <th>Sentiment</th>
+                        <th>Come Across</th>
+                        <th>Rating</th>
+                        <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="review, iterStat : ${reviews}" th:if="${not #lists.isEmpty(reviews)}">
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="avatar avatar-sm me-3">
+                            <span class="badge bg-gradient-primary">#<span th:text="${iterStat.count}">1</span></span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" th:text="${review.user.name}">John Doe</h6>
+                        </div>
+                      </td>
+                      <td>
+                        <h6 class="text-secondary text-xs font-weight-bold" th:text="${review.user.email}">user@example.com</h6>
+                      </td>
+                      <td>
+                        <span class="sentiment-badge" th:attr="data-recommendation=${review.recommendation}">
+                          <!-- Sentiment will be calculated by JavaScript -->
+                        </span>
+                      </td>
+                      <td>
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${review.cameFrom}">Website</span>
+                      </td>
+                      <td>
+                        <div class="rating-stars">
+                          <span th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i th:class="${i <= review.rating} ? 'fa fa-star' : 'fa fa-star-o'"></i>
+                          </span>
+                          <span class="ms-2 text-sm font-weight-bold" th:text="${review.rating}">5</span>
+                        </div>
+                      </td>
+                      <td>
+                        <button class="view-details-btn" 
+                                th:attr="data-bs-target='#feedbackModal' + ${iterStat.count},
+                                         data-username=${review.user.name},
+                                         data-recommendation=${review.recommendation},
+                                         data-suggestion=${review.suggestion}"
+                                data-bs-toggle="modal">
+                          <i class="fa fa-eye me-2"></i>View Details
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- Chart Section -->
+              <div class="chart-container">
+                <h2 class="chart-title">Sentiment Analysis Overview</h2>
+                <div style="width: 100%; height: 400px;">
+                  <canvas id="sentimentChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      <!-- Feedback Details Modal Template -->
+      <div th:each="review, iterStat : ${reviews}" 
+           th:id="'feedbackModal' + ${iterStat.count}"
+           class="modal fade" 
+           tabindex="-1" 
+           aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="fa fa-user-circle me-2"></i>
+                Feedback Details - <span th:text="${review.user.name}">User Name</span>
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="detail-section">
+                <div class="detail-label">
+                  <i class="fa fa-lightbulb-o me-2"></i>First Impression
+                </div>
+                <div class="detail-content" th:text="${review.recommendation}">
+                  First impression content will appear here...
+                </div>
+              </div>
+              
+              <div class="detail-section">
+                <div class="detail-label">
+                  <i class="fa fa-comments me-2"></i>Suggestions for Improvement
+                </div>
+                <div class="detail-content" th:text="${review.suggestion}">
+                  Suggestions content will appear here...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+	  </div>
+      <div class="container-fluid py-4">
+        <footer class="footer py-4  ">
+          <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+              <div class="col-lg-6 mb-lg-0 mb-4">
+                <div class="copyright text-center text-sm text-muted text-lg-start">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear())
+                  </script>,
+                  Copyright All rights reserved. Team :
+                  <a href="" class="font-weight-bold" target="_blank">GMADS <i class="fa fa-heart"></i></a>
+                  for a better web.
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-facebook-f"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-twitter"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="" class="nav-link text-muted" target="_blank"><i class="fa fa-instagram"></i></a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="nav-link text-muted"
+                      target="_blank"><i class="fa fa-youtube-play"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+  </main>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+
+<script th:inline="javascript">
+    // Sentiment Analysis Function
+    function analyzeSentiment(text) {
+        if (!text) return 'neutral';
+        
+        const positiveWords = [
+            'good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 
+            'awesome', 'best', 'love', 'perfect', 'outstanding', 'superb',
+            'brilliant', 'marvelous', 'exceptional', 'impressive', 'satisfied',
+            'happy', 'pleased', 'delighted', 'recommend', 'comfortable',
+            'smooth', 'efficient', 'professional', 'friendly', 'helpful',
+            'clean', 'nice', 'beautiful', 'enjoyable', 'pleasant'
+        ];
+        
+        const negativeWords = [
+            'bad', 'terrible', 'awful', 'horrible', 'poor', 'worst', 'hate',
+            'disappointing', 'unsatisfied', 'unhappy', 'frustrated', 'angry',
+            'annoying', 'uncomfortable', 'dirty', 'rude', 'unprofessional',
+            'delayed', 'canceled', 'expensive', 'overpriced', 'cramped',
+            'noisy', 'crowded', 'slow', 'difficult', 'confusing', 'broken',
+            'damaged', 'lost', 'missing', 'problem', 'issue', 'complaint'
+        ];
+        
+        const neutralWords = [
+            'okay', 'average', 'normal', 'standard', 'typical', 'regular',
+            'fine', 'acceptable', 'reasonable', 'fair', 'moderate'
+        ];
+        
+        // Convert to lowercase and split into words
+        const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+        
+        let positiveCount = 0;
+        let negativeCount = 0;
+        let neutralCount = 0;
+        
+        // Count sentiment words
+        words.forEach(word => {
+            if (positiveWords.includes(word)) {
+                positiveCount++;
+            } else if (negativeWords.includes(word)) {
+                negativeCount++;
+            } else if (neutralWords.includes(word)) {
+                neutralCount++;
+            }
+        });
+        
+        // Determine overall sentiment
+        if (positiveCount > negativeCount && positiveCount > neutralCount) {
+            return 'positive';
+        } else if (negativeCount > positiveCount && negativeCount > neutralCount) {
+            return 'negative';
+        } else {
+            return 'neutral';
+        }
+    }
+    
+    // Apply sentiment analysis to all reviews
+    document.addEventListener('DOMContentLoaded', function() {
+        const sentimentBadges = document.querySelectorAll('.sentiment-badge');
+        let sentimentCounts = { positive: 0, negative: 0, neutral: 0 };
+        
+        sentimentBadges.forEach(badge => {
+            const recommendation = badge.getAttribute('data-recommendation');
+            const sentiment = analyzeSentiment(recommendation);
+            
+            // Update sentiment counts
+            sentimentCounts[sentiment]++;
+            
+            // Apply appropriate styling and text
+            badge.className = `sentiment-badge sentiment-${sentiment}`;
+            badge.textContent = sentiment.charAt(0).toUpperCase() + sentiment.slice(1);
+        });
+        
+        // Create sentiment chart
+        createSentimentChart(sentimentCounts);
+    });
+    
+    // Create Chart Function
+    function createSentimentChart(sentimentCounts) {
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Positive', 'Negative', 'Neutral'],
+                datasets: [{
+                    data: [sentimentCounts.positive, sentimentCounts.negative, sentimentCounts.neutral],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(220, 53, 69, 1)',
+                        'rgba(108, 117, 125, 1)'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 14,
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+<script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileToggleBtn = document.getElementById('mobileToggleBtn');
+            const sidebar = document.getElementById('sidenav-main');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeIcon = document.getElementById('iconSidenav');
+            
+            // Function to show sidebar
+            function showSidebar() {
+                sidebar.classList.add('show');
+                sidebarOverlay.style.display = 'block';
+                closeIcon.classList.remove('d-none', 'd-xl-none');
+                closeIcon.classList.add('d-block');
+            }
+            
+            // Function to hide sidebar
+            function hideSidebar() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.style.display = 'none';
+                closeIcon.classList.remove('d-block');
+                closeIcon.classList.add('d-none', 'd-xl-none');
+            }
+            
+            // Mobile toggle button click
+            mobileToggleBtn.addEventListener('click', function() {
+                if (sidebar.classList.contains('show')) {
+                    hideSidebar();
+                } else {
+                    showSidebar();
+                }
+            });
+            
+            // Close button (X) click
+            closeIcon.addEventListener('click', function() {
+                hideSidebar();
+            });
+            
+            // Overlay click to close sidebar
+            sidebarOverlay.addEventListener('click', function() {
+                hideSidebar();
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1200) {
+                    // Desktop view - ensure sidebar is visible and overlay is hidden
+                    sidebar.classList.remove('show');
+                    sidebarOverlay.style.display = 'none';
+                    closeIcon.classList.remove('d-block');
+                    closeIcon.classList.add('d-none', 'd-xl-none');
+                } else {
+                    // Mobile view - ensure sidebar is hidden initially
+                    if (!sidebar.classList.contains('show')) {
+                        hideSidebar();
+                    }
+                }
+            });
+            
+            // Close sidebar when clicking on nav links (mobile only)
+            const navLinks = sidebar.querySelectorAll('.nav-link');
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 1200 && sidebar.classList.contains('show')) {
+                        hideSidebar();
+                    }
+                });
+            });
+        });
+    </script>
+</html>

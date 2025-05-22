@@ -43,19 +43,27 @@ public class FlightWithClassDetailsDTO {
         private Double rate;
         private int availableSeats;
         private Long classId;
+        private Double amount;
 
         // Default Constructor for ClassRateDetail
         public ClassRateDetail() {
         }
 
         // Parameterized Constructor for ClassRateDetail
-        public ClassRateDetail(String className, Double rate, int availableSeats, Long classId) {
+        public ClassRateDetail(String className, Double rate, int availableSeats, Long classId, Double amount) {
             this.className = className;
             this.rate = rate;
             this.availableSeats = availableSeats;
             this.classId = classId;
+            this.amount=amount;
         }
-
+        public Double getAmount() {
+        	return amount;
+        }
+        
+        public Double setAmount() {
+        	return amount;
+        }
         // Getter for className
         public String getClassName() {
             return className;

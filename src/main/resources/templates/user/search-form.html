@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Card Component</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Flight Card Styles */
+        :root {
+            --primary-color: #721b47;
+            --text-dark: #333;
+        }
+
+        body {
+            background: #f5f7fa;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 40px 20px;
+        }
+
+        .flight-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(114, 27, 71, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto 25px auto;
+        }
+
+        .flight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), #a8336b);
+        }
+
+        .flight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(114, 27, 71, 0.15);
+        }
+
+        .flight-route {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .route-point {
+            text-align: center;
+            flex: 1;
+        }
+
+        .route-point h4 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .route-point .city-name {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .route-connector {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .route-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #e0e0e0, var(--primary-color), #e0e0e0);
+            position: relative;
+        }
+
+        .plane-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .flight-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .detail-section h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .time-display {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .date-display {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .flight-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item i {
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .info-item .value {
+            color: #666;
+            margin-left: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .flight-route {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .route-connector {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+
+            .flight-details {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .flight-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .route-point h4 {
+                font-size: 1.5rem;
+            }
+
+            .time-display {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Single Flight Card Example -->
+    <div class="flight-card">
+        <div class="flight-route">
+            <div class="route-point">
+                <h4>NSK</h4>
+                <div class="city-name">Nashik</div>
+            </div>
+            
+            <div class="route-connector">
+                <div class="route-line"></div>
+                <div class="plane-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+            </div>
+            
+            <div class="route-point">
+                <h4>BOM</h4>
+                <div class="city-name">Mumbai</div>
+            </div>
+        </div>
+
+        <div class="flight-details">
+            <div class="detail-section">
+                <h6>Departure</h6>
+                <div class="time-display">15:23</div>
+                <div class="date-display">Sat, 11 Oct</div>
+            </div>
+            
+            <div class="detail-section">
+                <h6>Arrival</h6>
+                <div class="time-display">12:20</div>
+                <div class="date-display">Sat, 18 Oct</div>
+            </div>
+        </div>
+
+        <div class="flight-info-grid">
+            <div class="info-item">
+                <i class="fas fa-plane"></i>
+                <span class="label">Flight</span>
+                <span class="value">VS 901</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-building"></i>
+                <span class="label">Airline</span>
+                <span class="value">Vistara</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span class="label">Duration</span>
+                <span class="value">4h 57m</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-chair"></i>
+                <span class="label">Class</span>
+                <span class="value">Economy</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Another Example Card -->
+    <div class="flight-card">
+        <div class="flight-route">
+            <div class="route-point">
+                <h4>DEL</h4>
+                <div class="city-name">Delhi</div>
+            </div>
+            
+            <div class="route-connector">
+                <div class="route-line"></div>
+                <div class="plane-icon">
+                    <i class="fas fa-plane"></i>
+                </div>
+            </div>
+            
+            <div class="route-point">
+                <h4>GOA</h4>
+                <div class="city-name">Goa</div>
+            </div>
+        </div>
+
+        <div class="flight-details">
+            <div class="detail-section">
+                <h6>Departure</h6>
+                <div class="time-display">08:45</div>
+                <div class="date-display">Mon, 25 Dec</div>
+            </div>
+            
+            <div class="detail-section">
+                <h6>Arrival</h6>
+                <div class="time-display">11:30</div>
+                <div class="date-display">Mon, 25 Dec</div>
+            </div>
+        </div>
+
+        <div class="flight-info-grid">
+            <div class="info-item">
+                <i class="fas fa-plane"></i>
+                <span class="label">Flight</span>
+                <span class="value">AI 507</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-building"></i>
+                <span class="label">Airline</span>
+                <span class="value">Air India</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span class="label">Duration</span>
+                <span class="value">2h 45m</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-chair"></i>
+                <span class="label">Class</span>
+                <span class="value">Business</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

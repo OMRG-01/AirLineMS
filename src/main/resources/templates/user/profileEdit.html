@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Profile</title>
+</head>
+<body>
+<h2>Edit Profile</h2>
+
+<form th:action="@{/user/profile/update}" th:object="${user}" method="post">
+    <label>Title:</label>
+    <input type="text" th:field="*{title}" /><br/>
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required /><br/>
+
+    <label>Mobile:</label>
+    <input type="text" th:field="*{mobile}" required /><br/>
+
+    <label>Date of Birth:</label>
+    <input type="date" th:field="*{dateOfBirth}" /><br/>
+
+    <label>Gender:</label>
+    <select th:field="*{gender}">
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+    </select><br/>
+
+    <label>Street:</label>
+    <input type="text" th:field="*{streetAddress}" /><br/>
+
+    <label>City:</label>
+    <input type="text" th:field="*{city}" /><br/>
+
+    <label>State:</label>
+    <input type="text" th:field="*{state}" /><br/>
+
+    <label>ZIP:</label>
+    <input type="text" th:field="*{zipCode}" /><br/>
+
+    <label>Country:</label>
+    <input type="text" th:field="*{country}" /><br/>
+
+    <label>Travel Preference:</label>
+    <select th:field="*{travelPreference}">
+        <option value="">Select</option>
+        <option>Economy</option>
+        <option>Business</option>
+        <option>First Class</option>
+        <option>Premium Economy</option>
+    </select><br/>
+
+    <label>Preferred Airline:</label>
+    <input type="text" th:field="*{preferredAirline}" /><br/>
+
+    <button type="submit">Update</button>
+</form>
+
+<p th:if="${param.success}">Profile updated successfully!</p>
+
+</body>
+</html>

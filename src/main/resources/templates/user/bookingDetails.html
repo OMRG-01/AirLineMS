@@ -703,7 +703,10 @@
           gender: genders[i]
         });
       }
-      
+	  const rate = parseFloat(formData.get("rate"));
+	    const noOfPassengers = parseInt(formData.get("noOfPassengers"));
+	    const totalAmount = rate * noOfPassengers;
+		
       const bookingData = {
         airlineId: formData.get("airlineId"),
         flightId: formData.get("flightId"),
@@ -711,6 +714,7 @@
         flightClassId: formData.get("flightClassId"),
         rate: formData.get("rate"),
         noOfPassengers: formData.get("noOfPassengers"),
+		totalAmount: totalAmount,
         passengers: passengers,
         userId: formData.get("userId")
       };

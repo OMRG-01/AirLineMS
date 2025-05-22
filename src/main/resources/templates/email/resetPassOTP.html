@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Password Reset OTP - JetSetFly</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Arial, sans-serif; background-color: #f8fafc; line-height: 1.6; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 16px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); overflow: hidden;">
+                    
+                
+                    <tr>
+                        <td style="background: #004aad; padding: 40px 40px 30px; text-align: center;">
+                            <img src="cid:logoImage" alt="JetSetFly Logo" style="width: 160px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;" />
+                            <h1 style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Password Reset Request</h1>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td style="padding: 50px 40px;">
+                            <div style="text-align: center; margin-bottom: 40px;">
+                                <h2 style="color: #2d3748; font-size: 24px; font-weight: 600; margin: 0 0 15px;">Hello there! 👋</h2>
+                                <p style="color: #718096; font-size: 16px; margin: 0; line-height: 1.5;">We received a request to reset your password. Use the OTP code below to proceed.</p>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%); border: 2px dashed #cbd5e0; border-radius: 12px; padding: 10px; text-align: center; margin: 40px 0;">
+                                <p style="color: #4a5568; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 15px;">Your Verification Code</p>
+                                
+                                <!-- OTP Code -->
+                                <div style="background: #ffffff; border: 3px solid #e2e8f0; border-radius: 8px; padding: 10px; margin: 20px 0; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                    <span style="color: #e53e3e; font-size: 42px; font-weight: 800; letter-spacing: 8px; font-family: 'Courier New', monospace;" th:text="${otp}">123456</span>
+                                </div>
+                                
+                                <p style="color: #718096; font-size: 14px; margin: 15px 0 0; font-style: italic;">Enter this code in the password reset form</p>
+                            </div>
+                            <div style="background: #fef5e7; border-left: 4px solid #f6ad55; padding: 20px; border-radius: 8px; margin: 30px 0;">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <span style="color: #f6ad55; font-size: 20px; margin-right: 12px; line-height: 1;">⚠️</span>
+                                    <div>
+                                        <p style="color: #744210; font-size: 15px; font-weight: 600; margin: 0 0 8px;">Important Security Notice</p>
+                                        <p style="color: #975a16; font-size: 14px; margin: 0; line-height: 1.5;">
+                                            • This OTP is valid for <strong>5 minutes only</strong><br/>
+                                            • Never share this code with anyone<br/>
+                                            • JetSetFly will never ask for your OTP via phone or email
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin: 40px 0 30px;">
+                                <p style="color: #4a5568; font-size: 15px; margin: 0 0 20px;">If you didn't request a password reset, you can safely ignore this email.</p>
+                                <p style="color: #718096; font-size: 14px; margin: 0;">Need help? Contact our support team anytime.</p>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background: #f7fafc; padding: 30px 40px; text-align: center; border-top: 1px solid #e2e8f0;">
+                            <p style="color: #2d3748; font-size: 16px; font-weight: 600; margin: 0 0 8px;">Thank you for choosing JetSetFly</p>
+                            <p style="color: #718096; font-size: 14px; margin: 0 0 20px;">Your trusted travel companion ✈️</p>
+                            
+                            <!-- Social Links (Optional) -->
+                            <div style="margin-top: 20px;">
+                                <a href="#" style="display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px;">Privacy Policy</a>
+                                <span style="color: #cbd5e0;">|</span>
+                                <a href="#" style="display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px;">Support</a>
+                                <span style="color: #cbd5e0;">|</span>
+                                <a href="#" style="display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px;">Contact Us</a>
+                            </div>
+                            
+                            <p style="color: #a0aec0; font-size: 12px; margin: 20px 0 0;">© 2024 JetSetFly. All rights reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

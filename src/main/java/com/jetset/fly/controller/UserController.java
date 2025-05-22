@@ -1,5 +1,6 @@
 package com.jetset.fly.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,7 +36,9 @@ public class UserController {
     
     @Autowired
     private FlightScheduleRateService flightScheduleRateService;
-
+    
+    @Autowired
+    private UserService userService;
     
     @Autowired
     private BookingRepository bookingRepository;
@@ -48,6 +51,13 @@ public class UserController {
 	 
 	 @Autowired
 	 private CityService cityService;
+	 
+	 @GetMapping("/otp-view")
+	 public String viewOtpPage(Model model) {
+	     model.addAttribute("otp", "123456"); // example OTP
+	     return "email/reviewEmail"; // path inside templates folder
+	 }
+
     
     @GetMapping("/user/fair-flight")
 	 public String searchFlightsUser(@RequestParam(required = false) Long fromCityId,
@@ -208,5 +218,50 @@ public class UserController {
 
 	     return "user/passengerView";
 	 }
+	 // GET: Show Profile Edit Page
+	 @GetMapping("/user/profileEdit")
+	 public String showEditProfilePage(Model model, HttpSession session) {
+	     User loggedInUser = (User) session.getAttribute("loggedInUser");
+	     if (loggedInUser == null) {
+	         return "redirect:/login1";
+	     }
+
+	     User user = userService.findByEmail(loggedInUser.getEmail());
+	     model.addAttribute("user", user);
+	     return "user/profileEdit";  // View should be at templates/user/profileEdit.html
+	 }
+
+
+	    // POST: Save Profile Changes
+	    @PostMapping("/user/update")
+	    public String updateProfile(@ModelAttribute("user") User updatedUser, HttpSession session) {
+	        User existingUser = (User) session.getAttribute("loggedInUser");
+
+	        if (existingUser == null) {
+	            return "redirect:/login1"; // Not logged in
+	        }
+
+	        // Only update editable fields
+	        existingUser.setTitle(updatedUser.getTitle());
+	        existingUser.setName(updatedUser.getName());
+	        existingUser.setMobile(updatedUser.getMobile());
+	        existingUser.setDateOfBirth(updatedUser.getDateOfBirth());
+	        existingUser.setGender(updatedUser.getGender());
+	        existingUser.setStreetAddress(updatedUser.getStreetAddress());
+	        existingUser.setCity(updatedUser.getCity());
+	        existingUser.setState(updatedUser.getState());
+	        existingUser.setZipCode(updatedUser.getZipCode());
+	        existingUser.setCountry(updatedUser.getCountry());
+	        existingUser.setTravelPreference(updatedUser.getTravelPreference());
+	        existingUser.setPreferredAirline(updatedUser.getPreferredAirline());
+
+	        userService.save(existingUser);
+
+	        // Refresh session user
+	        session.setAttribute("loggedInUser", existingUser);
+
+	        return "redirect:/user/profile/edit?success";
+	    }
+
 
 }

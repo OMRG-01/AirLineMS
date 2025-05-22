@@ -14,5 +14,4 @@ public interface ClassRepository extends JpaRepository<Class, Long> {
     
     List<Class> findByStatus(String status);
     
-    
 }

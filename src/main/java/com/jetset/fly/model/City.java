@@ -18,6 +18,11 @@ public class City {
 
     private LocalDateTime createdAt;
 
+    @Override
+    public String toString() {
+        return this.cityname;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
