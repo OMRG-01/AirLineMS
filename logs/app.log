@@ -37,3 +37,131 @@
 2025-05-26T12:29:46.954+05:30  INFO 15684 --- [fly] [RMI TCP Connection(9)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2025-05-26T12:29:46.954+05:30  INFO 15684 --- [fly] [RMI TCP Connection(9)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2025-05-26T12:29:46.956+05:30  INFO 15684 --- [fly] [RMI TCP Connection(9)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-05-26T19:34:32.266+05:30  INFO 15684 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : Starting FlyApplication using Java 21.0.6 with PID 15684 (F:\fly\target\classes started by omgaw in F:\fly)
+2025-05-26T19:34:32.266+05:30  INFO 15684 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-05-26T19:34:32.520+05:30  INFO 16148 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : Starting FlyApplication using Java 21.0.6 with PID 16148 (F:\fly\target\classes started by omgaw in F:\fly)
+2025-05-26T19:34:32.522+05:30  INFO 16148 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-05-26T19:34:32.566+05:30  INFO 16148 --- [fly] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-05-26T19:34:32.566+05:30  INFO 16148 --- [fly] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-05-26T19:34:33.020+05:30  INFO 15684 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-26T19:34:33.065+05:30  INFO 15684 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 43 ms. Found 13 JPA repository interfaces.
+2025-05-26T19:34:33.326+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-26T19:34:33.328+05:30  INFO 15684 --- [fly] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-26T19:34:33.330+05:30  INFO 15684 --- [fly] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-26T19:34:33.401+05:30  INFO 15684 --- [fly] [restartedMain] o.a.c.c.C.[Tomcat-46].[localhost].[/]    : Initializing Spring embedded WebApplicationContext
+2025-05-26T19:34:33.402+05:30  INFO 15684 --- [fly] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1133 ms
+2025-05-26T19:34:33.493+05:30  WARN 15684 --- [fly] [restartedMain] o.a.c.c.C.[Tomcat-46].[localhost].[/]    : Cannot deserialize session attribute [connectedBookings] for session [FCF421C2F8B071664D67A37916018A33]
+2025-05-26T19:34:33.544+05:30  INFO 15684 --- [fly] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-26T19:34:33.547+05:30  INFO 15684 --- [fly] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-26T19:34:33.558+05:30  INFO 15684 --- [fly] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-26T19:34:33.560+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-195 - Starting...
+2025-05-26T19:34:33.571+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-195 - Added connection com.mysql.cj.jdbc.ConnectionImpl@c6e6395
+2025-05-26T19:34:33.571+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-195 - Start completed.
+2025-05-26T19:34:33.572+05:30  INFO 15684 --- [fly] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-195)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-26T19:34:33.590+05:30  INFO 16148 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-26T19:34:33.668+05:30  INFO 16148 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 69 ms. Found 13 JPA repository interfaces.
+2025-05-26T19:34:33.846+05:30  INFO 15684 --- [fly] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-26T19:34:33.934+05:30  INFO 15684 --- [fly] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-26T19:34:34.483+05:30  WARN 15684 --- [fly] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-26T19:34:34.536+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-05-26T19:34:34.551+05:30  INFO 16148 --- [fly] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-26T19:34:34.563+05:30  INFO 16148 --- [fly] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-26T19:34:34.564+05:30  INFO 16148 --- [fly] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-26T19:34:34.607+05:30  INFO 16148 --- [fly] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-26T19:34:34.608+05:30  INFO 16148 --- [fly] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2042 ms
+2025-05-26T19:34:34.740+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-05-26T19:34:34.874+05:30  INFO 16148 --- [fly] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-26T19:34:34.917+05:30  INFO 16148 --- [fly] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-26T19:34:34.943+05:30  INFO 16148 --- [fly] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-26T19:34:35.006+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-05-26T19:34:35.045+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-26T19:34:35.056+05:30  INFO 15684 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : Started FlyApplication in 2.832 seconds (process running for 25504.851)
+2025-05-26T19:34:35.059+05:30  INFO 15684 --- [fly] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   LogFileWebEndpointAutoConfiguration#logFileWebEndpoint matched:
+      - Log File found logging.file.name logs/app.log (LogFileWebEndpointAutoConfiguration.LogFileCondition)
+      - @ConditionalOnMissingBean (types: org.springframework.boot.actuate.logging.LogFileWebEndpoint; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+   HealthEndpointWebExtensionConfiguration:
+      Did not match:
+         - @ConditionalOnAvailableEndpoint not exposed (OnAvailableEndpointCondition)
+      Matched:
+         - found 'session' scope (OnWebApplicationCondition)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2025-05-26T19:34:35.139+05:30  INFO 15684 --- [fly] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat-46].[localhost].[/]    : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-26T19:34:35.139+05:30  INFO 15684 --- [fly] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-05-26T19:34:35.140+05:30  INFO 15684 --- [fly] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-05-26T19:34:35.187+05:30  INFO 16148 --- [fly] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-26T19:34:35.212+05:30  INFO 16148 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-26T19:34:35.670+05:30  INFO 16148 --- [fly] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@52ec51bf
+2025-05-26T19:34:35.673+05:30  INFO 16148 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-26T19:34:35.733+05:30  INFO 16148 --- [fly] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-26T19:34:36.727+05:30  INFO 16148 --- [fly] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-26T19:34:36.850+05:30  INFO 16148 --- [fly] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-26T19:34:37.175+05:30  INFO 16148 --- [fly] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-26T19:34:38.745+05:30  WARN 16148 --- [fly] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-26T19:34:38.929+05:30  INFO 16148 --- [fly] [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2025-05-26T19:34:39.391+05:30  INFO 16148 --- [fly] [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-05-26T19:34:39.876+05:30  WARN 16148 --- [fly] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : Unable to start LiveReload server
+2025-05-26T19:34:39.944+05:30  WARN 16148 --- [fly] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-05-26T19:34:39.949+05:30  INFO 16148 --- [fly] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-26T19:34:39.952+05:30  INFO 16148 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-05-26T19:34:39.959+05:30  INFO 16148 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-05-26T19:34:39.979+05:30  INFO 16148 --- [fly] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-05-26T19:34:39.997+05:30 ERROR 16148 --- [fly] [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
