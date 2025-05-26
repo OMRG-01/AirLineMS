@@ -62,4 +62,16 @@ public class PassengerDTO {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    
+    @Override
+    public String toString() {
+        return "PassengerDTO{" +
+                "userId=" + userId +
+                ", pname='" + pname + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", dob=" + dob +
+                ", gender='" + gender + '\'' +
+                '}';
+    }
+
 }

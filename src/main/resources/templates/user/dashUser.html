@@ -381,56 +381,67 @@
 	</form>
     </div>
 	<div id="flightFairForm" class="hidden">
-			<form id="statusForm" method="get" th:action="@{/search-flights}">
-			        <div class="form__group">
-			          <span><i class="ri-flight-takeoff-line"></i></span>
-			          <div class="input__content">
-			            <div class="input__group">
-			              <select name="source" id="status_from" required>
-			                <option value="">Select City</option>
-			                <th:block th:each="city : ${cities}">
-			                  <option th:value="${city.cityname}" th:text="${city.cityname}"></option>
-			                </th:block>
-			              </select>
-			              <label>From</label>
-			            </div>
-			            <p>Your Location</p>
-			          </div>
-			        </div>
+	    <form id="statusForm" th:action="@{/search-flights}" method="get">
+	        <div class="form__group">
+	            <span><i class="ri-flight-takeoff-line"></i></span>
+	            <div class="input__content">
+	                <div class="input__group">
+	                    <select name="source" id="status_from" required>
+	                        <option value="">Select City</option>
+	                        <th:block th:each="city : ${cities}">
+	                            <option th:value="${city.id}" th:text="${city.cityname}"></option>
+	                        </th:block>
+	                    </select>
+	                    <label>From</label>
+	                </div>
+	                <p>Your Location</p>
+	            </div>
+	        </div>
 
-			        <div class="form__group">
-			          <span><i class="ri-flight-land-fill"></i></span>
-			          <div class="input__content">
-			            <div class="input__group">
-			              <select  name="destination"  id="status_to" required>
-			                <option value="">Select City</option>
-			                <th:block th:each="city : ${cities}">
-			                  <option th:value="${city.cityname}" th:text="${city.cityname}"></option>
-			                </th:block>
-			              </select>
-			              <label>To</label>
-			            </div>
-			            <p>Destination</p>
-			          </div>
-			        </div>
-					<div class="form__group">
-							          <span><i class="ri-calendar-event-fill"></i></span>
-							          <div class="input__content">
-							            <div class="input__group">
-							              <input type="date"    name="date" required placeholder="Select Date">
-							              <label>Travel Date</label>
-							            </div>
-							            <p>Add date</p>
-							          </div>
-							        </div>
-			       
+	        <div class="form__group">
+	            <span><i class="ri-flight-land-fill"></i></span>
+	            <div class="input__content">
+	                <div class="input__group">
+	                    <select name="destination" id="status_to" required>
+	                        <option value="">Select City</option>
+	                        <th:block th:each="city : ${cities}">
+	                            <option th:value="${city.id}" th:text="${city.cityname}"></option>
+	                        </th:block>
+	                    </select>
+	                    <label>To</label>
+	                </div>
+	                <p>Destination</p>
+	            </div>
+	        </div>
 
-			       
-			        <br>
-			        <div class="button-container">
-			          <input type="submit" value="Check Status" id="second">
-			        </div>
-		</form>
+	        <div class="form__group">
+	            <span><i class="ri-calendar-event-fill"></i></span>
+	            <div class="input__content">
+	                <div class="input__group">
+	                    <input type="date" id="status_date" name="date" required placeholder="Select Date">
+	                    <label>Departure Date</label>
+	                </div>
+	                <p>Add date</p>
+	            </div>
+	        </div>
+
+	        <div class="form__group">
+	            <span><i class="ri-user-3-fill"></i></span>
+	            <div class="input__content">
+	                <div class="input__group">
+	                    <input type="number" min="1" max="10" name="passenger" id="nop" value="1" required/>
+	                    <label>Passengers</label>
+	                </div>
+	                <p>Select</p>
+	            </div>
+	        </div>
+
+	        <br>
+	        <div class="button-container">
+	            <input type="submit" value="Check Status" id="second">
+	        </div>
+	    </form>
+	</div>
 	    </div>
   </section>
 

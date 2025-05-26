@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Passenger Details</title>
+    <script>
+        function continueToPay() {
+            let passengers = [];
+
+            document.querySelectorAll('.passenger-form').forEach(form => {
+				let userId = form.querySelector('input[name="userId"]').value;
+				let pname = form.querySelector('input[name="pname"]').value;
+				let mobileNo = form.querySelector('input[name="mobileNo"]').value;
+				let dob = form.querySelector('input[name="dob"]').value;
+				let gender = form.querySelector('select[name="gender"]').value;
+
+                if(!pname || !mobileNo || !dob || !gender) {
+                    alert('Please fill all fields for all passengers.');
+                    throw 'Validation failed';
+                }
+
+                passengers.push({
+                    pname: pname,
+                    mobileNo: mobileNo,
+                    dob: dob,
+                    gender: gender,
+					userId:userId
+                });
+            });
+
+            fetch('/api/temp-save-connected', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(passengers)
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = '/user/gateway2';
+                } else {
+                    alert("Failed to save passenger details.");
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter Passenger Details</h2>
+
+    <!-- Assuming 'nos_passanger' is passed as a model attribute -->
+    <div th:each="i : ${#numbers.sequence(1, nos_passanger)}" class="passenger-form" style="margin-bottom:20px; border:1px solid #ccc; padding:15px;">
+        <h3>Passenger [[${i}]]</h3>
+		<input type="hidden" name="userId" th:value="${userId}" />
+        <label for="pname[[${i}]]">Name:</label>
+        <input type="text" name="pname" id="pname[[${i}]]" required /><br/>
+
+        <label for="mobileNo[[${i}]]">Mobile No:</label>
+        <input type="text" name="mobileNo" id="mobileNo[[${i}]]" required /><br/>
+
+        <label for="dob[[${i}]]">Date of Birth:</label>
+        <input type="date" name="dob" id="dob[[${i}]]" required /><br/>
+
+        <label for="gender[[${i}]]">Gender:</label>
+        <select name="gender" id="gender[[${i}]]" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select><br/>
+    </div>
+
+    <button type="button" onclick="continueToPay()">Continue to Pay</button>
+</body>
+</html>
