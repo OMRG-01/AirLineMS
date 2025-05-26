@@ -227,189 +227,37 @@ public class FlightSearchController {
 
 	     return "user/flight-search";
 	 }
+	 
+	 @GetMapping("/user/loading2")
+	 public String showLoadingUser(@RequestParam Long source,
+						             @RequestParam Long destination,
+						             @RequestParam String date,
+						             @RequestParam Integer passenger,
+	                               HttpSession  session,
+	                               Model model) {
+		 
+		 session.setAttribute("from", source);
+		    session.setAttribute("to", destination);
+		    session.setAttribute("d_date", date);
+		    session.setAttribute("nop", passenger);
 
+		    
+	     // Fetch city names using city service
+	     City fromCity = cityService.getCityById(source);
+	     City toCity = cityService.getCityById(destination);
+
+	     model.addAttribute("source", source);
+	     model.addAttribute("destination", destination);
+	     model.addAttribute("sourceCity", fromCity.getCityname());
+	     model.addAttribute("destinationCity", toCity.getCityname());
+	     model.addAttribute("date", date);
+	     model.addAttribute("passenger", passenger);
+
+	     return "user/loading/connectLoading";  // maps to loading.html Thymeleaf template
+	 }
     
-    
-//	 @GetMapping("/search-flights")
-//	 public String searchFlights(@RequestParam Long source,
-//	                              @RequestParam Long destination,
-//	                              @RequestParam String date,
-//	                              @RequestParam Integer passenger,
-//	                              Model model, HttpSession session) {
-//
-//	     City sourceCity = cityRepo.findById(source).orElse(null);
-//	     City destinationCity = cityRepo.findById(destination).orElse(null);
-//	     LocalDate selectedDate;
-//
-//	     try {
-//	         selectedDate = LocalDate.parse(date);
-//	     } catch (Exception e) {
-//	         model.addAttribute("error", "Invalid date format.");
-//	         return "flight-search";
-//	     }
-//
-//	     if (sourceCity == null || destinationCity == null) {
-//	         model.addAttribute("error", "Invalid source or destination.");
-//	         return "flight-search";
-//	     }
-//
-//	     Map<Long, List<FlightScheduleRate>> scheduleRatesMap = new HashMap<>();
-//	     Map<String, Integer> availableSeatsMap = new HashMap<>();
-//
-//	     // 🔹 Direct Flights
-//	     List<FlightSchedule> directFlights = scheduleRepo.findDirectFlightsByDate(
-//	         sourceCity, destinationCity, "ACTIVE", selectedDate
-//	     );
-//
-//	     if (!directFlights.isEmpty()) {
-//	         model.addAttribute("directFlights", directFlights);
-//
-//	         // Fill scheduleRatesMap & availableSeatsMap for direct flights
-//           for (FlightSchedule flight : directFlights) {
-//               List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
-//               scheduleRatesMap.put(flight.getId(), rates);
-//
-//               for (FlightScheduleRate rate : rates) {
-//                   Long flightId = rate.getFlight().getId();
-//                   Long classId = rate.getFlightClass().getId();
-//
-//                   FlightClass flightClass = flightClassService.findByFlightIdAndClassId(flightId, classId);
-//                   int totalCapacity = flightClass.getSeat();
-//                   int bookedSeats = passengerService.countPassengersByScheduleAndClass(flight.getId(), classId);
-//                   int availableSeats = totalCapacity - bookedSeats;
-//
-//                   String key = flight.getId() + "-" + classId;
-//                   availableSeatsMap.put(key, availableSeats);
-//               }
-//           }
-//	     } else {
-//	         // 🔁 Connecting Flights Logic
-//	         List<FlightSchedule> allFlights = scheduleRepo.findByStatus("ACTIVE");
-//	         Map<City, List<FlightSchedule>> graph = flightPathService.buildGraph(allFlights);
-//	         List<City> path = flightPathService.findPath(sourceCity, destinationCity, graph);
-//
-//	         if (!path.isEmpty()) {
-//	             List<List<FlightSchedule>> connectingFlights = flightPathService.getConnectingFlights(path, selectedDate);
-//	             boolean hasAnyValidFlight = connectingFlights.stream().anyMatch(list -> !list.isEmpty());
-//
-//	             if (hasAnyValidFlight) {
-//	            	    model.addAttribute("multiHopPath", path);
-//	            	    model.addAttribute("connectingFlights", connectingFlights);
-//
-//	            	    // 1. Collect all classes per hop
-//	            	    List<Set<Long>> classIdsPerHop = new ArrayList<>();
-//	            	    Map<Long, String> classNames = new HashMap<>();
-//
-//	            	 
-//
-//	            	    for (List<FlightSchedule> hopFlights : connectingFlights) {
-//	            	        Set<Long> classIdsInThisHop = new HashSet<>();
-//
-//	            	        for (FlightSchedule flight : hopFlights) {
-//	            	            List<FlightScheduleRate> rates = flightScheduleRateService.getRatesByScheduleId(flight.getId());
-//	            	            scheduleRatesMap.put(flight.getId(), rates);
-//
-//	            	            for (FlightScheduleRate rate : rates) {
-//	            	                Long classId = rate.getFlightClass().getId();
-//	            	                classIdsInThisHop.add(classId);
-//	            	                classNames.putIfAbsent(classId, rate.getFlightClass().getName());
-//
-//	            	                // Calculate available seats
-//	            	                FlightClass flightClass = flightClassService.findByFlightIdAndClassId(
-//	            	                    rate.getFlight().getId(), classId);
-//	            	                int totalCapacity = flightClass.getSeat();
-//	            	                int bookedSeats = passengerService.countPassengersByScheduleAndClass(
-//	            	                    rate.getFlight().getId(), classId);
-//	            	                int availableSeats = totalCapacity - bookedSeats;
-//
-//	            	                String key = rate.getFlight().getId() + "-" + classId;
-//	            	                availableSeatsMap.put(key, availableSeats);
-//	            	            }
-//	            	        }
-//	            	        classIdsPerHop.add(classIdsInThisHop);
-//	            	    }
-//
-//	            	    // 2. Find intersection (common classes) across all hops
-//	            	    Set<Long> commonClassIds = new HashSet<>(classIdsPerHop.get(0));
-//	            	    for (int i = 1; i < classIdsPerHop.size(); i++) {
-//	            	        commonClassIds.retainAll(classIdsPerHop.get(i));
-//	            	    }
-//
-//	            	    // 3. Calculate total rates & minimum available seats for these common classes
-//	            	    Map<Long, Double> totalRates = new HashMap<>();
-//	            	    Map<Long, Integer> minAvailableSeats = new HashMap<>();
-//
-//	            	    for (Long classId : commonClassIds) {
-//	            	        double sumRate = 0.0;
-//	            	        int minSeats = Integer.MAX_VALUE;
-//
-//	            	        // For each hop, sum rate and find min available seats
-//	            	        for (List<FlightSchedule> hopFlights : connectingFlights) {
-//	            	            // Sum over all flights in this hop for the classId
-//	            	            for (FlightSchedule flight : hopFlights) {
-//	            	                List<FlightScheduleRate> rates = scheduleRatesMap.get(flight.getId());
-//	            	                if (rates == null) continue;
-//
-//	            	                for (FlightScheduleRate rate : rates) {
-//	            	                    if (rate.getFlightClass().getId().equals(classId)) {
-//	            	                        sumRate += rate.getRate();
-//
-//	            	                        String key = flight.getId() + "-" + classId;
-//	            	                        int seats = availableSeatsMap.getOrDefault(key, 0);
-//	            	                        if (seats < minSeats) minSeats = seats;
-//	            	                    }
-//	            	                }
-//	            	            }
-//	            	        }
-//
-//	            	        totalRates.put(classId, sumRate);
-//	            	        minAvailableSeats.put(classId, minSeats);
-//	            	    }
-//
-//	            	    // 4. Add to model for frontend
-//	            	    model.addAttribute("commonClassIds", commonClassIds);
-//	            	    model.addAttribute("classNames", classNames);
-//	            	    model.addAttribute("classTotalRates", totalRates);
-//	            	    model.addAttribute("classAvailableSeats", minAvailableSeats);
-//
-//	            	    // Also add scheduleRatesMap & availableSeatsMap if needed elsewhere
-//	            	    model.addAttribute("scheduleRatesMap", scheduleRatesMap);
-//	            	    model.addAttribute("availableSeatsMap", availableSeatsMap);
-//	            	} else {
-//	                 model.addAttribute("noConnectingFlights", true);
-//	             }
-//	         } else {
-//	             model.addAttribute("error", "No flights or connections available.");
-//	         }
-//	     }
-//
-//	     // 🔐 User session check
-//	     User user = (User) session.getAttribute("loggedInUser");
-//	     if (user != null) {
-//	         model.addAttribute("currentUser", user);
-//	         model.addAttribute("userId", user.getId());
-//	     } else {
-//	         return "redirect:/login1";
-//	     }
-//
-//	     model.addAttribute("scheduleRatesMap", scheduleRatesMap);
-//	     model.addAttribute("availableSeatsMap", availableSeatsMap);
-//	     model.addAttribute("from", sourceCity.getCityname());
-//	     model.addAttribute("to", destinationCity.getCityname());
-//	     model.addAttribute("date", date);
-//	     model.addAttribute("passengerId", passenger);
-//
-//	     return "user/flight-search";
-//	 }
+	 
 
 
 
-
-
-
-    @GetMapping("/search-form")
-    public String searchForm(Model model) {
-        model.addAttribute("cities", cityRepo.findByStatus("ACTIVE"));
-        return "user/search-form";
-    }
 } 

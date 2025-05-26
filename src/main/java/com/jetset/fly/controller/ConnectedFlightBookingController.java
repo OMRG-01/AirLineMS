@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
-public class UserBookingController {
+public class ConnectedFlightBookingController {
 
     @Autowired private UserService userService;
     @Autowired private AirFlightService airFlightService;

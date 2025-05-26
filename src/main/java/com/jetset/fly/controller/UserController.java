@@ -150,7 +150,7 @@ public class UserController {
 	     model.addAttribute("d_date", d_date);
 	     model.addAttribute("nop", nop);
 
-	     return "user/bookingloading";  // maps to loading.html Thymeleaf template
+	     return "user/loading/bookingloading";  // maps to loading.html Thymeleaf template
 	 }
 	 
 	 @GetMapping("/user/flightstatus")

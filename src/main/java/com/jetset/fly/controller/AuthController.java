@@ -190,7 +190,7 @@ public class AuthController {
 	     model.addAttribute("d_date", d_date);
 	     model.addAttribute("nop", nop);
 
-	     return "user/loading";  // maps to loading.html Thymeleaf template
+	     return "user/loading/loading";  // maps to loading.html Thymeleaf template
 	 }
 
 

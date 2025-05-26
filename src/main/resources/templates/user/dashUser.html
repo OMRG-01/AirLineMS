@@ -381,12 +381,12 @@
 	</form>
     </div>
 	<div id="flightFairForm" class="hidden">
-	    <form id="statusForm" th:action="@{/search-flights}" method="get">
+	    <form id="fairForm" th:action="@{/search-flights}" method="get">
 	        <div class="form__group">
 	            <span><i class="ri-flight-takeoff-line"></i></span>
 	            <div class="input__content">
 	                <div class="input__group">
-	                    <select name="source" id="status_from" required>
+	                    <select name="source" id="fare_from" required>
 	                        <option value="">Select City</option>
 	                        <th:block th:each="city : ${cities}">
 	                            <option th:value="${city.id}" th:text="${city.cityname}"></option>
@@ -402,7 +402,7 @@
 	            <span><i class="ri-flight-land-fill"></i></span>
 	            <div class="input__content">
 	                <div class="input__group">
-	                    <select name="destination" id="status_to" required>
+	                    <select name="destination" id="fare_to" required>
 	                        <option value="">Select City</option>
 	                        <th:block th:each="city : ${cities}">
 	                            <option th:value="${city.id}" th:text="${city.cityname}"></option>
@@ -418,13 +418,12 @@
 	            <span><i class="ri-calendar-event-fill"></i></span>
 	            <div class="input__content">
 	                <div class="input__group">
-	                    <input type="date" id="status_date" name="date" required placeholder="Select Date">
+	                    <input type="text" id="fare_date" name="date" required placeholder="Select Date">
 	                    <label>Departure Date</label>
 	                </div>
 	                <p>Add date</p>
 	            </div>
 	        </div>
-
 	        <div class="form__group">
 	            <span><i class="ri-user-3-fill"></i></span>
 	            <div class="input__content">
@@ -684,6 +683,40 @@
     const statusToEl = document.getElementById('status_to');
     const statusDateEl = document.getElementById('status_date');
     
+	const fareFromEl = document.getElementById('fare_from');
+	 const fareToEl = document.getElementById('fare_to');
+	 const fareDateEl = document.getElementById('fare_date');
+
+	 let fareDatePicker = flatpickr(fareDateEl, {
+	   dateFormat: "Y-m-d",
+	   minDate: "today"
+	 });
+
+	 function updateFareAvailableDates() {
+	   const from = fareFromEl.value;
+	   const to = fareToEl.value;
+
+	   if (from && to) {
+	     fetch(`/api/available-dates?from=${from}&to=${to}`)
+	       .then(response => response.ok ? response.json() : Promise.reject("Failed to fetch"))
+	       .then(availableDates => {
+	         if (availableDates.length > 0) {
+	           fareDatePicker.set('enable', availableDates);
+	           fareDatePicker.clear();
+	         } else {
+	           fareDatePicker.set('enable', [date => date >= new Date()]);
+	           fareDatePicker.clear();
+	         }
+	       })
+	       .catch(err => {
+	         console.error("Fare dates error:", err);
+	         fareDatePicker.set('enable', [date => date >= new Date()]);
+	       });
+	   }
+	 }
+
+	 fareFromEl.addEventListener('change', updateFareAvailableDates);
+	 fareToEl.addEventListener('change', updateFareAvailableDates);
     // Initialize date pickers
     let flightDatePicker = flatpickr(dateEl, {
       dateFormat: "Y-m-d",
@@ -810,5 +843,27 @@
       window.location.href = `/user/flightstatus?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&d_date=${encodeURIComponent(d_date)}`;
     });
   </script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("fairForm");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); // stop normal form submission
+
+        const source = document.getElementById("fare_from").value;
+        const destination = document.getElementById("fare_to").value;
+        const date = document.getElementById("fare_date").value;
+        const passenger = document.getElementById("nop").value;
+
+        // build the query string to pass to /search-flights later
+        const queryString = `source=${encodeURIComponent(source)}&destination=${encodeURIComponent(destination)}&date=${encodeURIComponent(date)}&passenger=${encodeURIComponent(passenger)}`;
+
+        // redirect to the loading page with query string
+        window.location.href = `/user/loading2?${queryString}`;
+      });
+    });
+  </script>
+
 </body>
 </html>
