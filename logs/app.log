@@ -351,3 +351,30 @@ Unconditional classes:
 2025-05-26T19:37:59.262+05:30  INFO 15684 --- [fly] [Thread-756] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-05-26T19:37:59.262+05:30  INFO 15684 --- [fly] [Thread-756] com.zaxxer.hikari.HikariDataSource       : HikariPool-199 - Shutdown initiated...
 2025-05-26T19:37:59.266+05:30  INFO 15684 --- [fly] [Thread-756] com.zaxxer.hikari.HikariDataSource       : HikariPool-199 - Shutdown completed.
+2025-05-26T19:37:59.374+05:30  INFO 15684 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : Starting FlyApplication using Java 21.0.6 with PID 15684 (F:\fly\target\classes started by omgaw in F:\fly)
+2025-05-26T19:37:59.374+05:30  INFO 15684 --- [fly] [restartedMain] com.jetset.fly.FlyApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-05-26T19:37:59.586+05:30  INFO 15684 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-26T19:37:59.604+05:30  INFO 15684 --- [fly] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 13 JPA repository interfaces.
+2025-05-26T19:37:59.718+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-26T19:37:59.718+05:30  INFO 15684 --- [fly] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-26T19:37:59.718+05:30  INFO 15684 --- [fly] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-26T19:37:59.737+05:30  INFO 15684 --- [fly] [restartedMain] o.a.c.c.C.[Tomcat-49].[localhost].[/]    : Initializing Spring embedded WebApplicationContext
+2025-05-26T19:37:59.737+05:30  INFO 15684 --- [fly] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 362 ms
+2025-05-26T19:37:59.833+05:30  INFO 15684 --- [fly] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-26T19:37:59.835+05:30  INFO 15684 --- [fly] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-26T19:37:59.839+05:30  INFO 15684 --- [fly] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-26T19:37:59.841+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-200 - Starting...
+2025-05-26T19:37:59.849+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-200 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1c691587
+2025-05-26T19:37:59.849+05:30  INFO 15684 --- [fly] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-200 - Start completed.
+2025-05-26T19:37:59.850+05:30  INFO 15684 --- [fly] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-200)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-26T19:38:00.073+05:30  INFO 15684 --- [fly] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-26T19:38:00.132+05:30  INFO 15684 --- [fly] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-26T19:38:00.492+05:30  WARN 15684 --- [fly] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-26T19:38:00.542+05:30  INFO 15684 --- [fly] [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
