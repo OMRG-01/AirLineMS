@@ -65,12 +65,6 @@ public class UserController {
 	                             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 	                             @RequestParam(required = false) Integer  passengers,
 	                             Model model, HttpSession session) {
-		 
-//  		session.setAttribute("search_from", fromCityId);
-//		    session.setAttribute("search_to", toCityId);
-//		    session.setAttribute("search_date", date);
-//		    session.setAttribute("search_nop", passengers);
-		 
 		 if (fromCityId == null) fromCityId = (Long) session.getAttribute("from");
 		    if (toCityId == null) toCityId = (Long) session.getAttribute("to");
 		    if (date == null) date = LocalDate.parse((String) session.getAttribute("d_date"));

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Gateway</title>
+</head>
+<body>
+    <h2>Payment Gateway</h2>
+
+    <h3>Booking Summary</h3>
+	<table border="1">
+	    <thead>
+	        <tr>
+	            <th>Flight Class ID</th>
+	            <th>Schedule Flight ID</th>
+	            <th>Rate</th>
+	            <th>No of Passengers</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        <tr th:each="booking : ${bookings}">
+	            <td th:text="${booking.flightClassId}">Flight Class</td>
+	            <td th:text="${booking.scheduleFlightId}">Schedule Flight</td>
+	            <td th:text="${booking.rate}">Rate</td>
+	            <td th:text="${booking.noOfPassengers}">Passengers</td>
+	        </tr>
+	    </tbody>
+	</table>
+
+    <h3>Passengers</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mobile No</th>
+                <th>Date of Birth</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="p : ${passengers}">
+                <td th:text="${p.pname}">Name</td>
+                <td th:text="${p.mobileNo}">Mobile</td>
+                <td th:text="${p.dob}">DOB</td>
+                <td th:text="${p.gender}">Gender</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form method="post" th:action="@{/user/confirm-payment}">
+        <button type="submit">Pay Now</button>
+    </form>
+</body>
+</html>
