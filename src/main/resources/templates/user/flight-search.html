@@ -489,8 +489,8 @@
             <div th:each="flight : ${directFlights}" class="flight-card">
                 <div class="flight-route">
                     <div class="route-point">
-                        <h4>NSK</h4>
-                        <div class="city-name">Nashik</div>
+                        <h4 th:text="${flight.source.cityname}">>NSK</h4>
+                       
                     </div>
                     
                     <div class="route-connector">
@@ -501,22 +501,21 @@
                     </div>
                     
                     <div class="route-point">
-                        <h4>BOM</h4>
-                        <div class="city-name">Mumbai</div>
+                        <h4 th:text="${flight.destination.cityname}">>BOM</h4>
                     </div>
                 </div>
 
                 <div class="flight-details">
                     <div class="detail-section">
                         <h6>Departure</h6>
-                        <div class="time-display" th:text="${flight.departAt}">15:23</div>
-                        <div class="date-display">Sat, 11 Oct</div>
+                        <div class="time-display" th:text="${#temporals.format(flight.departAt, 'HH:mm')}">15:23</div>
+                        <div class="date-display" th:text="${#temporals.format(flight.departAt, 'EEE, dd MMM')}">Sat, 11 Oct</div>
                     </div>
                     
                     <div class="detail-section">
                         <h6>Arrival</h6>
-                        <div class="time-display" th:text="${flight.arriveAt}">12:20</div>
-                        <div class="date-display">Sat, 18 Oct</div>
+                        <div class="time-display" th:text="${#temporals.format(flight.arriveAt, 'HH:mm')}">12:20</div>
+                        <div class="date-display" th:text="${#temporals.format(flight.arriveAt, 'EEE, dd MMM')}">Sat, 18 Oct</div>
                     </div>
                 </div>
 
@@ -529,19 +528,57 @@
                     <div class="info-item">
                         <i class="fas fa-building"></i>
                         <span class="label">Airline</span>
-                        <span class="value">Vistara</span>
+                        <span class="value" th:text="${flight.flight.airline.aname}">Vistara</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-clock"></i>
                         <span class="label">Duration</span>
                         <span class="value">4h 57m</span>
                     </div>
-                    <div class="info-item">
-                        <i class="fas fa-chair"></i>
-                        <span class="label">Class</span>
-                        <span class="value">First,Business and Economy</span>
-                    </div>
+                    
                 </div>
+				
+				<div class="class-options">
+				                <div th:each="rate : ${scheduleRatesMap[flight.id]}" class="class-card">
+				                    <div>
+				                        <!-- Class Name -->
+				                        <h4 style="font-weight:bold;" th:text="${rate.flightClass.name}"></h4>
+				                    </div>
+
+				                    <!-- Price Check -->
+									<div th:if="${rate.rate > 0}">
+									    <h5 th:text="'INR ' + ${rate.rate}"></h5>
+
+									    <p style="font-size:15px;color:gray;margin-top:15px;">
+									        Available seats:
+									        <span th:text="${availableSeatsMap[flight.id + '-' + rate.flightClass.id]}">0</span>
+									    </p>
+
+									    <div>
+									        <!-- IF user is logged in and seats available: Show booking form -->
+									        <form th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] > 0}"
+									              th:action="@{/booking/initiate}"
+									              method="post"
+									              th:unless="${availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}">
+									           <input type="hidden" name="rate" th:value="${rate.rate}" />
+									            <button type="submit" class="select-btn">Book Now</button>
+									        </form>
+
+									        <!-- Show disabled button if no seats -->
+									        <button th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}"
+									                class="select-btn disabled"
+									                disabled>No Seats Available</button>
+
+									        
+									    </div>
+									</div>
+
+				                    <!-- Price Not Set = Class Not Available -->
+				                    <div th:if="${rate.rate == 0}" class="unavailable-class">
+				                        Class Not<br>Available
+				                    </div>
+				                </div>
+				            </div>
             </div>
         </div>
 
@@ -606,19 +643,19 @@
                         </div>
                     </div>
 
-                    <div class="flight-details">
-                        <div class="detail-section">
-                            <h6>Departure</h6>
-                            <div class="time-display" th:text="${flight.departAt}">10:30</div>
-                            <div class="date-display">Departure Date</div>
-                        </div>
-                        
-                        <div class="detail-section">
-                            <h6>Arrival</h6>
-                            <div class="time-display" th:text="${flight.arriveAt}">14:45</div>
-                            <div class="date-display">Arrival Date</div>
-                        </div>
-                    </div>
+					<div class="flight-details">
+					                   <div class="detail-section">
+					                       <h6>Departure</h6>
+					                       <div class="time-display" th:text="${#temporals.format(flight.departAt, 'HH:mm')}">15:23</div>
+					                       <div class="date-display" th:text="${#temporals.format(flight.departAt, 'EEE, dd MMM')}">Sat, 11 Oct</div>
+					                   </div>
+					                   
+					                   <div class="detail-section">
+					                       <h6>Arrival</h6>
+					                       <div class="time-display" th:text="${#temporals.format(flight.arriveAt, 'HH:mm')}">12:20</div>
+					                       <div class="date-display" th:text="${#temporals.format(flight.arriveAt, 'EEE, dd MMM')}">Sat, 18 Oct</div>
+					                   </div>
+					               </div>
 
                     <div class="flight-info-grid">
                         <div class="info-item">
@@ -642,7 +679,49 @@
                             <span class="value">First,Business and Economy</span>
                         </div>
                     </div>
+					<div class="class-options">
+									                <div th:each="rate : ${scheduleRatesMap[flight.id]}" class="class-card">
+									                    <div>
+									                        <!-- Class Name -->
+									                        <h4 style="font-weight:bold;" th:text="${rate.flightClass.name}"></h4>
+									                    </div>
+
+									                    <!-- Price Check -->
+														<div th:if="${rate.rate > 0}">
+														    <h5 th:text="'INR ' + ${rate.rate}"></h5>
+
+														    <p style="font-size:15px;color:gray;margin-top:15px;">
+														        Available seats:
+														        <span th:text="${availableSeatsMap[flight.id + '-' + rate.flightClass.id]}">0</span>
+														    </p>
+
+														    <div>
+														        <!-- IF user is logged in and seats available: Show booking form -->
+														        <form th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] > 0}"
+														              th:action="@{/booking/initiate}"
+														              method="post"
+														              th:unless="${availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}">
+														           <input type="hidden" name="rate" th:value="${rate.rate}" />
+														            <button type="submit" class="select-btn">Book Now</button>
+														        </form>
+
+														        <!-- Show disabled button if no seats -->
+														        <button th:if="${currentUser != null and availableSeatsMap[flight.id + '-' + rate.flightClass.id] == 0}"
+														                class="select-btn disabled"
+														                disabled>No Seats Available</button>
+
+														        
+														    </div>
+														</div>
+
+									                    <!-- Price Not Set = Class Not Available -->
+									                    <div th:if="${rate.rate == 0}" class="unavailable-class">
+									                        Class Not<br>Available
+									                    </div>
+									                </div>
+									            </div>
                 </div>
+				
             </div>
         </div>
 
