@@ -78,6 +78,12 @@ public class AuthController {
 		 model.addAttribute("cities", cities);
 	        return "index"; // Redirects to index.html in 'static'
 	    }
+	 @GetMapping("/demo")
+	    public String demo(Model model) {
+		 List<City> cities = cityService.getAllActiveCities();
+		 model.addAttribute("cities", cities);
+	        return "demo"; // Redirects to index.html in 'static'
+	    }
 	 
 	 @Autowired
 	 private FlightClassService flightClassService;

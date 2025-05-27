@@ -381,7 +381,7 @@
 	</form>
     </div>
 	<div id="flightFairForm" class="hidden">
-	    <form id="fairForm" th:action="@{/search-flights}" method="get">
+	    <form id="fairForm" th:action="@{/user/search-flights}" method="get">
 	        <div class="form__group">
 	            <span><i class="ri-flight-takeoff-line"></i></span>
 	            <div class="input__content">
@@ -861,6 +861,27 @@
 
         // redirect to the loading page with query string
         window.location.href = `/user/loading2?${queryString}`;
+      });
+    });
+  </script>
+  <script>
+    const fromSelect = document.getElementById("from");
+    const toSelect = document.getElementById("to");
+
+    // Store original destination options for resetting
+    const originalToOptions = Array.from(toSelect.options);
+
+    fromSelect.addEventListener("change", function () {
+      const selectedFrom = this.value;
+
+      // Clear current destination options
+      toSelect.innerHTML = "";
+
+      // Rebuild options, excluding selected source
+      originalToOptions.forEach(option => {
+        if (option.value !== selectedFrom || option.value === "") {
+          toSelect.appendChild(option.cloneNode(true));
+        }
       });
     });
   </script>

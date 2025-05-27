@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetSet - Fly Better</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --jetset-primary: #721b47;
+            --jetset-hover: #5a1538;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .navbar {
+            padding: 0;
+            height: 80px;
+        }
+
+        .navbar-brand {
+            margin-right: 30px;
+            padding: 0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo-container {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: flex-start;
+            height: 50px;
+        }
+
+        .logo-container img {
+            width: 150px;
+            height: 125px;
+            margin-top: -22px; /* Pulls logo up to align with top of header */
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .navbar-nav {
+            align-items: center;
+            height: 80px;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--jetset-primary) !important;
+            font-weight: 600;
+            padding: 0.8rem 1.2rem !important;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            height: 50px; /* Fixed height for nav items */
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .navbar-nav .nav-item {
+            display: flex;
+            align-items: center;
+            height: 80px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--jetset-hover) !important;
+            border-bottom: 3px solid var(--jetset-primary);
+            background-color: rgba(114, 27, 71, 0.05);
+        }
+
+        .navbar-nav .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .navbar-nav .dropdown-item {
+            color: var(--jetset-primary);
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background-color: var(--jetset-primary);
+            color: white;
+        }
+
+        /* Right side utilities */
+        .navbar-utilities {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            height: 80px;
+            margin: 0;
+        }
+
+        .utility-link {
+            color: var(--jetset-primary) !important;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            height: 50px;
+            padding: 0 10px;
+        }
+
+        .utility-link:hover {
+            color: var(--jetset-hover) !important;
+        }
+
+        /* Floating Icon */
+        .floating-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--jetset-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(114, 27, 71, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .floating-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(114, 27, 71, 0.4);
+        }
+
+        .floating-icon img {
+            width: 35px;
+            height: 35px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #721b47 0%, #5a1538 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background-color: white;
+            color: var(--jetset-primary);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.3);
+            color: var(--jetset-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar-utilities {
+                margin-top: 10px;
+                justify-content: center;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .floating-icon {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .floating-icon img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .logo-container img {
+                width: 120px;
+                height: 100px;
+                margin-top: -15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <!-- Brand Logo -->
+                <a href="#" class="navbar-brand" th:href="@{/}">
+                    <div class="logo-container">
+                        <img th:src="@{/demo/jetlogo.png}" alt="JetSetFly Logo">
+                    </div>
+                </a>
+
+                <!-- Toggle button for mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navigation Menu -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" th:href="@{/book}">BOOK</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                MANAGE
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" th:href="@{/manage/bookings}">My Bookings</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/manage/check-in}">Online Check-in</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/manage/flight-status}">Flight Status</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/manage/special-assistance}">Special Assistance</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                EXPERIENCE
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" th:href="@{/experience/cabin-classes}">Cabin Classes</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/experience/dining}">Dining</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/experience/entertainment}">Entertainment</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/experience/wifi}">WiFi & Connectivity</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                WHERE WE FLY
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/route-map}">Route Map</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/popular}">Popular Destinations</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/new-routes}">New Routes</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                LOYALTY
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/join}">Join Program</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/benefits}">Member Benefits</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/earn-miles}">Earn Miles</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/redeem}">Redeem Miles</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                HELP
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" th:href="@{/help/contact}">Contact Us</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/help/faq}">FAQ</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/help/travel-info}">Travel Information</a></li>
+                                <li><a class="dropdown-item" href="#" th:href="@{/help/feedback}">Feedback</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <!-- Right side utilities -->
+                    <div class="navbar-utilities">
+                        <a href="#" class="utility-link" th:href="@{/language}">
+                            <i class="fas fa-globe"></i> EN
+                        </a>
+                        <a href="#" class="utility-link" th:href="@{/location}">
+                            <i class="fas fa-map-marker-alt"></i> IN
+                        </a>
+                        <a href="#" class="utility-link" th:href="@{/search}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                        <a href="#" class="utility-link" th:href="@{/profile}">
+                            <i class="fas fa-user"></i> 0m
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">FLY BETTER</h1>
+            <p class="hero-subtitle">Experience premium travel with JetSet Airlines</p>
+            <a href="#" class="cta-button" th:href="@{/book}">Book Your Flight</a>
+        </div>
+    </section>
+
+    <!-- Floating Icon -->
+    <div class="floating-icon" onclick="toggleChat()">
+        <!-- Replace this with your jetset.png image -->
+        <img src="jetset.png" alt="JetSet" th:src="@{/images/jetset.png}">
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Floating icon functionality
+        function toggleChat() {
+            alert('JetSet Chat Support - Coming Soon!');
+            // You can replace this with actual chat functionality
+        }
+
+        // Add smooth scrolling effect
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            }
+        });
+    </script>
+</body>
+</html>
