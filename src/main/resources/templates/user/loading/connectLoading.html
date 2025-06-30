@@ -238,7 +238,7 @@
 		<div class="trip-details">
 		  <span th:text="${date}"></span>
 		  •
-		  <span th:text="${passenger + ' passenger' + (passenger > 1 ? 's' : '')}"></span>
+		  <span th:text="${passenger}"></span>
 		</div>
       </div>
       
@@ -263,8 +263,8 @@
     /*<![CDATA[*/
 	const source = /*[[${source}]]*/ 0;
 	  const destination = /*[[${destination}]]*/ 0;
-	  const date = /*[[${date}]]*/ '2025-05-30';
-	  const passenger = /*[[${passenger}]]*/ 1;
+	  const date = /*[[${date}]]*/ '2025-05-20';
+	  const passenger = /*[[${passenger}]]*/ 0;
     
     // Show different loading tips
     let tipIndex = 0;

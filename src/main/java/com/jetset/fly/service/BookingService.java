@@ -130,30 +130,34 @@ public class BookingService {
             }
         }
 
-        // Save payments
+     // Save payments per passenger instead of per booking
         for (Booking booking : savedBookings) {
-            Payment payment = new Payment();
+            for (PassengerDTO pDto : passengers) {
+                Payment payment = new Payment();
 
-            payment.setBooking(booking);
-            payment.setFlight(booking.getFlight());
-            payment.setSchedule(booking.getSchedule());
-            payment.setUser(booking.getUser());
+                payment.setBooking(booking);
+                payment.setFlight(booking.getFlight());
+                payment.setSchedule(booking.getSchedule());
+                payment.setUser(userRepo.findById(pDto.getUserId())
+                        .orElseThrow(() -> new RuntimeException("User not found with ID: " + pDto.getUserId())));
 
-            // Total passengers count
-            payment.setNoSeat(passengers.size());
+                // For each passenger, only one seat
+                payment.setNoSeat(1);
 
-            // Find rate for this booking class
-            double rate = connectedBookings.stream()
-                    .filter(b -> b.getFlightClassId().equals(booking.getFlightClass().getId()))
-                    .map(ConnectedBookingDTO::getRate)
-                    .findFirst().orElse(BigDecimal.ZERO).doubleValue();
+                // Get rate for this booking class
+                double rate = connectedBookings.stream()
+                        .filter(b -> b.getFlightClassId().equals(booking.getFlightClass().getId()))
+                        .map(ConnectedBookingDTO::getRate)
+                        .findFirst().orElse(BigDecimal.ZERO).doubleValue();
 
-            payment.setTotalAmount(rate * passengers.size());
-            payment.setTransactionId(UUID.randomUUID().toString());
-            payment.setCreatedAt(new Date());
+                payment.setTotalAmount(rate);
+                payment.setTransactionId(UUID.randomUUID().toString());
+                payment.setCreatedAt(new Date());
 
-            paymentRepo.save(payment);
+                paymentRepo.save(payment);
+            }
         }
+
     }
 
 

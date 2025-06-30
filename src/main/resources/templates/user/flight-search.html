@@ -735,7 +735,8 @@
 		                     <h5 th:text="${entry.value['className']}">Economy</h5>
 		                     <p>
 		                         <strong>Total Fare:</strong>
-		                         <span th:text="'INR ' + ${entry.value['totalRate']}">INR 0</span>
+		           				 <span th:text="'INR ' + (${entry.value['totalRate']} * ${passengerId})">INR 0</span>
+
 		                     </p>
 
 							 <form method="post" th:action="@{/user/book-connecting}" id="bookingForm">

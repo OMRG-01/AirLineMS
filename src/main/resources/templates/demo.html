@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JetSet - Fly Better</title>
+	<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
+	
+	<link rel="stylesheet" th:href="@{/css/autosearch.css}">
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">           
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
     <style>
         :root {
             --jetset-primary: #721b47;
             --jetset-hover: #5a1538;
+            --primary-color: #721b47;
+            --text-dark: #333;
+            --text-light: #666;
+            --extra-light: #f0f0f0;
+            --white: #fff;
         }
 
         body {
@@ -41,6 +54,9 @@
             display: flex;
             align-items: center;
             height: 80px;
+			width: 150px;
+			height: 155px;
+			background-color: #bc1212;
         }
 
         .logo-container {
@@ -53,9 +69,9 @@
 
         .logo-container img {
             width: 150px;
-            height: 125px;
-            margin-top: -22px; /* Pulls logo up to align with top of header */
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            height: 135px;
+            margin-top: -42px;
+			margin-left: 0px;
         }
 
         .navbar-nav {
@@ -71,7 +87,7 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
-            height: 50px; /* Fixed height for nav items */
+            height: 50px;
             display: flex;
             align-items: center;
             margin: 0;
@@ -201,6 +217,95 @@
             color: var(--jetset-primary);
         }
 
+		.banner {
+		    position: relative;
+		    width: 100%;
+		    height: 80vh;
+		    background: url(assets/india-blue.jpg);
+		    background-size: cover;
+		    z-index: 1;
+			margin-top: -50px;
+		}
+
+        .section__container {
+            position: relative;
+            max-width: 1200px;
+            margin: auto;
+            padding: 1rem 1rem;
+        }
+
+        
+
+        /* Lounge Section */
+        .lounge__container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 80px;
+        }
+
+        .lounge__content .section__header {
+            position: relative;
+            text-align: center;
+            font-size: 3rem;
+            line-height: 4rem;
+            padding: 0px;
+            z-index: 1;
+        }
+
+        .lounge__grid {
+            margin-top: 6rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .lounge__image {
+            position: relative;
+        }
+
+        .lounge__image img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 20rem;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .lounge__image img:nth-child(1) {
+            max-width: 300px;
+            transform: translate(calc(-50% - 3rem), -50%);
+        }
+
+        .lounge__image img:nth-child(2) {
+            max-width: 200px;
+            transform: translate(calc(-50% + 6rem), calc(-50% + 7rem));
+        }
+
+        .lounge__details h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .lounge__details p {
+            color: var(--text-light);
+        }
+
+        .section__header {
+            position: relative;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: 3rem;
+            color: var(--text-light);
+            top: 70px;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar-utilities {
@@ -229,7 +334,435 @@
                 height: 100px;
                 margin-top: -15px;
             }
+
+            .booking__container {
+                margin-top: -80px;
+                padding: 1.5rem;
+                border-radius: 2rem;
+            }
+
+            .booking__container form {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .booking__nav span {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .banner {
+                height: 60vh;
+            }
         }
+
+        @media (max-width: 480px) {
+            .booking__container .form__group {
+                flex-direction: column;
+                gap: 0.5rem;
+                padding: 1rem;
+            }
+
+            .booking__container .form__group span {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+
+		.travellers__grid {
+		    margin-top: 7rem;
+		    margin-bottom: 7rem;
+		    display: grid;
+		    grid-template-columns: repeat(4, 1fr);
+		    gap: 2rem;
+		  }
+		  
+		  .travellers__card {
+		    border-radius: 5rem;
+		    overflow: hidden;
+		    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+		    transition: transform 0.3s,box-shadow 0.3s;
+		  }
+		  
+		  .travellers__card:hover {
+		    border-radius: 5rem;
+		    overflow: hidden;
+		    box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.2);
+		    transform:scale(1.02);
+		  }
+		  
+		  .travellers__card__content {
+		    position: relative;
+		    padding: 1rem;
+		    text-align: center;
+		  }
+		  
+		  .travellers__card__content img {
+		    position: relative;
+		    max-width: 70px;
+		    top: 0;
+		    left: 50%;
+		    transform: translate(-50%, -50%);
+		    border: 5px solid var(--extra-light);
+		    border-radius: 100%;
+		  }
+		  
+		  
+		  
+		  .travellers__card__content p {
+		    font-weight: 500;
+		    color: var(--text-light);
+		  }
+		  
+		  
+		  
+		  .footer {
+		    background-color: var(--primary-color);
+		    
+		  }
+		  
+		  .footer__container {
+		    display: grid;
+		    grid-template-columns: 2fr repeat(2, 1fr);
+		    gap: 5rem;
+		    padding: 18px 8px;
+		  }
+		  .footer__col{
+		    padding-top: 0;
+		  
+		  }
+		  
+		  .footer__col h3 {
+		    font-size: 1.5rem;
+		    font-weight: 500;
+		    color: var(--white);
+		    margin-bottom: 1rem;
+		  }
+		  
+		  .footer__col h4 {
+		    font-size: 1rem;
+		    font-weight: 500;
+		    color: var(--white);
+		    margin-bottom: 1rem;
+		  }
+		  
+		  .footer__col p {
+		    color: var(--extra-light);
+		    margin-bottom: 1rem;
+		   /* cursor: pointer;
+		    transition: 0.3s;*/
+		  }
+		  .footer__col p a {
+		    text-decoration: none;
+		    color: #fff;
+		  }
+		  
+		  .footer__col p:hover {
+		    color: var(--white);
+		  }
+		  
+		  .footer__bar {
+		    padding: 0.5rem;
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between;
+		    gap: 1rem;
+		    border-top: 1px solid var(--extra-light);
+		  }
+		  
+		  .footer__bar p {
+		    font-size: 0.9rem;
+		    color: var(--extra-light);
+		  }
+		  
+		  .socials {
+		    display: flex;
+		    align-items: center;
+		    gap: 1rem;
+		  }
+		  
+		  .socials span {
+		    font-size: 1.2rem;
+		    color: var(--extra-light);
+
+		  }
+		  .socials span a
+		  {
+		    text-decoration:none;
+		  }
+
+		  img {
+		      width: 100%;
+		      display: flex;
+		  }
+		  /* Flight Booking Form Styles */
+		
+
+		  .booking-form-container {
+		      max-width: 1000px;
+		      margin: 0 auto;
+		      background: white;
+		      border-radius: 20px;
+		      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+		      overflow: hidden;
+		      position: relative;
+			  z-index: 1000;
+			  background-color: #fff;
+			  margin-top: -250px;
+			  height: 35vh;
+		  }
+
+		  /* Tab Navigation */
+		  .booking-tabs {
+		      display: flex;
+		      background: linear-gradient(135deg, var(--jetset-primary) 0%, var(--jetset-hover) 100%);
+		  }
+
+		  .tab-btn {
+		      flex: 1;
+		      padding: 18px 25px;
+		      background: transparent;
+		      border: none;
+		      color: rgba(255, 255, 255, 0.7);
+		      font-weight: 600;
+		      font-size: 0.95rem;
+		      cursor: pointer;
+		      transition: all 0.3s ease;
+		      display: flex;
+		      align-items: center;
+		      justify-content: center;
+		      gap: 8px;
+		      text-transform: uppercase;
+		      letter-spacing: 0.5px;
+		  }
+
+		  .tab-btn:hover {
+		      background: rgba(255, 255, 255, 0.1);
+		      color: white;
+		  }
+
+		  .tab-btn.active {
+		      background: rgba(255, 255, 255, 0.15);
+		      color: white;
+		      box-shadow: inset 0 -3px 0 white;
+		  }
+
+		  .tab-btn i {
+		      font-size: 1.1rem;
+		  }
+
+		  /* Form Styles */
+		  .booking-form {
+		      display: none;
+		      padding: 35px 40px 40px;
+		      animation: fadeIn 0.5s ease-in-out;
+		  }
+
+		  .booking-form.active {
+		      display: block;
+		  }
+
+		  @keyframes fadeIn {
+		      from { opacity: 0; transform: translateY(10px); }
+		      to { opacity: 1; transform: translateY(0); }
+		  }
+
+		  .form-row {
+		      display: grid;
+		      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		      gap: 20px;
+		      align-items: end;
+		  }
+
+		  .form-group {
+		      display: flex;
+		      flex-direction: column;
+		  }
+
+		  .form-group label {
+		      font-weight: 600;
+		      color: var(--jetset-primary);
+		      margin-bottom: 8px;
+		      font-size: 0.9rem;
+		      text-transform: uppercase;
+		      letter-spacing: 0.5px;
+		  }
+
+		  .input-wrapper {
+		      position: relative;
+		      display: flex;
+		      align-items: center;
+		  }
+
+		  .input-wrapper i {
+		      position: absolute;
+		      left: 15px;
+		      color: var(--jetset-primary);
+		      font-size: 1rem;
+		      z-index: 2;
+		  }
+
+		  .form-select,
+		  .form-input {
+		      width: 100%;
+		      padding: 14px 15px 14px 45px;
+		      border: 2px solid #e1e5e9;
+		      border-radius: 12px;
+		      font-size: 0.95rem;
+		      background: white;
+		      transition: all 0.3s ease;
+		      color: #333;
+		      font-weight: 500;
+		  }
+
+		  .form-select:focus,
+		  .form-input:focus {
+		      outline: none;
+		      border-color: var(--jetset-primary);
+		      box-shadow: 0 0 0 3px rgba(114, 27, 71, 0.1);
+		      transform: translateY(-1px);
+		  }
+
+		  .form-select {
+		      cursor: pointer;
+		      appearance: none;
+		      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23721b47' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+		      background-position: right 12px center;
+		      background-repeat: no-repeat;
+		      background-size: 16px;
+		      padding-right: 40px;
+		  }
+
+		  /* Search Button Center Fix */
+		  .search-btn-group {
+		      display: flex;
+		      align-items: center;
+		      justify-content: center;
+		      grid-column: 1 / -1; /* Span across all columns */
+		      margin-top: 20px;
+		  }
+
+		  .search-btn {
+		      width: auto;
+		      min-width: 200px;
+		      max-width: 300px;
+		      padding: 16px 40px;
+		      background: linear-gradient(135deg, var(--jetset-primary) 0%, var(--jetset-hover) 100%);
+		      color: white;
+		      border: none;
+		      border-radius: 12px;
+		      font-weight: 700;
+		      font-size: 1rem;
+		      cursor: pointer;
+		      transition: all 0.3s ease;
+		      display: flex;
+		      align-items: center;
+		      justify-content: center;
+		      gap: 10px;
+		      text-transform: uppercase;
+		      letter-spacing: 0.5px;
+		      min-height: 54px;
+		  }
+
+		  .search-btn:hover {
+		      transform: translateY(-2px);
+		      box-shadow: 0 8px 25px rgba(114, 27, 71, 0.3);
+		  }
+
+		  .search-btn:active {
+		      transform: translateY(0);
+		  }
+
+		  .search-btn i {
+		      font-size: 1.1rem;
+		  }
+
+
+		  /* Responsive Design */
+		  @media (max-width: 768px) {
+		      .form-section {
+		          padding: 40px 0;
+		      }
+		      
+		      .booking-form-container {
+		          margin: 0 15px;
+		          border-radius: 15px;
+		      }
+		      
+		      .booking-form {
+		          padding: 25px 20px 30px;
+		      }
+		      
+		      .form-row {
+		          grid-template-columns: 1fr;
+		          gap: 20px;
+		      }
+		      
+		      .tab-btn {
+		          padding: 15px 20px;
+		          font-size: 0.9rem;
+		      }
+		      
+		      .booking-tabs {
+		          flex-direction: row;
+		      }
+		  }
+
+		  @media (max-width: 480px) {
+		      .form-row {
+		          gap: 18px;
+		      }
+		      
+		      .form-select,
+		      .form-input {
+		          padding: 12px 12px 12px 40px;
+		          font-size: 0.9rem;
+		      }
+		      
+		      .search-btn {
+		          padding: 14px 20px;
+		          font-size: 0.95rem;
+		          min-height: 50px;
+		      }
+		      
+		      .tab-btn {
+		          padding: 12px 15px;
+		          font-size: 0.85rem;
+		      }
+		  }
+
+		  /* Additional Professional Touches */
+		  .form-select option {
+		      padding: 10px;
+		      font-weight: 500;
+		  }
+
+		  .input-wrapper:hover .form-select,
+		  .input-wrapper:hover .form-input {
+		      border-color: rgba(114, 27, 71, 0.5);
+		  }
+
+		  /* Loading state for search button */
+		  .search-btn.loading {
+		      pointer-events: none;
+		      opacity: 0.8;
+		  }
+
+		  .search-btn.loading::after {
+		      content: '';
+		      width: 16px;
+		      height: 16px;
+		      border: 2px solid transparent;
+		      border-top: 2px solid white;
+		      border-radius: 50%;
+		      animation: spin 1s linear infinite;
+		      margin-left: 8px;
+		  }
+
+		  @keyframes spin {
+		      0% { transform: rotate(0deg); }
+		      100% { transform: rotate(360deg); }
+		  }
     </style>
 </head>
 <body>
@@ -238,11 +771,11 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container">
                 <!-- Brand Logo -->
-                <a href="#" class="navbar-brand" th:href="@{/}">
+                <div href="#" class="navbar-brand" th:href="@{/}">
                     <div class="logo-container">
-                        <img th:src="@{/demo/jetlogo.png}" alt="JetSetFly Logo">
+                        <img th:src="@{/demo/jetlogo2.png}" alt="JetSetFly Logo">
                     </div>
-                </a>
+                </div>
 
                 <!-- Toggle button for mobile -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -253,52 +786,27 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" th:href="@{/book}">BOOK</a>
+                            <a class="nav-link" href="#" th:href="@{/book}">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                MANAGE
+                        <li class="nav-item ">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                MY FLIGHTS
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" th:href="@{/manage/bookings}">My Bookings</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/manage/check-in}">Online Check-in</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/manage/flight-status}">Flight Status</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/manage/special-assistance}">Special Assistance</a></li>
-                            </ul>
+                            
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                EXPERIENCE
+                        <li class="nav-item ">
+                            <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown">
+                                ABOUT
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" th:href="@{/experience/cabin-classes}">Cabin Classes</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/experience/dining}">Dining</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/experience/entertainment}">Entertainment</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/experience/wifi}">WiFi & Connectivity</a></li>
-                            </ul>
+                          
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                WHERE WE FLY
+                        <li class="nav-item ">
+                            <a class="nav-link " href="#" role="button" data-bs-toggle="dropdown">
+                                FEEDBACK
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/route-map}">Route Map</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/popular}">Popular Destinations</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/destinations/new-routes}">New Routes</a></li>
-                            </ul>
+                           
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                LOYALTY
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/join}">Join Program</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/benefits}">Member Benefits</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/earn-miles}">Earn Miles</a></li>
-                                <li><a class="dropdown-item" href="#" th:href="@{/loyalty/redeem}">Redeem Miles</a></li>
-                            </ul>
-                        </li>
+                        
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 HELP
@@ -314,71 +822,574 @@
 
                     <!-- Right side utilities -->
                     <div class="navbar-utilities">
-                        <a href="#" class="utility-link" th:href="@{/language}">
-                            <i class="fas fa-globe"></i> EN
-                        </a>
-                        <a href="#" class="utility-link" th:href="@{/location}">
+                        
+                        <a href="#" class="utility-link" >
                             <i class="fas fa-map-marker-alt"></i> IN
                         </a>
+						<a href="#" class="utility-link" th:href="@{/language}">
+						                            <i class="fa-solid fa-arrow-right-to-bracket"></i> LOGIN
+						                        </a>
                         <a href="#" class="utility-link" th:href="@{/search}">
-                            <i class="fas fa-search"></i>
+                            <i class="fa-solid fa-user-plus"></i> SIGN UP
                         </a>
-                        <a href="#" class="utility-link" th:href="@{/profile}">
-                            <i class="fas fa-user"></i> 0m
-                        </a>
+                        
                     </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <h1 class="hero-title">FLY BETTER</h1>
-            <p class="hero-subtitle">Experience premium travel with JetSet Airlines</p>
-            <a href="#" class="cta-button" th:href="@{/book}">Book Your Flight</a>
-        </div>
+    <!-- Banner Section -->
+    <section class="banner">
+        <h2 class="section__header"></h2>
     </section>
 
-    <!-- Floating Icon -->
-    <div class="floating-icon" onclick="toggleChat()">
-        <!-- Replace this with your jetset.png image -->
-        <img src="jetset.png" alt="JetSet" th:src="@{/images/jetset.png}">
-    </div>
+    <!-- Enhanced Booking Container -->
+	<!-- FORMHERE Section - Add this where you want the form in your existing HTML -->
+	<section class="form-section">
+	    <div class="container">
+	        <div class="booking-form-container">
+	            <!-- Tab Navigation -->
+	            <div class="booking-tabs">
+	                <button class="tab-btn active" data-tab="one-way">
+	                    <i class="fas fa-plane"></i>
+	                    One Way
+	                </button>
+	                <button class="tab-btn" data-tab="round-trip">
+	                    <i class="fas fa-sync-alt"></i>
+	                    Round Trip
+	                </button>
+	            </div>
+
+	            <!-- One Way Form -->
+	            <form class="booking-form active" id="one-way">
+	                <div class="form-row">
+	                    <div class="form-group">
+	                        <label for="from1">From</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-plane-departure"></i>
+	                            <select id="from1" class="form-select" required>
+	                                <option value="">Select Source</option>
+	                                <option value="DEL">Delhi (DEL)</option>
+	                                <option value="BOM">Mumbai (BOM)</option>
+	                                <option value="BLR">Bangalore (BLR)</option>
+	                                <option value="MAA">Chennai (MAA)</option>
+	                                <option value="CCU">Kolkata (CCU)</option>
+	                                <option value="HYD">Hyderabad (HYD)</option>
+	                                <option value="AMD">Ahmedabad (AMD)</option>
+	                                <option value="PNQ">Pune (PNQ)</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group">
+	                        <label for="to1">To</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-plane-arrival"></i>
+	                            <select id="to1" class="form-select" required>
+	                                <option value="">Select Destination</option>
+	                                <option value="DEL">Delhi (DEL)</option>
+	                                <option value="BOM">Mumbai (BOM)</option>
+	                                <option value="BLR">Bangalore (BLR)</option>
+	                                <option value="MAA">Chennai (MAA)</option>
+	                                <option value="CCU">Kolkata (CCU)</option>
+	                                <option value="HYD">Hyderabad (HYD)</option>
+	                                <option value="AMD">Ahmedabad (AMD)</option>
+	                                <option value="PNQ">Pune (PNQ)</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group">
+	                        <label for="departure1">Departure</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-calendar-alt"></i>
+	                            <input type="date" id="departure1" class="form-input" required>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group">
+	                        <label for="passengers1">Passengers</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-users"></i>
+	                            <select id="passengers1" class="form-select" required>
+	                                <option value="">Select</option>
+	                                <option value="1">1 Passenger</option>
+	                                <option value="2">2 Passengers</option>
+	                                <option value="3">3 Passengers</option>
+	                                <option value="4">4 Passengers</option>
+	                                <option value="5">5 Passengers</option>
+	                                <option value="6">6+ Passengers</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group search-btn-group">
+	                        <button type="submit" class="search-btn">
+	                            <i class="fas fa-search"></i>
+	                            Search Flights
+	                        </button>
+	                    </div>
+	                </div>
+	            </form>
+
+	            <!-- Round Trip Form -->
+	            <form class="booking-form" id="round-trip">
+	                <div class="form-row">
+	                    <div class="form-group">
+	                        <label for="from2">From</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-plane-departure"></i>
+	                            <select id="from2" class="form-select" required>
+	                                <option value="">Select Source</option>
+	                                <option value="DEL">Delhi (DEL)</option>
+	                                <option value="BOM">Mumbai (BOM)</option>
+	                                <option value="BLR">Bangalore (BLR)</option>
+	                                <option value="MAA">Chennai (MAA)</option>
+	                                <option value="CCU">Kolkata (CCU)</option>
+	                                <option value="HYD">Hyderabad (HYD)</option>
+	                                <option value="AMD">Ahmedabad (AMD)</option>
+	                                <option value="PNQ">Pune (PNQ)</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group">
+	                        <label for="to2">To</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-plane-arrival"></i>
+	                            <select id="to2" class="form-select" required>
+	                                <option value="">Select Destination</option>
+	                                <option value="DEL">Delhi (DEL)</option>
+	                                <option value="BOM">Mumbai (BOM)</option>
+	                                <option value="BLR">Bangalore (BLR)</option>
+	                                <option value="MAA">Chennai (MAA)</option>
+	                                <option value="CCU">Kolkata (CCU)</option>
+	                                <option value="HYD">Hyderabad (HYD)</option>
+	                                <option value="AMD">Ahmedabad (AMD)</option>
+	                                <option value="PNQ">Pune (PNQ)</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group">
+	                        <label for="departure2">Departure</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-calendar-alt"></i>
+	                            <input type="date" id="departure2" class="form-input" required>
+	                        </div>
+	                    </div>
+
+	                    
+	                    <div class="form-group">
+	                        <label for="passengers2">Passengers</label>
+	                        <div class="input-wrapper">
+	                            <i class="fas fa-users"></i>
+	                            <select id="passengers2" class="form-select" required>
+	                                <option value="">Select</option>
+	                                <option value="1">1 Passenger</option>
+	                                <option value="2">2 Passengers</option>
+	                                <option value="3">3 Passengers</option>
+	                                <option value="4">4 Passengers</option>
+	                                <option value="5">5 Passengers</option>
+	                                <option value="6">6+ Passengers</option>
+	                            </select>
+	                        </div>
+	                    </div>
+
+	                    <div class="form-group search-btn-group">
+	                        <button type="submit" class="search-btn">
+	                            <i class="fas fa-search"></i>
+	                            Search Flights
+	                        </button>
+	                    </div>
+	                </div>
+	            </form>
+	        </div>
+	    </div>
+	</section>
+   
+	   <section class="section__container lounge__container">
+	       <div class="lounge__image">
+	         <img th:src="@{/assets/lounge-1.jpg}" alt="lounge" />
+	         <img th:src="@{/assets/lounge-2.jpg}" alt="lounge" />
+	       </div>
+	       <div class="lounge__content">
+	         <h2 class="section__header">Start Planning Your Next Trip</h2>
+	         <div class="lounge__grid">
+	           <div class="lounge__details">
+	             <h4>Experience Tranquility</h4>
+	             <p>
+	               Serenity Haven offers a tranquil escape, featuring comfortable
+	               seating, calming ambiance, and attentive service.
+	             </p>
+	           </div>
+	           <div class="lounge__details">
+	             <h4>Elevate Your Experience</h4>
+	             <p>
+	               Designed for discerning travelers, this exclusive lounge offers
+	               premium amenities, assistance, and private workspaces.
+	             </p>
+	           </div>
+	           <div class="lounge__details">
+	             <h4>A Welcoming Space</h4>
+	             <p>
+	               Creating a family-friendly atmosphere, The Family Zone is the
+	               perfect haven for parents and children.
+	             </p>
+	           </div>
+	           <div class="lounge__details">
+	             <h4>A Culinary Delight</h4>
+	             <p>
+	               Immerse yourself in a world of flavors, offering international
+	               cuisines, gourmet dishes, and carefully curated beverages.
+	             </p>
+	           </div>
+	         </div>
+	       </div>
+	     </section>
+
+
+	     <section class="section__container travellers__container">
+	       <h2 class="section__header">Explore New Places</h2>
+	       <div class="travellers__grid">
+	         <div class="travellers__card">
+	           <img th:src="@{/assets/traveller-1.jpg}" alt="traveller" />
+	           <div class="travellers__card__content">
+	             <p>Agra</p>
+	           </div>
+	         </div>
+	         <div class="travellers__card">
+	           <img th:src="@{/assets/traveller-2.jpg}" alt="traveller" />
+	           <div class="travellers__card__content">
+	             <p>Kolkata</p>
+	           </div>
+	         </div>
+	         <div class="travellers__card">
+	           <img th:src="@{/assets/traveller-3.jpg}" alt="traveller" />
+	           <div class="travellers__card__content">
+	             <p>Mumbai</p>
+	           </div>
+	         </div>
+	         <div class="travellers__card">
+	           <img th:src="@{/assets/traveller-4.jpg}" alt="traveller" />
+	           <div class="travellers__card__content">
+	             <p>Chennai</p>
+	           </div>
+	         </div>
+	       </div>
+	     </section>
+
+
+	     <footer class="footer">
+	       <div class="section__container footer__container">
+	         <div class="footer__col">
+	           <!-- video div -->
+	           <div id="video-container">
+	             <video id="myVideo" width="320" height="240" autoplay muted loop>
+	               <source th:src="@{/assets/final-video-clip-for-intro.mp4}" type="video/mp4">
+	               Your browser does not support the video tag.
+	             </video>
+	           </div>
+	         </div>
+	         <div class="footer__col">
+	           <h3>INFORMATION</h3>
+	           <p><a th:href="@{/}">Home</a></p>
+	           <p><a th:href="@{/aboutus}">About</a></p>
+	           <p><a th:href="@{/login1}">Feedback</a></p>
+	         </div>
+	         <div class="footer__col">
+	           <h3>CONTACT</h3>
+	           <p>jetsetfly2024@gmail.com</p>
+	           <br>
+	           <br>
+	           <br>
+	           <br>
+	           <div class="nav__logo"><img th:src="@{/assets/jetsetflylogoinwhite.png}"></div>
+	         </div>
+	       </div>
+	       <div class="section__container footer__bar">
+	         <div>
+	           <p>Copyright © 2024 Team GMADS. All rights reserved.</p>
+	         </div>
+	         <div class="socials">
+	           <span><a href="" class="text-muted" target="_blank"><i class="ri-facebook-fill"></i></a></span>
+	           <span><a href="" class="text-muted" target="_blank"><i class="ri-twitter-fill"></i></a></span>
+	           <span><a href="" class="text-muted" target="_blank"><i class="ri-instagram-line"></i></a></span>
+	           <span><a href="https://www.youtube.com/channel/UCNCWGkiAKDhwgCuGT02aXCg" class="text-muted" target="_blank"><i
+	                 class="ri-youtube-fill"></i></a></span>
+	         </div>
+	       </div>
+	     </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Floating icon functionality
-        function toggleChat() {
-            alert('JetSet Chat Support - Coming Soon!');
-            // You can replace this with actual chat functionality
-        }
+<script>
+	// Flight Booking Form JavaScript
+	document.addEventListener('DOMContentLoaded', function() {
+	    
+	    // Tab switching functionality
+	    const tabButtons = document.querySelectorAll('.tab-btn');
+	    const bookingForms = document.querySelectorAll('.booking-form');
+	    
+	    tabButtons.forEach(button => {
+	        button.addEventListener('click', function() {
+	            const targetTab = this.getAttribute('data-tab');
+	            
+	            // Remove active class from all tabs and forms
+	            tabButtons.forEach(btn => btn.classList.remove('active'));
+	            bookingForms.forEach(form => form.classList.remove('active'));
+	            
+	            // Add active class to clicked tab and corresponding form
+	            this.classList.add('active');
+	            document.getElementById(targetTab).classList.add('active');
+	        });
+	    });
+	    
+	    // Set minimum date to today for all date inputs
+	    const dateInputs = document.querySelectorAll('input[type="date"]');
+	    const today = new Date().toISOString().split('T')[0];
+	    
+	    dateInputs.forEach(input => {
+	        input.setAttribute('min', today);
+	    });
+	    
+	    // Handle return date minimum (should be after departure date)
+	    const departureInputs = document.querySelectorAll('#departure1, #departure2');
+	    const returnInput = document.querySelector('#return2');
+	    
+	    if (returnInput) {
+	        departureInputs.forEach(input => {
+	            input.addEventListener('change', function() {
+	                if (this.id === 'departure2') {
+	                    returnInput.setAttribute('min', this.value);
+	                    if (returnInput.value && returnInput.value < this.value) {
+	                        returnInput.value = '';
+	                    }
+	                }
+	            });
+	        });
+	    }
+	    
+	    // Form submission handling
+	    const forms = document.querySelectorAll('.booking-form');
+	    
+	    forms.forEach(form => {
+	        form.addEventListener('submit', function(e) {
+	            e.preventDefault();
+	            
+	            const submitBtn = this.querySelector('.search-btn');
+	            const formData = new FormData(this);
+	            
+	            // Get form values
+	            const formValues = {};
+	            const inputs = this.querySelectorAll('select, input');
+	            
+	            inputs.forEach(input => {
+	                if (input.value) {
+	                    formValues[input.id] = input.value;
+	                }
+	            });
+	            
+	            // Basic validation
+	            if (!validateForm(formValues, this.id)) {
+	                return;
+	            }
+	            
+	            // Add loading state
+	            submitBtn.classList.add('loading');
+	            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+	            
+	            // Simulate API call (replace with actual implementation)
+	            setTimeout(() => {
+	                console.log('Form submitted:', formValues);
+	                alert('Flight search initiated! (This is a demo)');
+	                
+	                // Remove loading state
+	                submitBtn.classList.remove('loading');
+	                submitBtn.innerHTML = '<i class="fas fa-search"></i> Search Flights';
+	                
+	                // Here you would typically redirect to results page or show results
+	                // window.location.href = '/search-results?' + new URLSearchParams(formValues);
+	            }, 2000);
+	        });
+	    });
+	    
+	    // Form validation function
+	    function validateForm(values, formId) {
+	        const requiredFields = ['from', 'to', 'departure', 'passengers'];
+	        
+	        // Add return date validation for round trip
+	        if (formId === 'round-trip') {
+	            requiredFields.push('return');
+	        }
+	        
+	        for (let field of requiredFields) {
+	            const fieldKey = Object.keys(values).find(key => key.includes(field));
+	            if (!fieldKey || !values[fieldKey]) {
+	                showError(`Please select ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+	                return false;
+	            }
+	        }
+	        
+	        // Check if source and destination are different
+	        const fromKey = Object.keys(values).find(key => key.includes('from'));
+	        const toKey = Object.keys(values).find(key => key.includes('to'));
+	        
+	        if (values[fromKey] === values[toKey]) {
+	            showError('Source and destination cannot be the same');
+	            return false;
+	        }
+	        
+	        // Check if departure date is not in the past
+	        const departureKey = Object.keys(values).find(key => key.includes('departure'));
+	        const selectedDate = new Date(values[departureKey]);
+	        const today = new Date();
+	        today.setHours(0, 0, 0, 0);
+	        
+	        if (selectedDate < today) {
+	            showError('Departure date cannot be in the past');
+	            return false;
+	        }
+	        
+	        // For round trip, check if return date is after departure date
+	        if (formId === 'round-trip') {
+	            const returnKey = Object.keys(values).find(key => key.includes('return'));
+	            const returnDate = new Date(values[returnKey]);
+	            
+	            if (returnDate <= selectedDate) {
+	                showError('Return date must be after departure date');
+	                return false;
+	            }
+	        }
+	        
+	        return true;
+	    }
+	    
+	    // Error message display
+	    function showError(message) {
+	        // Remove existing error messages
+	        const existingError = document.querySelector('.error-message');
+	        if (existingError) {
+	            existingError.remove();
+	        }
+	        
+	        // Create and show new error message
+	        const errorDiv = document.createElement('div');
+	        errorDiv.className = 'error-message';
+	        errorDiv.style.cssText = `
+	            background: #ff4757;
+	            color: white;
+	            padding: 12px 20px;
+	            border-radius: 8px;
+	            margin: 15px 0;
+	            font-weight: 500;
+	            text-align: center;
+	            animation: slideDown 0.3s ease;
+	        `;
+	        errorDiv.textContent = message;
+	        
+	        const activeForm = document.querySelector('.booking-form.active');
+	        activeForm.insertBefore(errorDiv, activeForm.firstChild);
+	        
+	        // Remove error message after 5 seconds
+	        setTimeout(() => {
+	            if (errorDiv.parentNode) {
+	                errorDiv.remove();
+	            }
+	        }, 5000);
+	    }
+	    
+	    // Add slideDown animation
+	    const style = document.createElement('style');
+	    style.textContent = `
+	        @keyframes slideDown {
+	            from {
+	                opacity: 0;
+	                transform: translateY(-10px);
+	            }
+	            to {
+	                opacity: 1;
+	                transform: translateY(0);
+	            }
+	        }
+	    `;
+	    document.head.appendChild(style);
+	    
+	    // Enhanced user experience features
+	    
+	    // Auto-focus next field after selection
+	    const selects = document.querySelectorAll('.form-select');
+	    selects.forEach((select, index) => {
+	        select.addEventListener('change', function() {
+	            const nextSelect = selects[index + 1];
+	            if (nextSelect && this.closest('.booking-form').classList.contains('active')) {
+	                setTimeout(() => nextSelect.focus(), 100);
+	            }
+	        });
+	    });
+	    
+	    // Swap source and destination functionality (optional)
+	    function addSwapFunctionality() {
+	        const swapBtns = document.querySelectorAll('.swap-btn');
+	        swapBtns.forEach(btn => {
+	            btn.addEventListener('click', function() {
+	                const form = this.closest('.booking-form');
+	                const fromSelect = form.querySelector('[id*="from"]');
+	                const toSelect = form.querySelector('[id*="to"]');
+	                
+	                const tempValue = fromSelect.value;
+	                fromSelect.value = toSelect.value;
+	                toSelect.value = tempValue;
+	            });
+	        });
+	    }
+	    
+	    // Initialize additional features
+	    addSwapFunctionality();
+	    
+	    // Smooth scrolling to form after page load
+	    setTimeout(() => {
+	        const formSection = document.querySelector('.form-section');
+	        if (formSection && window.location.hash === '#booking') {
+	            formSection.scrollIntoView({ behavior: 'smooth' });
+	        }
+	    }, 500);
+	});
 
-        // Add smooth scrolling effect
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.header');
-            if (window.scrollY > 50) {
-                header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
-            } else {
-                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            }
-        });
-    </script>
+	// Export functions for external use (if needed)
+	window.FlightBookingForm = {
+	    switchTab: function(tabName) {
+	        const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+	        if (tabBtn) {
+	            tabBtn.click();
+	        }
+	    },
+	    
+	    setFormValues: function(values) {
+	        Object.keys(values).forEach(key => {
+	            const input = document.getElementById(key);
+	            if (input) {
+	                input.value = values[key];
+	            }
+	        });
+	    },
+	    
+	    getFormValues: function(formId) {
+	        const form = document.getElementById(formId);
+	        const values = {};
+	        const inputs = form.querySelectorAll('select, input');
+	        
+	        inputs.forEach(input => {
+	            if (input.value) {
+	                values[input.id] = input.value;
+	            }
+	        });
+	        
+	        return values;
+	    }
+	};
+</script>
+   
 </body>
 </html>
