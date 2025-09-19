@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jetset.fly.dto.*;
 import com.jetset.fly.model.*;
@@ -75,29 +76,37 @@ public class ConnectedFlightBookingController {
 
 
     @GetMapping("/gateway2")
-    public String showPaymentPage(HttpSession session, Model model) {
+    public String showPaymentPage(HttpSession session, Model model, 
+                                  @ModelAttribute("successMessage") String successMessage) {
         List<ConnectedBookingDTO> bookings = (List<ConnectedBookingDTO>) session.getAttribute("connectedBookings");
         List<PassengerDTO> passengers = (List<PassengerDTO>) session.getAttribute("tempPassengers");
 
         if (bookings == null || passengers == null) {
-            // Handle error or redirect somewhere safe
             return "redirect:/user/passangerDetailForm";
         }
 
         model.addAttribute("bookings", bookings);
         model.addAttribute("passengers", passengers);
 
+        // Success message will automatically come from flash attributes (if present)
+        if (successMessage != null && !successMessage.isEmpty()) {
+            model.addAttribute("successMessage", successMessage);
+        }
+
         return "user/gateway2";
     }
 
 
     @PostMapping("/confirm-payment")
-    public String confirmPayment(HttpSession session) {
-        List<ConnectedBookingDTO> connectedBookings = (List<ConnectedBookingDTO>) session.getAttribute("connectedBookings");
-        List<PassengerDTO> tempPassengers = (List<PassengerDTO>) session.getAttribute("tempPassengers");
+    public String confirmPayment(HttpSession session, Model model) {
+        List<ConnectedBookingDTO> connectedBookings = 
+            (List<ConnectedBookingDTO>) session.getAttribute("connectedBookings");
+        List<PassengerDTO> tempPassengers = 
+            (List<PassengerDTO>) session.getAttribute("tempPassengers");
 
         if (connectedBookings == null || tempPassengers == null) {
-            return "redirect:/user/passangerDetailForm";
+            model.addAttribute("errorMessage", "Session expired. Please re-enter passenger details.");
+            return "user/gateway2"; // stay on same page with error
         }
 
         bookingService.confirmBooking(connectedBookings, tempPassengers);
@@ -106,6 +115,11 @@ public class ConnectedFlightBookingController {
         session.removeAttribute("connectedBookings");
         session.removeAttribute("tempPassengers");
 
-        return "user/paymentSuccess";
+        // Add success message
+        model.addAttribute("successMessage", "Payment successful! Redirecting to your bookings...");
+
+        return "user/gateway2"; // stay on same page with success
     }
+
+
 }

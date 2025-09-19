@@ -2,52 +2,748 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Payment Gateway</title>
+
+	<link rel="icon" type="image/png" th:href="@{/img/fg.png}">
+	    <link rel="stylesheet" th:href="@{/css/home.css}">
+	    <link rel="stylesheet" th:href="@{/css/autosearch.css}">
+	    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+	    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+	<style>
+		:root {
+		        --primary-color: #721b47;
+		        --text-dark: #333;
+		        --light-bg: #f8f9fa;
+		        --border-color: #e0e6ed;
+		        --success-color: #28a745;
+		        --shadow-light: 0 2px 10px rgba(0,0,0,0.08);
+		        --shadow-medium: 0 4px 20px rgba(0,0,0,0.12);
+		        --border-radius: 12px;
+		        --warning-color: #ffc107;
+		        --info-color: #17a2b8;
+		        }
+			 body {
+			            font-family: 'Poppins', sans-serif;
+			            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+			            margin: 0;
+			            padding: 0;
+			            min-height: 100vh;
+			        }
+		        /* Header Styles - Preserved exactly as original */
+		        header {
+		        position: fixed;
+		        top: 0;
+		        left: 0;
+			
+		        width: 100%;
+		        display: flex;
+		        justify-content: space-between;
+		        align-items: center;
+		        transition: 0.6s;
+		        padding: 10px 20px 0 30px;
+		        z-index: 10000;
+		        background: rgba(255, 255, 255, 0.95);
+		        backdrop-filter: blur(10px);
+		        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+		        }
+		        header .logo {
+		        font-weight: 700;
+		        text-decoration: none;
+		        font-size: 1.5rem;
+		        text-transform: uppercase;
+		        letter-spacing: 2px;
+		        transition: 0.6s;
+		        }
+		        header ul {
+		        display: flex;
+		        justify-content: center;
+		        align-items: center;
+		        }
+		        header ul li {
+		        margin-right: 15px;
+		        list-style: none;
+		        }
+		        header ul li:last-child {
+		        margin-right: 0;
+		        }
+		        header ul li a {
+		        margin: 0 15px;
+		        text-decoration: none;
+		        color: var(--primary-color);
+		        letter-spacing: 2px;
+		        font-weight: 700;
+		        transition: 0.6s;
+		        }
+		        .nav__logo img {
+		        height: 50px;
+		        width: 150px;
+		        margin-right: 10px;
+		        }
+		        .nav__links {
+		        list-style: none;
+		        display: flex;
+		        align-items: center;
+		        gap: 2rem;
+		        }
+		        .nav__links li {
+		        list-style: none;
+		        display: inline-block;
+		        padding: 8px 12px;
+		        position: relative;
+		        font-family: 'Poppins', sans-serif;
+		        }
+		        .nav__links li a {
+		        color: var(--text-dark);
+		        text-decoration: none;
+		        font-weight: 700;
+		        font-family: 'Poppins', sans-serif;
+		        }
+		        .nav__links li::after {
+		        content: '';
+		        width: 0%;
+		        height: 2px;
+		        background: var(--primary-color);
+		        display: block;
+		        margin: auto;
+		        transition: 0.5s;
+		        }
+		        .nav__links li:hover::after {
+		        width: 80%;
+		        }
+		        .btn {
+		        background: var(--primary-color);
+		        color: white;
+		        border: none;
+		        padding: 10px 20px;
+		        border-radius: 25px;
+		        font-weight: 600;
+		        transition: all 0.3s ease;
+		        }
+		        .btn:hover {
+		        background: #8b2557;
+		        transform: translateY(-2px);
+		        box-shadow: 0 5px 15px rgba(114, 27, 71, 0.3);
+		        }
+
+		        /* Main Content Styles */
+		        .main-container {
+		            margin-top: 100px;
+		            padding: 20px;
+		            max-width: 1200px;
+		            margin-left: auto;
+		            margin-right: auto;
+		        }
+
+		        .page-title {
+		            text-align: center;
+		            color: var(--text-dark);
+		            font-size: 2.5rem;
+		            font-weight: 700;
+		            margin-bottom: 10px;
+		            background: linear-gradient(135deg, var(--primary-color), #8b2557);
+		            -webkit-background-clip: text;
+		            -webkit-text-fill-color: transparent;
+		            background-clip: text;
+		        }
+
+		        .page-subtitle {
+		            text-align: center;
+		            color: #666;
+		            font-size: 1.1rem;
+		            margin-bottom: 40px;
+		            font-weight: 400;
+		        }
+
+		        /* Progress Steps */
+		        .progress-steps {
+		            display: flex;
+		            justify-content: center;
+		            align-items: center;
+		            gap: 20px;
+		            margin-bottom: 40px;
+		            padding: 20px;
+		            background: white;
+		            border-radius: var(--border-radius);
+		            box-shadow: var(--shadow-light);
+		        }
+
+		        .step {
+		            display: flex;
+		            align-items: center;
+		            gap: 10px;
+		            padding: 10px 20px;
+		            border-radius: 25px;
+		            font-weight: 600;
+		            font-size: 0.9rem;
+		        }
+
+		        .step.completed {
+		            background: var(--success-color);
+		            color: white;
+		        }
+
+		        .step.active {
+		            background: var(--primary-color);
+		            color: white;
+		        }
+
+		        .step.pending {
+		            background: var(--light-bg);
+		            color: #666;
+		        }
+
+		        /* Payment Layout */
+		        .payment-layout {
+		            display: grid;
+		            grid-template-columns: 2fr 1fr;
+		            gap: 30px;
+		            margin-bottom: 30px;
+		        }
+
+		        .summary-section {
+		            display: flex;
+		            flex-direction: column;
+		            gap: 25px;
+		        }
+
+		        .summary-card {
+		            background: white;
+		            border-radius: var(--border-radius);
+		            box-shadow: var(--shadow-light);
+		            overflow: hidden;
+		            transition: all 0.3s ease;
+		        }
+
+		        .summary-card:hover {
+		            box-shadow: var(--shadow-medium);
+		            transform: translateY(-2px);
+		        }
+
+		        .card-header {
+		            background: linear-gradient(135deg, var(--primary-color), #8b2557);
+		            color: white;
+		            padding: 20px;
+		            font-size: 1.2rem;
+		            font-weight: 600;
+		            display: flex;
+		            align-items: center;
+		            gap: 12px;
+		        }
+
+		        .card-content {
+		            padding: 25px;
+		        }
+
+		        /* Modern Table Styles */
+		        .modern-table {
+		            width: 100%;
+		            border-collapse: collapse;
+		            background: white;
+		            border-radius: var(--border-radius);
+		            overflow: hidden;
+		            box-shadow: var(--shadow-light);
+		        }
+
+		        .modern-table th {
+		            background: var(--light-bg);
+		            color: var(--text-dark);
+		            font-weight: 600;
+		            padding: 15px;
+		            text-align: left;
+		            border-bottom: 2px solid var(--border-color);
+		            font-size: 0.9rem;
+		            text-transform: uppercase;
+		            letter-spacing: 0.5px;
+		        }
+
+		        .modern-table td {
+		            padding: 15px;
+		            border-bottom: 1px solid var(--border-color);
+		            color: var(--text-dark);
+		            font-weight: 500;
+		        }
+
+		        .modern-table tbody tr {
+		            transition: all 0.2s ease;
+		        }
+
+		        .modern-table tbody tr:hover {
+		            background: rgba(114, 27, 71, 0.05);
+		        }
+
+		        .modern-table tbody tr:last-child td {
+		            border-bottom: none;
+		        }
+
+		        /* Price Summary Sidebar */
+		        .price-summary {
+		            background: white;
+		            border-radius: var(--border-radius);
+		            box-shadow: var(--shadow-light);
+		            padding: 25px;
+		            height: fit-content;
+		            position: sticky;
+		            top: 120px;
+		        }
+
+		        .price-header {
+		            background: linear-gradient(135deg, var(--primary-color), #8b2557);
+		            color: white;
+		            padding: 20px;
+		            margin: -25px -25px 20px -25px;
+		            border-radius: var(--border-radius) var(--border-radius) 0 0;
+		            text-align: center;
+		            font-size: 1.3rem;
+		            font-weight: 600;
+		        }
+
+		        .price-item {
+		            display: flex;
+		            justify-content: space-between;
+		            align-items: center;
+		            padding: 12px 0;
+		            border-bottom: 1px solid var(--border-color);
+		            font-weight: 500;
+		        }
+
+		        .price-item:last-child {
+		            border-bottom: none;
+		            margin-top: 15px;
+		            padding-top: 20px;
+		            border-top: 2px solid var(--primary-color);
+		            font-size: 1.2rem;
+		            font-weight: 700;
+		            color: var(--primary-color);
+		        }
+
+		        .price-label {
+		            color: #666;
+		        }
+
+		        .price-value {
+		            color: var(--text-dark);
+		            font-weight: 600;
+		        }
+
+		        .total-price {
+		            color: var(--primary-color) !important;
+		            font-size: 1.4rem !important;
+		        }
+
+		        /* Payment Button */
+		        .payment-section {
+		            margin-top: 25px;
+		        }
+
+		        .pay-btn {
+		            width: 100%;
+		            background: linear-gradient(135deg, var(--success-color), #20c997);
+		            color: white;
+		            border: none;
+		            padding: 18px;
+		            border-radius: 12px;
+		            font-size: 1.2rem;
+		            font-weight: 600;
+		            cursor: pointer;
+		            transition: all 0.3s ease;
+		            display: flex;
+		            align-items: center;
+		            justify-content: center;
+		            gap: 12px;
+		            text-transform: uppercase;
+		            letter-spacing: 1px;
+		            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+		        }
+
+		        .pay-btn:hover {
+		            transform: translateY(-3px);
+		            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+		            background: linear-gradient(135deg, #20c997, #28a745);
+		        }
+
+		        .pay-btn:active {
+		            transform: translateY(-1px);
+		        }
+
+		        /* Security Badge */
+		        .security-info {
+		            margin-top: 20px;
+		            padding: 15px;
+		            background: rgba(23, 162, 184, 0.1);
+		            border-radius: 8px;
+		            border-left: 4px solid var(--info-color);
+		            font-size: 0.9rem;
+		            color: #666;
+		            text-align: center;
+		        }
+
+		        .security-info i {
+		            color: var(--info-color);
+		            margin-right: 8px;
+		        }
+
+		        /* Data Labels */
+		        .data-label {
+		            display: inline-flex;
+		            align-items: center;
+		            gap: 6px;
+		            font-size: 0.85rem;
+		            font-weight: 600;
+		            color: var(--primary-color);
+		            background: rgba(114, 27, 71, 0.1);
+		            padding: 4px 8px;
+		            border-radius: 4px;
+		        }
+
+		        /* Responsive Design */
+		        @media (max-width: 992px) {
+		            .payment-layout {
+		                grid-template-columns: 1fr;
+		                gap: 25px;
+		            }
+
+		            .price-summary {
+		                position: static;
+		                order: -1;
+		            }
+		        }
+
+		        @media (max-width: 768px) {
+		            .main-container {
+		                padding: 15px;
+		                margin-top: 80px;
+		            }
+
+		            .page-title {
+		                font-size: 2rem;
+		            }
+
+		            .modern-table {
+		                font-size: 0.85rem;
+		            }
+
+		            .modern-table th,
+		            .modern-table td {
+		                padding: 10px 8px;
+		            }
+
+		            .progress-steps {
+		                flex-wrap: wrap;
+		                gap: 10px;
+		            }
+
+		            .step {
+		                padding: 8px 16px;
+		                font-size: 0.8rem;
+		            }
+
+		            header {
+		                padding: 10px 15px 0 20px;
+		            }
+
+		            .nav__links {
+		                gap: 1rem;
+		            }
+
+		            .nav__links li a {
+		                margin: 0 8px;
+		                font-size: 0.9rem;
+		            }
+		        }
+
+		        @media (max-width: 480px) {
+		            .modern-table {
+		                display: block;
+		                overflow-x: auto;
+		                white-space: nowrap;
+		            }
+
+		            .price-summary {
+		                padding: 20px;
+		            }
+
+		            .nav__logo img {
+		                height: 40px;
+		                width: 120px;
+		            }
+		        }
+
+		        /* Loading Animation */
+		        @keyframes pulse {
+		            0% { opacity: 1; }
+		            50% { opacity: 0.7; }
+		            100% { opacity: 1; }
+		        }
+
+		        .loading {
+		            animation: pulse 1.5s infinite;
+		        }
+
+		        /* Flight Info Highlights */
+		        .flight-highlight {
+		            background: linear-gradient(45deg, rgba(114, 27, 71, 0.1), rgba(139, 37, 87, 0.05));
+		            padding: 3px 8px;
+		            border-radius: 6px;
+		            font-weight: 600;
+		            color: var(--primary-color);
+		        }
+
+		        /* Passenger Badge */
+		        .passenger-badge {
+		            display: inline-flex;
+		            align-items: center;
+		            gap: 6px;
+		            background: rgba(40, 167, 69, 0.1);
+		            color: var(--success-color);
+		            padding: 4px 10px;
+		            border-radius: 15px;
+		            font-size: 0.85rem;
+		            font-weight: 600;
+		        }
+
+		        /* Mobile Number Format */
+		        .mobile-format {
+		            font-family: 'Courier New', monospace;
+		            background: var(--light-bg);
+		            padding: 2px 6px;
+		            border-radius: 4px;
+		            font-size: 0.9rem;
+		        }
+	</style>
+   
 </head>
 <body>
-    <h2>Payment Gateway</h2>
+	<!-- Header - Preserved exactly as original -->
+	<header>
+	   <div class="nav__logo"><img th:src="@{/assets/jetsetflylogo.png}" alt="JetSetFly Logo"></div>
+	   <ul class="nav__links">
+	      <li class="link"><a th:href="@{/user/userDash}">HOME</a></li>
+	      <li class="link"><a th:href="@{/user/bookings}">MY FLIGHTS</a></li>
+	      <li class="link"><a th:href="@{/user/review}">REVIEW</a></li>
+	      <li class="link"><a th:href="@{/user/profileEdit}">Profile</a></li>
+	   </ul>
+	   <a th:href="@{/user/logout}"><button class="btn">Login &nbsp;<i class="fa fa-sign-in" style="font-size:15px"></i></button></a>
+	</header>
 
-    <h3>Booking Summary</h3>
-	<table border="1">
-	    <thead>
-	        <tr>
-	            <th>Flight Class ID</th>
-	            <th>Schedule Flight ID</th>
-	            <th>Rate</th>
-	            <th>No of Passengers</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <tr th:each="booking : ${bookings}">
-	            <td th:text="${booking.flightClassId}">Flight Class</td>
-	            <td th:text="${booking.scheduleFlightId}">Schedule Flight</td>
-	            <td th:text="${booking.rate}">Rate</td>
-	            <td th:text="${booking.noOfPassengers}">Passengers</td>
-	        </tr>
-	    </tbody>
-	</table>
+	<div class="main-container">
+		
+	    <h1 class="page-title">Payment Gateway</h1>
+	    <p class="page-subtitle">Review your booking details and complete your payment</p>
+		
+		<div th:if="${successMessage}" class="alert alert-success text-center">
+		    <p th:text="${successMessage}"></p>
+		</div>
 
-    <h3>Passengers</h3>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Mobile No</th>
-                <th>Date of Birth</th>
-                <th>Gender</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="p : ${passengers}">
-                <td th:text="${p.pname}">Name</td>
-                <td th:text="${p.mobileNo}">Mobile</td>
-                <td th:text="${p.dob}">DOB</td>
-                <td th:text="${p.gender}">Gender</td>
-            </tr>
-        </tbody>
-    </table>
+		<!-- Error Message -->
+		<div th:if="${errorMessage}" class="alert alert-danger text-center">
+		    <p th:text="${errorMessage}"></p>
+		</div>
+	    <!-- Progress Steps -->
+	    <div class="progress-steps">
+	        <div class="step completed">
+	            <i class="fas fa-search"></i>
+	            <span>Search Flights</span>
+	        </div>
+	        <div class="step completed">
+	            <i class="fas fa-plane"></i>
+	            <span>Select Flight</span>
+	        </div>
+	        <div class="step completed">
+	            <i class="fas fa-users"></i>
+	            <span>Passenger Details</span>
+	        </div>
+	        <div class="step active">
+	            <i class="fas fa-credit-card"></i>
+	            <span>Payment</span>
+	        </div>
+	    </div>
 
-    <form method="post" th:action="@{/user/confirm-payment}">
-        <button type="submit">Pay Now</button>
-    </form>
+	    <div class="payment-layout">
+	        <!-- Left Section - Booking Details -->
+	        <div class="summary-section">
+	            <!-- Booking Summary Card -->
+	            <div class="summary-card">
+	                <div class="card-header">
+	                    <i class="fas fa-plane-departure"></i>
+	                    Flight Booking Summary
+	                </div>
+	                <div class="card-content">
+	                    <table class="modern-table">
+	                        <thead>
+	                            <tr>
+	                                <th><i class="fas fa-tag"></i> Flight Class</th>
+	                                <th><i class="fas fa-calendar"></i> Schedule ID</th>
+	                                <th><i class="fas fa-rupee-sign"></i> Rate per Person</th>
+	                                <th><i class="fas fa-users"></i> Passengers</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                            <tr th:each="booking : ${bookings}">
+	                                <td>
+	                                    <span class="flight-highlight" th:text="${booking.flightClassId}">Flight Class</span>
+	                                </td>
+	                                <td>
+	                                    <span class="data-label">
+	                                        <i class="fas fa-barcode"></i>
+	                                        <span th:text="${booking.scheduleFlightId}">Schedule Flight</span>
+	                                    </span>
+	                                </td>
+	                                <td>
+	                                    <strong>₹<span th:text="${booking.rate}">Rate</span></strong>
+	                                </td>
+	                                <td>
+	                                    <span class="passenger-badge">
+	                                        <i class="fas fa-user"></i>
+	                                        <span th:text="${booking.noOfPassengers}">Passengers</span>
+	                                    </span>
+	                                </td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+
+	            <!-- Passengers Details Card -->
+	            <div class="summary-card">
+	                <div class="card-header">
+	                    <i class="fas fa-users"></i>
+	                    Passenger Information
+	                </div>
+	                <div class="card-content">
+	                    <table class="modern-table">
+	                        <thead>
+	                            <tr>
+	                                <th><i class="fas fa-user"></i> Full Name</th>
+	                                <th><i class="fas fa-phone"></i> Mobile Number</th>
+	                                <th><i class="fas fa-birthday-cake"></i> Date of Birth</th>
+	                                <th><i class="fas fa-venus-mars"></i> Gender</th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                            <tr th:each="p : ${passengers}">
+	                                <td>
+	                                    <strong th:text="${p.pname}">Name</strong>
+	                                </td>
+	                                <td>
+	                                    <span class="mobile-format" th:text="${p.mobileNo}">Mobile</span>
+	                                </td>
+	                                <td th:text="${p.dob}">DOB</td>
+	                                <td>
+	                                    <span class="data-label">
+	                                        <i class="fas fa-venus-mars"></i>
+	                                        <span th:text="${p.gender}">Gender</span>
+	                                    </span>
+	                                </td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	            </div>
+	        </div>
+
+	        <!-- Right Section - Price Summary -->
+	        <div class="price-summary">
+	            <div class="price-header">
+	                <i class="fas fa-calculator"></i>
+	                Price Breakdown
+	            </div>
+
+	            <div class="price-item">
+	                <span class="price-label">Base Fare</span>
+	                <span class="price-value">₹<span id="baseFare">0</span></span>
+	            </div>
+
+	            <div class="price-item">
+	                <span class="price-label">Taxes & Fees</span>
+	                <span class="price-value">₹<span id="taxes">0</span></span>
+	            </div>
+
+	            <div class="price-item">
+	                <span class="price-label">Service Charges</span>
+	                <span class="price-value">₹<span id="serviceCharges">199</span></span>
+	            </div>
+
+	            <div class="price-item">
+	                <span class="price-label">Total Amount</span>
+	                <span class="price-value total-price">₹<span id="totalAmount">0</span></span>
+	            </div>
+
+	            <div class="payment-section">
+	                <form method="post" th:action="@{/user/confirm-payment}">
+	                    <button type="submit" class="pay-btn">
+	                        <i class="fas fa-lock"></i>
+	                        Pay Securely Now
+	                        <i class="fas fa-arrow-right"></i>
+	                    </button>
+	                </form>
+
+	                <div class="security-info">
+	                    <i class="fas fa-shield-alt"></i>
+	                    Your payment is secured with 256-bit SSL encryption
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<script>
+	    // Calculate and display price breakdown
+	    document.addEventListener('DOMContentLoaded', function() {
+	        calculatePrices();
+	    });
+
+	    function calculatePrices() {
+	        let totalBaseFare = 0;
+	        
+	        // Calculate base fare from booking data
+	        const bookingRows = document.querySelectorAll('tbody tr');
+	        bookingRows.forEach(row => {
+	            const cells = row.querySelectorAll('td');
+	            if (cells.length >= 4) {
+	                const rate = parseFloat(cells[2].textContent.replace('₹', '')) || 0;
+	                const passengers = parseInt(cells[3].textContent) || 0;
+	                totalBaseFare += rate * passengers;
+	            }
+	        });
+
+	        const taxes = Math.round(totalBaseFare * 0.18); // 18% tax
+	        const serviceCharges = 199;
+	        const totalAmount = totalBaseFare + taxes + serviceCharges;
+
+	        // Update display
+	        document.getElementById('baseFare').textContent = totalBaseFare.toLocaleString();
+	        document.getElementById('taxes').textContent = taxes.toLocaleString();
+	        document.getElementById('totalAmount').textContent = totalAmount.toLocaleString();
+	    }
+
+	    // Enhanced form submission with loading state
+	    document.querySelector('form').addEventListener('submit', function(e) {
+	        const payBtn = document.querySelector('.pay-btn');
+	        const originalHTML = payBtn.innerHTML;
+	        
+	        payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+	        payBtn.disabled = true;
+	        payBtn.classList.add('loading');
+
+	        // If there's an error, restore the button (this would be handled by your backend)
+	        setTimeout(() => {
+	            if (payBtn.disabled) {
+	                payBtn.innerHTML = originalHTML;
+	                payBtn.disabled = false;
+	                payBtn.classList.remove('loading');
+	            }
+	        }, 10000); // 10 second timeout
+	    });
+		
+	</script>
+	<!-- Auto Redirect -->
+	<script th:if="${successMessage}">
+	    setTimeout(function() {
+	        window.location.href = '/user/bookings';
+	    }, 3000); // 3 seconds delay
+	</script>
 </body>
 </html>

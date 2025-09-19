@@ -7,7 +7,7 @@ public class PassengerDTO {
     private String mobileNo;
     private LocalDate dob;
     private String gender;
-
+    private Long om;
     // Default Constructor
     public PassengerDTO() {
     }
