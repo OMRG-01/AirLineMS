@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - echo "Cleaning and building with Maven..."
+      - mvn clean package -DskipTests
+  build:
+    commands:
+      - echo "Build completed on `date`"
+  post_build:
+    commands:
+      - echo "Packaging completed successfully"
+
+artifacts:
+  files:
+    - target/fly-0.0.1.jar
+  discard-path: yes
