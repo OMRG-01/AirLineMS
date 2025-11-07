@@ -7,7 +7,7 @@ phases:
   pre_build:
     commands:
       - echo "Cleaning and building with Maven..."
-      - mvn clean package -DskipTests
+      - mvn clean package
   build:
     commands:
       - echo "Build completed on `date`"
@@ -17,5 +17,5 @@ phases:
 
 artifacts:
   files:
-    - target/fly-0.0.1.jar
+    - target/fly-0.0.1-SNAPSHOT.jar
   discard-path: yes
