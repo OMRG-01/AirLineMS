@@ -3,33 +3,30 @@ name: Deploy to Elastic Beanstalk
 on:
   push:
     branches:
-      - main   # 👈 deploys whenever you push to main
+      - main  # change if your branch name is master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'corretto'
           java-version: '17'
+          distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Build the JAR
         run: mvn clean package -DskipTests
 
-      - name: Prepare deployment package
-        run: |
-          mkdir -p deploy
-          cp target/fly-0.0.1-SNAPSHOT.jar deploy/application.jar
-          zip -r deploy.zip deploy
+      - name: Create ZIP for deployment
+        run: zip -r deploy.zip target/*.jar
 
       - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
